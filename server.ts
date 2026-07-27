@@ -16,18 +16,25 @@ async function startServer() {
   // Chat endpoint with Senior Cybersecurity Trainer
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, history } = req.body;
+      const { message, history, lang } = req.body;
+      const isEn = lang === "en";
       if (!message) {
-        return res.status(400).json({ error: "Message is required" });
+        return res.status(400).json({ error: isEn ? "Message is required" : "Message is required" });
       }
 
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
-        return res.status(200).json({ 
-          reply: `⚠️ **GEMINI_API_KEY non configurata nei Secrets.**
-          
-          Per usufruire dell'assistente AI in tempo reale, aggiungi la chiave nei Secrets di AI Studio (in alto a destra). 
-          
+        return res.status(200).json({
+          reply: isEn
+            ? `⚠️ **GEMINI_API_KEY is not configured in Secrets.**
+
+          To use the real-time AI assistant, add the key in the AI Studio Secrets (top right).
+
+          In the meantime, you can proceed to the **Study Phase** by reviewing the material and testing your preparation with the **High-Stakes Simulator** (full questions with integrated explanations!).`
+            : `⚠️ **GEMINI_API_KEY non configurata nei Secrets.**
+
+          Per usufruire dell'assistente AI in tempo reale, aggiungi la chiave nei Secrets di AI Studio (in alto a destra).
+
           Nel frattempo, puoi procedere alla **Fase Studio** consultando il materiale e mettendo alla prova la tua preparazione con l'**High-Stakes Simulator** (10 domande complete con spiegazioni integrate!).`
         });
       }
@@ -44,22 +51,40 @@ async function startServer() {
       // Format history into a cohesive prompt to prevent API-level state issues
       let conversationHistory = "";
       if (history && Array.isArray(history)) {
+        const studentLabel = isEn ? "Student" : "Studente";
         conversationHistory = history
-          .map((h: { role: string; content: string }) => `${h.role === "user" ? "Studente" : "Trainer"}: ${h.content}`)
+          .map((h: { role: string; content: string }) => `${h.role === "user" ? studentLabel : "Trainer"}: ${h.content}`)
           .join("\n\n");
       }
 
-      const systemPrompt = `Sei un Senior Cybersecurity Trainer e Question Writer certificato CompTIA, specializzato nel creare esami "High-Stakes" (ad alto rischio). Il tuo obiettivo è preparare l'utente su tutti i domini chiave del syllabus, incluse le novità del Security+ SY0-701:
+      const systemPrompt = isEn
+        ? `You are a Senior Cybersecurity Trainer and CompTIA-certified Question Writer, specialized in creating "High-Stakes" exams. Your goal is to prepare the user on all the key domains of the syllabus, including the new content of Security+ SY0-701:
+      - Domain 1 ("General Security Concepts")
+      - Domain 2 ("Threats, Vulnerabilities, and Mitigations")
+      - Domain 3 ("Security Architecture")
+      - Domain 4 ("Security Operations")
+      - Domain 5 ("Security Program Management and Oversight")
+      Respond in a professional and extremely detailed manner, using official CompTIA terminology and metrics (e.g. SLE = AV * EF, ALE = SLE * ARO, RTO, RPO, MTD, MTBF, MTTR, MOU, MOA, BPA, SLA, NDA, SOW, Due Care vs Due Diligence, SIEM, SOAR, EDR, XDR, Vulnerability Management, Incident Response, Backup Strategies, Threat Actors, Mitigations, etc.).
+      Your explanations must be rigorous, structured and geared toward passing the exam.
+      Always respond in English. Include markdown comparison tables if the user asks for clarification between similar concepts. Do not ramble. Keep a calm, assertive and extremely competent tone.`
+        : `Sei un Senior Cybersecurity Trainer e Question Writer certificato CompTIA, specializzato nel creare esami "High-Stakes" (ad alto rischio). Il tuo obiettivo è preparare l'utente su tutti i domini chiave del syllabus, incluse le novità del Security+ SY0-701:
       - Dominio 1 ("General Security Concepts")
       - Dominio 2 ("Threats, Vulnerabilities, and Mitigations")
       - Dominio 3 ("Security Architecture")
       - Dominio 4 ("Security Operations")
       - Dominio 5 ("Security Program Management and Oversight")
       Rispondi in modo professionale ed estremamente dettagliato, usando la terminologia e le metriche ufficiali CompTIA (es. SLE = AV * EF, ALE = SLE * ARO, RTO, RPO, MTD, MTBF, MTTR, MOU, MOA, BPA, SLA, NDA, SOW, Due Care vs Due Diligence, SIEM, SOAR, EDR, XDR, Vulnerability Management, Incident Response, Backup Strategies, Threat Actors, Mitigations, ecc.).
-      Le tue spiegazioni devono essere rigorose, strutturate, ed orientate a superare l'esame. 
+      Le tue spiegazioni devono essere rigorose, strutturate, ed orientate a superare l'esame.
       Usa sempre la lingua italiana per rispondere. Includi tabelle comparative markdown se l'utente chiede chiarimenti tra concetti simili. Non divagare. Mantieni un tono calmo, assertivo ed estremamente competente.`;
 
-      const prompt = `Conversazione precedente:
+      const prompt = isEn
+        ? `Previous conversation:
+${conversationHistory}
+
+New question from the student: ${message}
+
+Provide an in-depth, CompTIA-style answer, focusing on official best practices.`
+        : `Conversazione precedente:
 ${conversationHistory}
 
 Nuova domanda dello studente: ${message}
@@ -78,21 +103,27 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       res.json({ reply: response.text });
     } catch (error: any) {
       console.error("Error calling Gemini API:", error);
-      res.status(500).json({ error: "Errore durante la generazione della risposta dell'assistente AI: " + error.message });
+      const isEn = req.body?.lang === "en";
+      res.status(500).json({
+        error: (isEn
+          ? "Error while generating the AI assistant's response: "
+          : "Errore durante la generazione della risposta dell'assistente AI: ") + error.message
+      });
     }
   });
 
   // Remediation endpoint to generate 3 hard questions based on weak topics
   app.post("/api/quiz/remediation", async (req, res) => {
     try {
-      const { weakTopics } = req.body;
+      const { weakTopics, lang } = req.body;
+      const isEn = lang === "en";
       if (!weakTopics || !Array.isArray(weakTopics) || weakTopics.length === 0) {
         return res.status(400).json({ error: "Weak topics are required" });
       }
 
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
-        return res.status(400).json({ error: "GEMINI_API_KEY non configurata" });
+        return res.status(400).json({ error: isEn ? "GEMINI_API_KEY is not configured" : "GEMINI_API_KEY non configurata" });
       }
 
       const ai = new GoogleGenAI({
@@ -105,9 +136,19 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       });
 
       const topicsString = weakTopics.join(", ");
-      const systemInstruction = `Sei un Senior Cybersecurity Trainer e Question Writer certificato CompTIA, specializzato nel creare esami "High-Stakes". 
+      const systemInstruction = isEn
+        ? `You are a Senior Cybersecurity Trainer and CompTIA-certified Question Writer, specialized in creating "High-Stakes" exams.
+      Your task is to write exactly 3 brand-new ANALYSIS-level exam questions (extremely hard, equivalent to the most complex exam questions) specifically on the following weak topics identified for the student: ${topicsString}.
+
+      Mandatory rules for writing the questions:
+      1. ANALYSIS level: Each question must present a complex business scenario (at least 3-4 lines) with conflicting constraints (e.g. budget limits, legacy systems, regulations such as GDPR/PCI-DSS/HIPAA, staff shortages or recent breaches).
+      2. No direct definitions: The answer must not test whether the user knows a term, but its correct application in a critical scenario.
+      3. The "Best" Dilemma: All 4 options must be plausible or technically correct in a general sense, but only one must be the "BEST" or the "FIRST" to do according to CompTIA best practices.
+      4. Output structure: You must respond in valid JSON, adhering to the required schema.
+      5. Write the entire output in ENGLISH.`
+        : `Sei un Senior Cybersecurity Trainer e Question Writer certificato CompTIA, specializzato nel creare esami "High-Stakes".
       Il tuo compito è scrivere esattamente 3 domande d'esame inedite di livello ANALISI (estremamente difficili, equivalenti alle domande d'esame più complesse) specificamente sui seguenti argomenti deboli riscontrati nello studente: ${topicsString}.
-      
+
       Regole mandatorie per la scrittura delle domande:
       1. Livello ANALISI: Ogni domanda deve presentare uno scenario aziendale complesso (minimo 3-4 righe) con vincoli contrastanti (es. limiti di budget, legacy systems, normative come GDPR/PCI-DSS/HIPAA, carenza di personale o breach recenti).
       2. No definizioni dirette: La risposta non deve testare se l'utente conosce un termine, ma la sua applicazione corretta in uno scenario critico.
@@ -115,7 +156,10 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       4. Struttura dell'Output: Devi rispondere in formato JSON valido, aderente allo schema richiesto.
       5. Scrivi tutto l'output in lingua ITALIANA.`;
 
-      const prompt = `Genera esattamente 3 domande d'esame di livello ANALISI in formato JSON sugli argomenti deboli: ${topicsString}.
+      const prompt = isEn
+        ? `Generate exactly 3 ANALYSIS-level exam questions in JSON format on the weak topics: ${topicsString}.
+      Each question must focus on application in complex contexts and contain an in-depth (CompTIA-style) explanation of why the correct answer is the BEST and why the other three are plausible but sub-optimal distractors.`
+        : `Genera esattamente 3 domande d'esame di livello ANALISI in formato JSON sugli argomenti deboli: ${topicsString}.
       Ogni domanda deve focalizzarsi sull'applicazione in contesti complessi e contenere una spiegazione approfondita (CompTIA-style) che spieghi perché la risposta corretta è la BEST e perché le altre tre sono distrattori plausibili ma sub-ottimali.`;
 
       const response = await ai.models.generateContent({

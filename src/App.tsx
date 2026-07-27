@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   ShieldAlert, 
   FileText, 
@@ -26,10 +26,11 @@ import {
   ArrowUp,
   ArrowDown
 } from "lucide-react";
-import { DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS, INITIAL_QUESTIONS, DOMAIN_1_QUESTIONS, DOMAIN_2_QUESTIONS, DOMAIN_3_QUESTIONS, DOMAIN_4_QUESTIONS, DOMAIN_5_QUESTIONS } from "./data";
+import { getDomainTopics, getDomainQuestions, getInitialQuestions } from "./localizedData";
 import { Subtopic, TopicGroup, Question, ChatMessage } from "./types";
 import { motion, AnimatePresence } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
+import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 
 const SUBGROUP_MAP: Record<string, string> = {
   // Domain 1
@@ -600,6 +601,20 @@ const getSubgroupForSubtopic = (checklistKey: string): string | null => {
 };
 
 export default function App() {
+  // Localization
+  const { lang, setLang, t } = useLang();
+  const DOMAIN_1_TOPICS = useMemo(() => getDomainTopics(1, lang), [lang]);
+  const DOMAIN_2_TOPICS = useMemo(() => getDomainTopics(2, lang), [lang]);
+  const DOMAIN_3_TOPICS = useMemo(() => getDomainTopics(3, lang), [lang]);
+  const DOMAIN_4_TOPICS = useMemo(() => getDomainTopics(4, lang), [lang]);
+  const DOMAIN_5_TOPICS = useMemo(() => getDomainTopics(5, lang), [lang]);
+  const DOMAIN_1_QUESTIONS = useMemo(() => getDomainQuestions(1, lang), [lang]);
+  const DOMAIN_2_QUESTIONS = useMemo(() => getDomainQuestions(2, lang), [lang]);
+  const DOMAIN_3_QUESTIONS = useMemo(() => getDomainQuestions(3, lang), [lang]);
+  const DOMAIN_4_QUESTIONS = useMemo(() => getDomainQuestions(4, lang), [lang]);
+  const DOMAIN_5_QUESTIONS = useMemo(() => getDomainQuestions(5, lang), [lang]);
+  const INITIAL_QUESTIONS = useMemo(() => getInitialQuestions(lang), [lang]);
+
   // Navigation & General App State
   const [activeTab, setActiveTab] = useState<"studio" | "quiz" | "glossary">("studio");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
@@ -656,7 +671,7 @@ export default function App() {
     {
       id: "welcome",
       sender: "trainer",
-      text: "Salve! Sono il tuo Cybersecurity Trainer certificato CompTIA. Sono qui per guidarti nello studio dei **Domini 1 (General Security Concepts)**, **2 (Threats, Vulnerabilities, and Mitigations)**, **3 (Security Architecture)**, **4 (Security Operations)** e **5 (Security Program Management and Oversight)** del Security+ SY0-701.\n\nPuoi pormi qualsiasi domanda teorica, chiedermi spiegazioni su concetti di sicurezza generali, attori delle minacce, vulnerabilità, mitigazioni, architetture, protocolli sicuri o formule di rischio, o farmi generare scenari ad-hoc. Cosa desideri approfondire oggi?",
+      text: t("chat.welcome"),
       timestamp: new Date()
     }
   ]);
@@ -728,6 +743,44 @@ export default function App() {
       }
     }
   }, []);
+
+  // Re-resolve the selected subtopic in the active language (by checklistKey)
+  // so the study panel updates instantly when the user switches language.
+  useEffect(() => {
+    const topics = getDomainTopics(activeDomain, lang);
+    for (const g of topics) {
+      const found = g.subtopics.find(s => s.checklistKey === selectedSubtopic.checklistKey);
+      if (found) {
+        setSelectedSubtopic(found);
+        return;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  // Re-map dataset-backed quiz questions to the active language (by id).
+  // Remediation questions come from the AI and are left untouched.
+  useEffect(() => {
+    const byId = new Map(getInitialQuestions(lang).map(q => [q.id, q]));
+    setActiveQuestions(prev => prev.map(q => byId.get(q.id) ?? q));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  // Keep the trainer welcome message in sync with the active language.
+  useEffect(() => {
+    setChatMessages(prev =>
+      prev.map(m => (m.id === "welcome" ? { ...m, text: t("chat.welcome") } : m))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  // Localized label for a question difficulty level. Falls back to the raw
+  // value for levels not in the dictionary (e.g. AI-generated English levels).
+  const levelLabel = (lvl: string): string => {
+    const key = `level.${lvl}` as UIKey;
+    const label = t(key);
+    return label === key ? lvl : label;
+  };
 
   // Toggle checklist checkbox
   const handleToggleCheck = (key: string) => {
@@ -847,7 +900,7 @@ export default function App() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history })
+        body: JSON.stringify({ message: text, history, lang })
       });
 
       const data = await res.json();
@@ -865,7 +918,7 @@ export default function App() {
       setChatMessages(prev => [...prev, {
         id: Math.random().toString(),
         sender: "system",
-        text: `⚠️ Errore di connessione con il Trainer AI: ${err.message}.`,
+        text: t("chat.connectionError", { msg: err.message }),
         timestamp: new Date()
       }]);
     } finally {
@@ -902,7 +955,7 @@ export default function App() {
     ];
 
     if (questionsToUse.length === 0) {
-      alert("Seleziona almeno una domanda per avviare il simulatore!");
+      alert(t("quiz.selectAtLeastOne"));
       return;
     }
 
@@ -973,12 +1026,12 @@ export default function App() {
       const res = await fetch("/api/quiz/remediation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ weakTopics: uniqueWeakTopics })
+        body: JSON.stringify({ weakTopics: uniqueWeakTopics, lang })
       });
 
       const data = await res.json();
       if (res.status !== 200 || data.error) {
-        throw new Error(data.error || "Impossibile recuperare domande adattive.");
+        throw new Error(data.error || t("rem.cannotRetrieve"));
       }
 
       if (data.questions && data.questions.length > 0) {
@@ -991,10 +1044,10 @@ export default function App() {
         setRemediationCompleted(false);
         setRemediationScore(0);
       } else {
-        throw new Error("Il server non ha restituito domande di recupero valide.");
+        throw new Error(t("rem.noValidQuestions"));
       }
     } catch (err: any) {
-      setRemediationError(err.message || "Errore sconosciuto.");
+      setRemediationError(err.message || t("rem.unknownError"));
     } finally {
       setIsGeneratingRemediation(false);
     }
@@ -1038,11 +1091,11 @@ export default function App() {
   };
 
   const domainMetadata = [
-    { id: 1, name: "Dominio 1: General Security Concepts", desc: "Concetti generali, attori delle minacce, intelligence e controlli base" },
-    { id: 2, name: "Dominio 2: Threats, Vulnerabilities, and Mitigations", desc: "Vulnerabilità software, attacchi social engineering, minacce e mitigazioni" },
-    { id: 3, name: "Dominio 3: Security Architecture", desc: "Architettura di rete sicura, cloud, crittografia avanzata e resilienza" },
-    { id: 4, name: "Dominio 4: Security Operations", desc: "Monitoraggio, incident response, log, digital forensics e backup" },
-    { id: 5, name: "Dominio 5: Security Program Management & Oversight", desc: "Governance, conformità normativa, gestione del rischio (ALE/SLE) e contratti" }
+    { id: 1, name: t("domainMeta.1.name"), desc: t("domainMeta.1.desc") },
+    { id: 2, name: t("domainMeta.2.name"), desc: t("domainMeta.2.desc") },
+    { id: 3, name: t("domainMeta.3.name"), desc: t("domainMeta.3.desc") },
+    { id: 4, name: t("domainMeta.4.name"), desc: t("domainMeta.4.desc") },
+    { id: 5, name: t("domainMeta.5.name"), desc: t("domainMeta.5.desc") }
   ];
 
   const totalQuestionsSelected = (Object.values(customCounts) as number[]).reduce((sum, val) => sum + val, 0);
@@ -1082,7 +1135,7 @@ export default function App() {
           <div className="w-10 h-10 bg-cyan-600 rounded flex items-center justify-center font-bold text-xl text-slate-50 shadow-md shadow-cyan-500/10" id="logo_icon_box">S+</div>
           <div>
             <h1 className="text-sm font-bold tracking-tight text-cyan-400 uppercase" id="header_title">CompTIA Security+ SY0-701</h1>
-            <p className="text-xs text-slate-400" id="header_subtitle">Senior Cybersecurity Trainer Interface v4.2</p>
+            <p className="text-xs text-slate-400" id="header_subtitle">{t("header.subtitle")}</p>
           </div>
         </div>
 
@@ -1093,7 +1146,7 @@ export default function App() {
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "studio" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            Checklist & Studio
+            {t("tab.studio")}
           </button>
           <button 
             id="tab_btn_glossary"
@@ -1101,7 +1154,7 @@ export default function App() {
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "glossary" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <FileText className="w-3.5 h-3.5" />
-            Glossario SY0-701
+            {t("tab.glossary")}
           </button>
           <button 
             id="tab_btn_quiz"
@@ -1109,7 +1162,7 @@ export default function App() {
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "quiz" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <Activity className="w-3.5 h-3.5" />
-            High-Stakes Simulator
+            {t("tab.quiz")}
           </button>
 
           <div className="h-6 w-[1px] bg-slate-700 mx-1"></div>
@@ -1120,8 +1173,28 @@ export default function App() {
             className={`px-2.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${sidebarOpen ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "border border-slate-800 text-slate-400 hover:bg-slate-800/30"}`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>AI Trainer</span>
+            <span>{t("tab.aiTrainer")}</span>
           </button>
+
+          <div className="h-6 w-[1px] bg-slate-700 mx-1"></div>
+
+          {/* Language toggle IT / EN */}
+          <div className="flex items-center rounded-md border border-slate-800 overflow-hidden" id="lang_toggle" title={t("lang.label")}>
+            <button
+              id="lang_btn_it"
+              onClick={() => setLang("it")}
+              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${lang === "it" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            >
+              IT
+            </button>
+            <button
+              id="lang_btn_en"
+              onClick={() => setLang("en")}
+              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${lang === "en" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            >
+              EN
+            </button>
+          </div>
         </div>
       </header>
 
@@ -1135,38 +1208,38 @@ export default function App() {
             {/* Left Sidebar Checklist Tree - Sleek Interface Style */}
             <aside className="w-full md:w-80 md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-slate-800 bg-slate-900/30 p-4 flex flex-col shrink-0" id="checklist_sidebar">
               <div className="mb-4 pb-2 border-b border-slate-800/60" id="checklist_header">
-                <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Sfoglia Checklist</h2>
-                <p className="text-[11px] text-slate-500 mt-1 mb-3">Seleziona e spunta gli argomenti completati.</p>
+                <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t("sidebar.browseChecklist")}</h2>
+                <p className="text-[11px] text-slate-500 mt-1 mb-3">{t("sidebar.selectAndCheck")}</p>
                 <div className="grid grid-cols-5 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800/80">
                   <button
                     onClick={() => handleSwitchDomain(1)}
                     className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 1 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
-                    Dom 1
+                    {t("sidebar.domShort", { n: 1 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(2)}
                     className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 2 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
-                    Dom 2
+                    {t("sidebar.domShort", { n: 2 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(3)}
                     className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 3 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
-                    Dom 3
+                    {t("sidebar.domShort", { n: 3 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(4)}
                     className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 4 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
-                    Dom 4
+                    {t("sidebar.domShort", { n: 4 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(5)}
                     className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 5 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
-                    Dom 5
+                    {t("sidebar.domShort", { n: 5 })}
                   </button>
                 </div>
               </div>
@@ -1245,7 +1318,7 @@ export default function App() {
                                       </span>
                                       {totalCount > 1 && (
                                         <span className="text-[9px] font-mono text-slate-500 group-hover:text-slate-400 transition-colors leading-none mt-0.5">
-                                          {completedCount} di {totalCount} completati
+                                          {t("common.completedOf", { done: completedCount, total: totalCount })}
                                         </span>
                                       )}
                                     </div>
@@ -1265,7 +1338,7 @@ export default function App() {
               {/* Progress Tracker Widget inspired by Design HTML */}
               <div className="mt-4 p-4 rounded-lg bg-slate-900 border border-slate-800" id="checklist_progress_box">
                 <div className="flex justify-between text-[10px] text-slate-500 mb-2">
-                  <span className="uppercase font-semibold font-mono tracking-wider">PROGRESSO DOMINIO {activeDomain}</span>
+                  <span className="uppercase font-semibold font-mono tracking-wider">{t("sidebar.domainProgress", { n: activeDomain })}</span>
                   <span className="font-mono font-bold text-cyan-400">
                     {(() => {
                       const subs = (activeDomain === 1 ? DOMAIN_1_TOPICS : activeDomain === 2 ? DOMAIN_2_TOPICS : activeDomain === 3 ? DOMAIN_3_TOPICS : activeDomain === 4 ? DOMAIN_4_TOPICS : DOMAIN_5_TOPICS).flatMap(g => g.subtopics);
@@ -1286,7 +1359,7 @@ export default function App() {
                     }}
                   ></div>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-2.5 italic">Passing Score: 80% (Analysis focus)</p>
+                <p className="text-[10px] text-slate-500 mt-2.5 italic">{t("sidebar.passingScore")}</p>
               </div>
             </aside>
 
@@ -1322,24 +1395,24 @@ export default function App() {
                       <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl" />
                       
                       <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-cyan-400 font-semibold uppercase tracking-widest mb-3" id="topic_crumbs">
-                        <span>DOMINIO {activeDomain}</span>
+                        <span>{t("study.domain")} {activeDomain}</span>
                         <span>·</span>
-                        <span>{activeDomain === 1 ? "GENERAL SECURITY CONCEPTS" : activeDomain === 2 ? "THREATS, VULNERABILITIES & MITIGATIONS" : activeDomain === 3 ? "SECURITY ARCHITECTURE" : activeDomain === 4 ? "SECURITY OPERATIONS" : "SECURITY PROGRAM MANAGEMENT"}</span>
+                        <span>{t(`domainCrumb.${activeDomain}` as UIKey)}</span>
                         {subgroupName && (
                           <>
                             <span>·</span>
-                            <span className="text-slate-400">{subgroupName}</span>
+                            <span className="text-slate-400">{localizeSubgroup(subgroupName, lang)}</span>
                           </>
                         )}
                       </div>
 
                       <h2 className="text-2xl font-bold text-slate-100 mb-3" id="topic_title">
-                        {subgroupName || selectedSubtopic.name}
+                        {subgroupName ? localizeSubgroup(subgroupName, lang) : selectedSubtopic.name}
                       </h2>
-                      
+
                       <p className="text-slate-300 leading-relaxed text-sm border-l-2 border-cyan-500 pl-4 bg-cyan-500/[0.03] py-2 rounded-r mb-4" id="topic_definition">
-                        {subgroupName 
-                          ? `Questa scheda unificata contiene ${totalInGroup} concetti fondamentali appartenenti alla categoria "${subgroupName}".`
+                        {subgroupName
+                          ? t("study.unifiedCard", { n: totalInGroup, name: localizeSubgroup(subgroupName, lang) })
                           : selectedSubtopic.definition}
                       </p>
 
@@ -1347,8 +1420,8 @@ export default function App() {
                       {totalInGroup > 1 && (
                         <div className="bg-slate-950/60 border border-slate-800/80 p-4 rounded-lg space-y-2 mt-4" id="category_progress_wrapper">
                           <div className="flex justify-between items-center text-xs">
-                            <span className="text-slate-400 font-medium">Progresso in questa categoria</span>
-                            <span className="font-mono font-bold text-cyan-400">{completedInGroup} di {totalInGroup} completati ({percentComplete}%)</span>
+                            <span className="text-slate-400 font-medium">{t("study.categoryProgress")}</span>
+                            <span className="font-mono font-bold text-cyan-400">{t("study.completedPercent", { done: completedInGroup, total: totalInGroup, percent: percentComplete })}</span>
                           </div>
                           <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
                             <div 
@@ -1370,14 +1443,14 @@ export default function App() {
                             <div className="flex justify-between items-start gap-4 border-b border-slate-800/80 pb-3" id={`concept_hdr_${sub.checklistKey}`}>
                               <div className="flex items-center gap-3">
                                 <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-950/40 px-2 py-1 border border-cyan-900 rounded select-none">
-                                  CONCETTO {idx + 1} DI {totalInGroup}
+                                  {t("study.conceptOf", { i: idx + 1, n: totalInGroup })}
                                 </span>
                                 <h3 className="text-lg font-bold text-slate-100">{sub.name}</h3>
                               </div>
                               
                               {/* Individual checklist checkbox */}
                               <div className="flex items-center gap-2" id={`concept_check_wrapper_${sub.checklistKey}`}>
-                                <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">Completato</span>
+                                <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">{t("study.completed")}</span>
                                 <button 
                                   id={`concept_check_${sub.checklistKey}`}
                                   onClick={() => handleToggleCheck(sub.checklistKey)}
@@ -1399,7 +1472,7 @@ export default function App() {
                             <div className="space-y-3" id={`concept_details_${sub.checklistKey}`}>
                               <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
                                 <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-                                <span>Analisi Dettagliata</span>
+                                <span>{t("study.detailedAnalysis")}</span>
                               </div>
                               <div className="text-sm text-slate-300 leading-relaxed space-y-3">
                                 {renderMarkdownToJSX(sub.details)}
@@ -1411,7 +1484,7 @@ export default function App() {
                               <div className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-2.5" id={`concept_formulas_${sub.checklistKey}`}>
                                 <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs font-mono uppercase tracking-wider">
                                   <Calculator className="w-3.5 h-3.5" />
-                                  <span>Metriche e Formule Chiave CompTIA</span>
+                                  <span>{t("study.keyFormulas")}</span>
                                 </div>
                                 <ul className="space-y-1.5">
                                   {sub.keyFormulas.map((f, fIdx) => (
@@ -1429,7 +1502,7 @@ export default function App() {
                               <div className="space-y-2.5" id={`concept_table_${sub.checklistKey}`}>
                                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
                                   <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
-                                  <span>Tabella Comparativa</span>
+                                  <span>{t("study.comparativeTable")}</span>
                                 </div>
                                 <div className="overflow-x-auto border border-slate-800 rounded bg-slate-950">
                                   <table className="w-full text-left border-collapse text-xs">
@@ -1460,7 +1533,7 @@ export default function App() {
                                 <Sparkles className="w-4 h-4" />
                               </div>
                               <div>
-                                <h4 className="text-slate-200 font-semibold text-xs mb-1">CONSIGLIO COMPTIA EXAM +</h4>
+                                <h4 className="text-slate-200 font-semibold text-xs mb-1">{t("study.examTipTitle")}</h4>
                                 <p className="text-slate-400 text-xs leading-relaxed">{sub.examTip}</p>
                               </div>
                             </div>
@@ -1469,16 +1542,16 @@ export default function App() {
                             <div className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-850 rounded-lg" id={`concept_chat_trigger_${sub.checklistKey}`}>
                               <div className="flex items-center gap-2">
                                 <Info className="w-3.5 h-3.5 text-cyan-400" />
-                                <span className="text-xs text-slate-400">Hai dubbi su {sub.name}? Chiedi subito al Trainer!</span>
+                                <span className="text-xs text-slate-400">{t("study.doubtsAbout", { name: sub.name })}</span>
                               </div>
-                              <button 
+                              <button
                                 onClick={() => {
                                   setSidebarOpen(true);
-                                  handleSendChat(`Spiegami approfonditamente l'argomento "${sub.name}" con un esempio pratico aziendale e consigli d'esame.`);
+                                  handleSendChat(t("study.askPrompt", { name: sub.name }));
                                 }}
                                 className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold px-3 py-1.5 rounded transition-colors flex items-center gap-1 border border-slate-750"
                               >
-                                Chiedi Spiegazione
+                                {t("study.askExplanation")}
                                 <ArrowRight className="w-3.5 h-3.5" />
                               </button>
                             </div>
@@ -1498,16 +1571,16 @@ export default function App() {
               <button
                 onClick={scrollToPanelTop}
                 className="p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500 text-slate-300 hover:text-cyan-400 shadow-xl shadow-black/60 transition-all duration-200 group flex items-center justify-center backdrop-blur-sm"
-                title="Torna all'inizio"
-                aria-label="Torna all'inizio"
+                title={t("study.scrollTop")}
+                aria-label={t("study.scrollTop")}
               >
                 <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
               </button>
               <button
                 onClick={scrollToPanelBottom}
                 className="p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500 text-slate-300 hover:text-cyan-400 shadow-xl shadow-black/60 transition-all duration-200 group flex items-center justify-center backdrop-blur-sm"
-                title="Vai in fondo"
-                aria-label="Vai in fondo"
+                title={t("study.scrollBottom")}
+                aria-label={t("study.scrollBottom")}
               >
                 <ArrowDown className="w-5 h-5 transition-transform group-hover:translate-y-0.5" />
               </button>
@@ -1534,9 +1607,9 @@ export default function App() {
                       <Activity className="w-8 h-8 text-cyan-400" />
                     </div>
                     <div className="space-y-1">
-                      <h2 className="text-xl font-bold text-slate-100" id="start_screen_title">High-Stakes Exam Simulator</h2>
+                      <h2 className="text-xl font-bold text-slate-100" id="start_screen_title">{t("quiz.title")}</h2>
                       <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-                        Configura il tuo simulatore d'esame. Seleziona quanti quesiti affrontare per ciascun dominio di competenza o scegli un preset rapido.
+                        {t("quiz.subtitle")}
                       </p>
                     </div>
                   </div>
@@ -1546,11 +1619,11 @@ export default function App() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-mono font-extrabold text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-2 py-0.5 rounded uppercase tracking-wider">Nuovo Caricamento 100% Completo</span>
+                          <span className="text-[9px] font-mono font-extrabold text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-2 py-0.5 rounded uppercase tracking-wider">{t("quiz.newBadge")}</span>
                         </div>
-                        <h4 className="text-xs font-bold text-slate-200">10 Nuove Domande Tradotte nel Dominio 1 (Domande 11-89)</h4>
+                        <h4 className="text-xs font-bold text-slate-200">{t("quiz.newTitle")}</h4>
                         <p className="text-[11px] text-slate-400 leading-relaxed">
-                          Abbiamo caricato e tradotto in italiano le 10 domande d'esame dai tuoi screenshot (IDs 141-150). Sono ora integrate in Dominio 1!
+                          {t("quiz.newDesc")}
                         </p>
                       </div>
                       <div className="flex flex-row sm:flex-col gap-2 shrink-0 w-full sm:w-auto">
@@ -1572,14 +1645,14 @@ export default function App() {
                           }}
                           className="flex-1 sm:flex-initial bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-3 py-2 rounded text-[11px] transition-colors shadow-md shadow-cyan-600/10 text-center"
                         >
-                          Avvia Test (10 domande)
+                          {t("quiz.startTest10")}
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowNewQuestionsModal(true)}
                           className="flex-1 sm:flex-initial border border-slate-800 hover:border-slate-700 hover:text-slate-200 text-slate-400 font-bold px-3 py-2 rounded text-[11px] bg-slate-900 transition-colors text-center"
                         >
-                          Leggi Testi Tradotti
+                          {t("quiz.readTexts")}
                         </button>
                       </div>
                     </div>
@@ -1587,40 +1660,40 @@ export default function App() {
 
                   {/* Preset Configurations */}
                   <div className="space-y-2 bg-slate-950/40 border border-slate-800/60 p-4 rounded-md" id="presets_container">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block mb-2">Seleziona Configurazione Rapida (Presets)</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block mb-2">{t("quiz.selectPreset")}</label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                       <button
                         type="button"
                         onClick={() => applyPreset("mini")}
                         className={`px-3 py-2 rounded text-xs font-semibold border transition-all ${quizFocus === "mini" ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-200"}`}
                       >
-                        Mini (10 Totali)
+                        {t("quiz.presetMini")}
                       </button>
                       <button
                         type="button"
                         onClick={() => applyPreset("balanced")}
                         className={`px-3 py-2 rounded text-xs font-semibold border transition-all ${quizFocus === "balanced" ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-200"}`}
                       >
-                        Bilanciato (25 Totali)
+                        {t("quiz.presetBalanced")}
                       </button>
                       <button
                         type="button"
                         onClick={() => applyPreset("all")}
                         className={`px-3 py-2 rounded text-xs font-semibold border transition-all ${quizFocus === "all" ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-200"}`}
                       >
-                        Completo (Tutte)
+                        {t("quiz.presetAll")}
                       </button>
                       <button
                         type="button"
                         onClick={() => setQuizFocus("custom")}
                         className={`px-3 py-2 rounded text-xs font-semibold border transition-all ${quizFocus === "custom" ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-200"}`}
                       >
-                        Personalizzato
+                        {t("quiz.presetCustom")}
                       </button>
                     </div>
 
                     <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-slate-800/40">
-                      <span className="text-[9px] text-slate-500 font-mono flex items-center mr-1">SOLO DOMINIO:</span>
+                      <span className="text-[9px] text-slate-500 font-mono flex items-center mr-1">{t("quiz.onlyDomain")}</span>
                       {[1, 2, 3, 4, 5].map(domNum => (
                         <button
                           key={domNum}
@@ -1636,7 +1709,7 @@ export default function App() {
 
                   {/* Domain-specific Question Count Sliders */}
                   <div className="space-y-4" id="domain_sliders_list">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Personalizza Numero Domande per ciascun Dominio</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">{t("quiz.customizePerDomain")}</label>
                     <div className="space-y-3">
                       {domainMetadata.map((dom) => {
                         const maxVal = maxQuestionsByDomain[dom.id] || 0;
@@ -1716,12 +1789,12 @@ export default function App() {
                   {/* Summary & Run constraints */}
                   <div className="bg-cyan-950/20 border border-cyan-500/20 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center gap-4" id="custom_quiz_summary_box">
                     <div className="text-left space-y-1">
-                      <div className="text-xs font-mono text-slate-400">RIEPILOGO CONFIGURAZIONE</div>
+                      <div className="text-xs font-mono text-slate-400">{t("quiz.configSummary")}</div>
                       <div className="text-sm font-bold text-slate-100 font-sans">
-                        <span className="text-cyan-400 font-mono text-lg">{totalQuestionsSelected}</span> domande ad alto rischio selezionate
+                        <span className="text-cyan-400 font-mono text-lg">{totalQuestionsSelected}</span> {t("quiz.highStakesSelected")}
                       </div>
                       <div className="text-[10px] text-slate-500 font-mono">
-                        Soglia di sbarramento: 80% • Tempo stimato: ~{totalQuestionsSelected * 2} min
+                        {t("quiz.thresholdTime", { min: totalQuestionsSelected * 2 })}
                       </div>
                     </div>
 
@@ -1731,7 +1804,7 @@ export default function App() {
                       onClick={handleStartQuiz}
                       className="w-full md:w-auto bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 disabled:border-slate-800 disabled:shadow-none text-white font-bold px-6 py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all inline-flex items-center justify-center gap-2 border border-cyan-500/30"
                     >
-                      Avvia Simulatore di Esame
+                      {t("quiz.startSimulator")}
                       <ChevronRight className="w-4 h-4 stroke-[3]" />
                     </button>
                   </div>
@@ -1739,11 +1812,11 @@ export default function App() {
                   <div className="bg-slate-950 p-4 rounded border border-slate-800 max-w-md mx-auto text-left space-y-2 text-xs font-mono" id="quiz_rules_box">
                     <div className="flex items-center gap-2 text-cyan-400 font-bold">
                       <Check className="w-4 h-4" />
-                      <span>REGOLE DI IDONEITÀ</span>
+                      <span>{t("quiz.rulesTitle")}</span>
                     </div>
-                    <p className="text-slate-400">● Domande ad alto rischio d'esame (Ricordo, Comprensione, Applicazione, Analisi).</p>
-                    <p className="text-slate-400">● <strong>Soglia di Sbarramento: 80%</strong> per superare il modulo.</p>
-                    <p className="text-slate-400">● Se fallisci, si attiverà un quiz di recupero con domande adattive basate sulle tue debolezze.</p>
+                    <p className="text-slate-400">{t("quiz.rule1")}</p>
+                    <p className="text-slate-400">{t("quiz.rule2")}</p>
+                    <p className="text-slate-400">{t("quiz.rule3")}</p>
                   </div>
                 </div>
               ) : quizCompleted ? (
@@ -1754,14 +1827,14 @@ export default function App() {
                       {quizScore >= 8 ? <Award className="w-8 h-8" /> : <AlertTriangle className="w-8 h-8" />}
                     </div>
                     <div className="space-y-1">
-                      <h2 className="text-xl font-bold text-slate-100" id="completed_title">Simulazione Completata</h2>
-                      <p className="text-slate-400 font-mono text-xs">Esito del test per {quizFocus === "domain2" ? "il Dominio 2" : quizFocus === "domain3" ? "il Dominio 3" : quizFocus === "domain4" ? "il Dominio 4" : quizFocus === "domain5" ? "il Dominio 5" : "i Domini 2, 3, 4 & 5"}</p>
+                      <h2 className="text-xl font-bold text-slate-100" id="completed_title">{t("quiz.completedTitle")}</h2>
+                      <p className="text-slate-400 font-mono text-xs">{t("quiz.resultFor")}</p>
                     </div>
 
                     <div className="inline-block bg-slate-950 px-6 py-4 rounded border border-slate-800 shadow-inner" id="score_badge_box">
                       <div className="text-3xl font-extrabold text-slate-100 font-mono" id="score_digits">{quizScore} / {activeQuestions.length}</div>
                       <div className={`text-xs font-mono font-bold uppercase mt-1 tracking-wider ${quizScore >= (activeQuestions.length * 0.8) ? "text-cyan-400" : "text-rose-400"}`} id="score_status">
-                        {quizScore >= (activeQuestions.length * 0.8) ? "IDONEITÀ CONSEGUITA" : "REMEDIATION NECESSARIA (FALLITO)"}
+                        {quizScore >= (activeQuestions.length * 0.8) ? t("quiz.passed") : t("quiz.failed")}
                       </div>
                     </div>
                   </div>
@@ -1772,9 +1845,9 @@ export default function App() {
                       <div className="flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 text-rose-400 mt-0.5 flex-shrink-0" />
                         <div className="space-y-1">
-                          <h4 className="text-sm font-bold text-rose-400 font-mono" id="remediation_title">ANALISI DELLE DEBOLEZZE</h4>
+                          <h4 className="text-sm font-bold text-rose-400 font-mono" id="remediation_title">{t("quiz.weaknessAnalysis")}</h4>
                           <p className="text-xs text-slate-400 leading-relaxed" id="remediation_desc">
-                            Non hai raggiunto la soglia di sbarramento (80%). Il sistema ha tracciato gli errori commessi e ha isolato le tue aree di vulnerabilità teoriche:
+                            {t("quiz.weaknessDesc")}
                           </p>
                         </div>
                       </div>
@@ -1789,7 +1862,7 @@ export default function App() {
 
                       <div className="pt-2 border-t border-slate-800 flex justify-between items-center gap-4" id="remediation_actions">
                         <p className="text-xs text-slate-400 max-w-[340px]">
-                          Il Trainer AI può generare al volo un <strong>Quiz Adattivo di 3 domande di livello ANALISI (Difficilissime)</strong> su questi esatti argomenti.
+                          {t("quiz.remediationOffer")}
                         </p>
                         <button 
                           id="trigger_remediation_btn"
@@ -1800,12 +1873,12 @@ export default function App() {
                           {isGeneratingRemediation ? (
                             <>
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                              Generazione...
+                              {t("quiz.generating")}
                             </>
                           ) : (
                             <>
                               <Sparkles className="w-3.5 h-3.5" />
-                              Avvia Recupero Adattivo
+                              {t("quiz.startAdaptive")}
                             </>
                           )}
                         </button>
@@ -1820,9 +1893,9 @@ export default function App() {
                     <div className="bg-cyan-950/20 border border-cyan-900/50 p-5 rounded flex gap-3 shadow-md" id="passed_box">
                       <Award className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                       <div className="space-y-1">
-                        <h4 className="text-sm font-bold text-cyan-400 font-mono" id="passed_title">ECCELLENTE PREPARAZIONE!</h4>
+                        <h4 className="text-sm font-bold text-cyan-400 font-mono" id="passed_title">{t("quiz.excellentTitle")}</h4>
                         <p className="text-xs text-slate-300 leading-relaxed" id="passed_desc">
-                          Hai superato brillantemente lo sbarramento. Dimostri una conoscenza di livello professionale sulla governance, le politiche di rischio e la conformità di terze parti. Continua così!
+                          {t("quiz.excellentDesc")}
                         </p>
                       </div>
                     </div>
@@ -1834,14 +1907,14 @@ export default function App() {
                       onClick={handleStartQuiz}
                       className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-5 py-2.5 rounded text-sm transition-all"
                     >
-                      Ripeti Test Principale
+                      {t("quiz.repeatMain")}
                     </button>
                     <button 
                       id="back_to_studio_btn"
                       onClick={() => setActiveTab("studio")}
                       className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded text-sm transition-all shadow-md shadow-cyan-600/15"
                     >
-                      Ritorna allo Studio
+                      {t("quiz.backToStudio")}
                     </button>
                   </div>
                 </div>
@@ -1854,16 +1927,16 @@ export default function App() {
                       <Award className="w-8 h-8" />
                     </div>
                     <div className="space-y-2">
-                      <h2 className="text-xl font-bold text-slate-100" id="remediation_ended_title">Sessione di Recupero Completata</h2>
+                      <h2 className="text-xl font-bold text-slate-100" id="remediation_ended_title">{t("rem.completedTitle")}</h2>
                       <p className="text-sm text-slate-400 max-w-md mx-auto">
-                        Hai completato le 3 domande adattive generate al volo sull'analisi dei tuoi punti deboli.
+                        {t("rem.completedDesc")}
                       </p>
                     </div>
 
                     <div className="inline-block bg-slate-950 px-6 py-4 rounded border border-slate-800" id="remediation_score_box">
                       <div className="text-2xl font-extrabold text-slate-100 font-mono" id="remediation_score_digits">{remediationScore} / 3</div>
                       <div className="text-xs font-mono font-bold text-rose-300 mt-1 uppercase tracking-wider" id="remediation_score_status">
-                        RECUPERO ADATTIVO (LIVELLO ANALISI)
+                        {t("rem.adaptiveLevel")}
                       </div>
                     </div>
 
@@ -1874,7 +1947,7 @@ export default function App() {
                         className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-5 py-2.5 rounded text-sm transition-all flex items-center gap-1"
                       >
                         <RefreshCw className="w-4 h-4" />
-                        Rigenera Domande Nuove
+                        {t("rem.regenerate")}
                       </button>
                       <button 
                         id="remediation_end_btn"
@@ -1884,7 +1957,7 @@ export default function App() {
                         }}
                         className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded text-sm transition-all"
                       >
-                        Vedi Risultato Principale
+                        {t("rem.seeMainResult")}
                       </button>
                     </div>
                   </div>
@@ -1892,13 +1965,13 @@ export default function App() {
                   /* Remediation Question Active */
                   <div className="space-y-6" id="remediation_question_screen">
                     <div className="flex justify-between items-center text-xs font-mono text-rose-400 pb-2 border-b border-slate-800" id="remediation_q_header">
-                      <span>RECUPERO ADATTIVO · LIVELLO: {remediationQuestions[remediationIndex].level}</span>
-                      <span>DOMANDA {remediationIndex + 1} DI {remediationQuestions.length}</span>
+                      <span>{t("rem.headerLevel", { level: levelLabel(remediationQuestions[remediationIndex].level) })}</span>
+                      <span>{t("rem.questionOf", { i: remediationIndex + 1, n: remediationQuestions.length })}</span>
                     </div>
 
                     {/* Scenario card */}
                     <div className="bg-slate-950/80 p-4 border-l-2 border-rose-500 rounded-r space-y-2" id="remediation_scenario_box">
-                      <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded uppercase font-semibold">Scenario Tecnico di Analisi</span>
+                      <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("rem.analysisScenario")}</span>
                       <p className="text-xs text-slate-400 leading-relaxed italic">{remediationQuestions[remediationIndex].scenario}</p>
                     </div>
 
@@ -1945,9 +2018,9 @@ export default function App() {
                         <div className={`p-4 rounded border ${remediationSelected === remediationQuestions[remediationIndex].answerIndex ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="remediation_feedback_details">
                           <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
                             {remediationSelected === remediationQuestions[remediationIndex].answerIndex ? (
-                              <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">BEST CHOICE SELEZIONATA</span></>
+                              <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                             ) : (
-                              <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">DISTRATTORE RILEVATO</span></>
+                              <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
                             )}
                           </h4>
                           <div className="text-xs text-slate-400 leading-relaxed">
@@ -1960,7 +2033,7 @@ export default function App() {
                           onClick={handleRemediationNext}
                           className="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded hover:bg-rose-500 transition-all text-xs flex items-center justify-center gap-1"
                         >
-                          <span>{remediationIndex === remediationQuestions.length - 1 ? "Vedi Esito Recupero" : "Prossima Domanda di Recupero"}</span>
+                          <span>{remediationIndex === remediationQuestions.length - 1 ? t("rem.seeOutcome") : t("rem.nextQuestion")}</span>
                           <ChevronRight className="w-4 h-4 stroke-[3]" />
                         </button>
                       </div>
@@ -1971,7 +2044,7 @@ export default function App() {
                         disabled={remediationSelected === null}
                         className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
                       >
-                        Conferma Risposta
+                        {t("quiz.confirmAnswer")}
                       </button>
                     )}
                   </div>
@@ -1984,7 +2057,7 @@ export default function App() {
                   <div className="space-y-2" id="quiz_progress_container">
                     <div className="flex justify-between items-center text-xs font-mono text-slate-400" id="quiz_progress_text">
                       <span className="text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded text-[10px] uppercase font-bold">{activeQuestions[currentQuestionIndex].topic}</span>
-                      <span>LIVELLO: <strong className="text-cyan-400">{activeQuestions[currentQuestionIndex].level}</strong> · {currentQuestionIndex + 1} DI {activeQuestions.length}</span>
+                      <span>{t("quiz.level")} <strong className="text-cyan-400">{levelLabel(activeQuestions[currentQuestionIndex].level)}</strong> · {t("quiz.questionCounter", { i: currentQuestionIndex + 1, n: activeQuestions.length })}</span>
                     </div>
                     {/* Progress Bar */}
                     <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden" id="quiz_bar">
@@ -1998,7 +2071,7 @@ export default function App() {
 
                   {/* Scenario box */}
                   <div className="bg-slate-950/80 p-4 border-l-2 border-cyan-500 rounded-r space-y-2" id="quiz_scenario_box">
-                    <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase font-semibold">Scenario Aziendale</span>
+                    <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("quiz.businessScenario")}</span>
                     <p className="text-xs text-slate-400 leading-relaxed italic">{activeQuestions[currentQuestionIndex].scenario}</p>
                   </div>
 
@@ -2045,9 +2118,9 @@ export default function App() {
                       <div className={`p-4 rounded border ${selectedOption === activeQuestions[currentQuestionIndex].answerIndex ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="quiz_feedback_details">
                         <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
                           {selectedOption === activeQuestions[currentQuestionIndex].answerIndex ? (
-                            <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">BEST CHOICE SELEZIONATA</span></>
+                            <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                           ) : (
-                            <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">DISTRATTORE RILEVATO</span></>
+                            <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
                           )}
                         </h4>
                         <div className="text-xs text-slate-400 leading-relaxed">
@@ -2060,7 +2133,7 @@ export default function App() {
                         onClick={handleNextQuestion}
                         className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all text-xs flex items-center justify-center gap-1"
                       >
-                        <span>{currentQuestionIndex === activeQuestions.length - 1 ? "Concludi Esame" : "Prossima Domanda"}</span>
+                        <span>{currentQuestionIndex === activeQuestions.length - 1 ? t("quiz.finishExam") : t("quiz.nextQuestion")}</span>
                         <ChevronRight className="w-4 h-4 stroke-[3]" />
                       </button>
                     </div>
@@ -2071,7 +2144,7 @@ export default function App() {
                       disabled={selectedOption === null}
                       className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
                     >
-                      Conferma Risposta
+                      {t("quiz.confirmAnswer")}
                     </button>
                   )}
 
@@ -2109,7 +2182,7 @@ export default function App() {
                   <div className="bg-cyan-500/10 p-1.5 rounded text-cyan-400" id="sidebar_header_icon">
                     <Sparkles className="w-4 h-4" />
                   </div>
-                  <h3 className="font-bold text-xs font-mono text-cyan-400 tracking-wider uppercase">ASSISTENTE AI TRAINER</h3>
+                  <h3 className="font-bold text-xs font-mono text-cyan-400 tracking-wider uppercase">{t("chat.title")}</h3>
                 </div>
                 <button 
                   id="close_sidebar_icon_btn"
@@ -2152,7 +2225,7 @@ export default function App() {
                   <div className="flex justify-start" id="chat_loading_indicator">
                     <div className="bg-slate-950 border border-slate-800 rounded p-3 flex items-center gap-2" id="chat_loading_bubble">
                       <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin" />
-                      <span className="text-xs text-slate-400 font-mono">Il Trainer sta elaborando...</span>
+                      <span className="text-xs text-slate-400 font-mono">{t("chat.processing")}</span>
                     </div>
                   </div>
                 )}
@@ -2161,49 +2234,49 @@ export default function App() {
 
               {/* Suggested chips based on context */}
               <div className="px-3 py-2 border-t border-slate-800/60 bg-slate-950/40" id="suggested_chips_box">
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-1.5 pl-1">Chiedi al Trainer:</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-1.5 pl-1">{t("chat.askTrainer")}</span>
                 <div className="flex flex-wrap gap-1.5" id="suggested_chips_list">
                   <button 
                     id="chip_threats"
-                    onClick={() => handleSendChat("Quali sono le principali categorie di Threat Actors (Nation-State, Hacktivist, Insider) e le loro motivazioni secondo il syllabus di Domain 2?")}
+                    onClick={() => handleSendChat(t("chat.chipThreatsPrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    Attori delle Minacce (Dom 2)
+                    {t("chat.chipThreats")}
                   </button>
                   <button 
                     id="chip_edr"
-                    onClick={() => handleSendChat("Qual è la differenza tra EDR, MDR e un Antivirus tradizionale basato su firme nel Dominio 2?")}
+                    onClick={() => handleSendChat(t("chat.chipEdrPrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    EDR vs Antivirus (Dom 2)
+                    {t("chat.chipEdr")}
                   </button>
                   <button 
                     id="chip_rto"
-                    onClick={() => handleSendChat("Spiegami la differenza e gli impatti aziendali tra RTO, RPO e MTD con un esempio pratico.")}
+                    onClick={() => handleSendChat(t("chat.chipRtoPrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    RTO vs RPO vs MTD
+                    {t("chat.chipRto")}
                   </button>
                   <button 
                     id="chip_sle"
-                    onClick={() => handleSendChat("Come si calcolano SLE, ALE e ARO? Dammi un problema d'esame numerico da risolvere per esercitarmi.")}
+                    onClick={() => handleSendChat(t("chat.chipSlePrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    Calcolo Rischio SLE/ALE
+                    {t("chat.chipSle")}
                   </button>
                   <button 
                     id="chip_due"
-                    onClick={() => handleSendChat("Qual è la differenza fondamentale tra Due Diligence e Due Care secondo CompTIA? Fammi degli esempi pratici.")}
+                    onClick={() => handleSendChat(t("chat.chipDuePrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    Due Care vs Due Diligence
+                    {t("chat.chipDue")}
                   </button>
                   <button 
                     id="chip_agreements"
-                    onClick={() => handleSendChat("Fornisci un riepilogo delle differenze tra SLA, MOU, BPA, MOA, SOW e BAA.")}
+                    onClick={() => handleSendChat(t("chat.chipAgreementsPrompt"))}
                     className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
                   >
-                    Confronto Accordi
+                    {t("chat.chipAgreements")}
                   </button>
                 </div>
               </div>
@@ -2224,7 +2297,7 @@ export default function App() {
                     value={chatInput}
                     disabled={isChatLoading}
                     onChange={(e) => setChatInput(e.target.value)}
-                    placeholder="Chiedi spiegazioni o scenari..."
+                    placeholder={t("chat.placeholder")}
                     className="flex-1 bg-slate-900 border border-slate-800 focus:border-cyan-500/50 rounded px-3 py-2 text-xs outline-none text-slate-100 placeholder-slate-500 transition-colors"
                   />
                   <button 
@@ -2249,8 +2322,8 @@ export default function App() {
               {/* Header */}
               <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950" id="new_questions_modal_header">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-100">Banca Dati: 10 Nuove Domande Tradotte (Dominio 1)</h3>
-                  <p className="text-[10px] text-slate-400">Scenari reali e spiegazioni dettagliate d'esame in italiano (CompTIA Security+ SY0-701)</p>
+                  <h3 className="text-sm font-bold text-slate-100">{t("modal.title")}</h3>
+                  <p className="text-[10px] text-slate-400">{t("modal.subtitle")}</p>
                 </div>
                 <button
                   type="button"
@@ -2266,11 +2339,11 @@ export default function App() {
                 {DOMAIN_1_QUESTIONS.filter(q => q.id >= 141 && q.id <= 150).map((q, idx) => (
                   <div key={q.id} className="p-4 bg-slate-950/40 border border-slate-800/80 rounded-lg space-y-3" id={`modal_q_${q.id}`}>
                     <div className="flex items-center justify-between gap-2 border-b border-slate-800/60 pb-1.5">
-                      <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase">Domanda {idx + 1} (CompTIA ID: {q.id})</span>
-                      <span className="text-[10px] font-mono text-slate-500">Argomento: {q.topic}</span>
+                      <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase">{t("modal.questionN", { i: idx + 1, id: q.id })}</span>
+                      <span className="text-[10px] font-mono text-slate-500">{t("modal.topic", { topic: q.topic })}</span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs text-slate-450 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>Scenario:</strong> {q.scenario}</p>
+                      <p className="text-xs text-slate-450 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
                       <p className="text-xs font-semibold text-slate-200">{q.question}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
@@ -2284,7 +2357,7 @@ export default function App() {
                       ))}
                     </div>
                     <div className="text-[11px] bg-slate-950/80 p-3 rounded border border-slate-800/60 text-slate-300 leading-relaxed space-y-1">
-                      <strong className="text-cyan-400 block text-xs">Spiegazione Dettagliata:</strong>
+                      <strong className="text-cyan-400 block text-xs">{t("modal.detailedExplanation")}</strong>
                       <div className="whitespace-pre-line text-slate-400">{q.explanation}</div>
                     </div>
                   </div>
@@ -2298,7 +2371,7 @@ export default function App() {
                   onClick={() => setShowNewQuestionsModal(false)}
                   className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-semibold transition-colors"
                 >
-                  Chiudi
+                  {t("modal.close")}
                 </button>
                 <button
                   type="button"
@@ -2319,7 +2392,7 @@ export default function App() {
                   }}
                   className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition-colors shadow-md shadow-cyan-600/10"
                 >
-                  Avvia Test Diretto
+                  {t("modal.startDirect")}
                 </button>
               </div>
             </div>

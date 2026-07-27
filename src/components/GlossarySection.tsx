@@ -20,14 +20,9 @@ import {
   SlidersHorizontal,
   CheckCircle2
 } from "lucide-react";
-import { 
-  DOMAIN_1_TOPICS, 
-  DOMAIN_2_TOPICS, 
-  DOMAIN_3_TOPICS, 
-  DOMAIN_4_TOPICS, 
-  DOMAIN_5_TOPICS 
-} from "../data";
+import { getDomainTopics } from "../localizedData";
 import { TopicGroup, Subtopic } from "../types";
+import { useLang, translate, type Lang, type UIKey } from "../i18n";
 
 export interface GlossaryTerm {
   id: string;
@@ -152,14 +147,24 @@ function checkIfAcronym(term: string): boolean {
   return false;
 }
 
-// Build unified glossary dataset
-function buildGlossaryDataset(): GlossaryTerm[] {
+// Maps the canonical (Italian) category identifier to its UI translation key.
+const CATEGORY_LABEL_KEY: Record<string, UIKey> = {
+  "Acronimi & Protocolli": "cat.acronyms",
+  "Concetti Cardine": "cat.core",
+  "Controlli & Architetture": "cat.controls",
+  "Attacchi & Minacce": "cat.attacks",
+  "Metriche & Formule": "cat.metrics",
+  "Governance & Normative": "cat.governance",
+};
+
+// Build unified glossary dataset for the given language.
+function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
   const domains: { id: 1 | 2 | 3 | 4 | 5; groups: TopicGroup[] }[] = [
-    { id: 1, groups: DOMAIN_1_TOPICS },
-    { id: 2, groups: DOMAIN_2_TOPICS },
-    { id: 3, groups: DOMAIN_3_TOPICS },
-    { id: 4, groups: DOMAIN_4_TOPICS },
-    { id: 5, groups: DOMAIN_5_TOPICS },
+    { id: 1, groups: getDomainTopics(1, lang) },
+    { id: 2, groups: getDomainTopics(2, lang) },
+    { id: 3, groups: getDomainTopics(3, lang) },
+    { id: 4, groups: getDomainTopics(4, lang) },
+    { id: 5, groups: getDomainTopics(5, lang) },
   ];
 
   const termsMap = new Map<string, GlossaryTerm>();
@@ -181,8 +186,8 @@ function buildGlossaryDataset(): GlossaryTerm[] {
             details: sub.details,
             examTip: sub.examTip,
             domainId: id,
-            domainName: DOMAIN_INFO[id].title,
-            domainShort: DOMAIN_INFO[id].short,
+            domainName: translate(lang, `glossDom.${id}.title` as UIKey),
+            domainShort: translate(lang, `glossDom.${id}.short` as UIKey),
             groupTitle: group.title,
             category: cat,
             isAcronym: isAcr,
@@ -194,7 +199,7 @@ function buildGlossaryDataset(): GlossaryTerm[] {
     });
   });
 
-  return Array.from(termsMap.values()).sort((a, b) => a.term.localeCompare(b.term, "it", { sensitivity: "base" }));
+  return Array.from(termsMap.values()).sort((a, b) => a.term.localeCompare(b.term, lang, { sensitivity: "base" }));
 }
 
 interface GlossarySectionProps {
@@ -202,7 +207,14 @@ interface GlossarySectionProps {
 }
 
 export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => {
-  const allTerms = useMemo(() => buildGlossaryDataset(), []);
+  const { lang, t } = useLang();
+  const allTerms = useMemo(() => buildGlossaryDataset(lang), [lang]);
+
+  // Localized label for a (canonical, Italian) category identifier.
+  const catLabel = (cat: string): string => {
+    const key = CATEGORY_LABEL_KEY[cat];
+    return key ? t(key) : cat;
+  };
 
   // Filter States
   const [searchTerm, setSearchTerm] = useState("");
@@ -244,7 +256,13 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
   const handleCopyTerm = (term: GlossaryTerm, e: React.MouseEvent) => {
     e.stopPropagation();
-    const textToCopy = `${term.term} (${term.domainShort})\nDefinizione: ${term.definition}\n${term.examTip ? `Suggerimento d'Esame: ${term.examTip}` : ""}`;
+    const tip = term.examTip ? t("gloss.copyTip", { tip: term.examTip }) : "";
+    const textToCopy = t("gloss.copyTemplate", {
+      term: term.term,
+      domain: term.domainShort,
+      definition: term.definition,
+      tip,
+    });
     navigator.clipboard.writeText(textToCopy);
     setCopiedTermId(term.id);
     setTimeout(() => setCopiedTermId(null), 2000);
@@ -253,7 +271,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
   const handleAskAIAboutTerm = (term: GlossaryTerm, e: React.MouseEvent) => {
     e.stopPropagation();
     if (onAskAI) {
-      onAskAI(`Spiegami in dettaglio per l'esame CompTIA Security+ SY0-701 il termine: "${term.term}". Contestualizzalo nel ${term.domainShort} ed evidenzia gli aspetti chiave per risolvere le domande d'esame.`);
+      onAskAI(t("gloss.askAIPrompt", { term: term.term, domain: term.domainShort }));
     }
   };
 
@@ -320,17 +338,17 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5" />
-                  Glossario Ufficiale SY0-701
+                  {t("gloss.badge")}
                 </span>
                 <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-                  {allTerms.length} Termini & Acronimi
+                  {t("gloss.termsCount", { n: allTerms.length })}
                 </span>
               </div>
               <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-                Glossario & Dizionario di Cybersecurity
+                {t("gloss.heroTitle")}
               </h2>
               <p className="text-xs md:text-sm text-slate-400 mt-1 max-w-3xl">
-                Consulta definizioni dettagliate, acronimi ufficiali, protocolli e consigli d'esame per padroneggiare tutti i concetti chiave richiesti dalla certificazione CompTIA Security+.
+                {t("gloss.heroSubtitle")}
               </p>
             </div>
 
@@ -340,8 +358,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 <BookmarkCheck className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs text-slate-400">Termini Salvati</div>
-                <div className="text-base font-bold text-white">{bookmarkedIds.length} <span className="text-xs font-normal text-slate-500">nei preferiti</span></div>
+                <div className="text-xs text-slate-400">{t("gloss.savedTerms")}</div>
+                <div className="text-base font-bold text-white">{bookmarkedIds.length} <span className="text-xs font-normal text-slate-500">{t("gloss.inBookmarks")}</span></div>
               </div>
             </div>
           </div>
@@ -354,7 +372,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Cerca acronimo, termine, protocollo o formula (es. SIEM, Zero Trust, ALE, AES, MFA)..."
+                placeholder={t("gloss.searchPlaceholder")}
                 className="w-full bg-slate-950/80 border border-slate-700/80 focus:border-cyan-500 text-slate-100 placeholder-slate-500 text-sm pl-11 pr-10 py-3.5 rounded-lg shadow-inner focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
                 id="glossary_search_input"
               />
@@ -362,7 +380,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 <button
                   onClick={() => setSearchTerm("")}
                   className="absolute right-3.5 p-1 text-slate-400 hover:text-white rounded-md hover:bg-slate-800 transition-colors"
-                  title="Pulisci ricerca"
+                  title={t("gloss.clearSearch")}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -370,16 +388,14 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             </div>
             
             <div className="flex items-center justify-between text-xs text-slate-400 mt-2 px-1">
-              <span>
-                Mostrando <strong className="text-cyan-400">{filteredTerms.length}</strong> di {allTerms.length} termini
-              </span>
+              <span>{t("gloss.showingOf", { shown: filteredTerms.length, total: allTerms.length })}</span>
               {(searchTerm || selectedDomain !== "ALL" || selectedCategory !== "ALL" || selectedLetter !== "ALL" || onlyExamTips || onlyAcronyms || onlyBookmarks) && (
                 <button
                   onClick={resetFilters}
                   className="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1 transition-colors"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  Ripristina Filtri
+                  {t("gloss.resetFilters")}
                 </button>
               )}
             </div>
@@ -393,7 +409,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
           <div>
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-cyan-400" />
-              Filtra per Dominio CompTIA
+              {t("gloss.filterByDomain")}
             </div>
             <div className="flex flex-wrap gap-2">
               <button
@@ -404,7 +420,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                     : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/50"
                 }`}
               >
-                Tutti i Domini ({allTerms.length})
+                {t("gloss.allDomains", { n: allTerms.length })}
               </button>
 
               {[1, 2, 3, 4, 5].map((domNum) => {
@@ -434,7 +450,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
           <div>
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-purple-400" />
-              Filtra per Categoria
+              {t("gloss.filterByCategory")}
             </div>
             <div className="flex flex-wrap gap-2">
               <button
@@ -445,7 +461,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                     : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/50"
                 }`}
               >
-                Tutte le Categorie
+                {t("gloss.allCategories")}
               </button>
 
               {Object.keys(CATEGORY_COLORS).map((catName) => {
@@ -463,7 +479,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                         : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 border-slate-700/50"
                     }`}
                   >
-                    <span>{catName}</span>
+                    <span>{catLabel(catName)}</span>
                     <span className="text-[10px] opacity-75">({count})</span>
                   </button>
                 );
@@ -476,7 +492,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             
             {/* Alphabet Bar */}
             <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 max-w-full">
-              <span className="text-xs font-semibold text-slate-500 mr-1 shrink-0">Indice A-Z:</span>
+              <span className="text-xs font-semibold text-slate-500 mr-1 shrink-0">{t("gloss.azIndex")}</span>
               {availableLetters.map((letter) => {
                 const isSelected = selectedLetter === letter;
                 return (
@@ -506,7 +522,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 }`}
               >
                 <GraduationCap className="w-3.5 h-3.5 text-amber-400" />
-                <span>Consigli d'Esame</span>
+                <span>{t("gloss.examTipsToggle")}</span>
               </button>
 
               <button
@@ -518,7 +534,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 }`}
               >
                 <Tag className="w-3.5 h-3.5 text-purple-400" />
-                <span>Solo Acronimi</span>
+                <span>{t("gloss.onlyAcronyms")}</span>
               </button>
 
               <button
@@ -530,7 +546,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 }`}
               >
                 <BookmarkCheck className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Salvati ({bookmarkedIds.length})</span>
+                <span>{t("gloss.savedToggle", { n: bookmarkedIds.length })}</span>
               </button>
             </div>
 
@@ -544,15 +560,15 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             <div className="w-12 h-12 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto text-slate-500 mb-3">
               <Search className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-200">Nessun termine trovato</h3>
+            <h3 className="text-lg font-bold text-slate-200">{t("gloss.noTermsTitle")}</h3>
             <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Nessun termine o acronimo soddisfa i filtri o la ricerca corrente ("{searchTerm}").
+              {t("gloss.noTermsDesc", { query: searchTerm })}
             </p>
             <button
               onClick={resetFilters}
               className="mt-4 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-all shadow-md shadow-cyan-600/20"
             >
-              Ripristina Tutti i Filtri
+              {t("gloss.resetAll")}
             </button>
           </div>
         ) : (
@@ -583,13 +599,13 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
                         {/* Category Badge */}
                         <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase border ${catStyle.badge}`}>
-                          {item.category}
+                          {catLabel(item.category)}
                         </span>
 
                         {/* Acronym Pill */}
                         {item.isAcronym && (
                           <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-950 text-purple-300 border border-purple-800/80">
-                            ACRONIMO
+                            {t("gloss.acronym")}
                           </span>
                         )}
                       </div>
@@ -602,8 +618,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                             ? "bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30" 
                             : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
                         }`}
-                        title={isBookmarked ? "Rimuovi dai preferiti" : "Salva nei preferiti"}
-                        aria-label="Segnalibro"
+                        title={isBookmarked ? t("gloss.removeBookmark") : t("gloss.addBookmark")}
+                        aria-label={isBookmarked ? t("gloss.removeBookmark") : t("gloss.addBookmark")}
                       >
                         <Bookmark className={`w-4 h-4 ${isBookmarked ? "fill-cyan-400" : ""}`} />
                       </button>
@@ -615,7 +631,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                     </h3>
 
                     <div className="text-[11px] text-slate-500 font-medium mt-0.5 mb-2">
-                      Gruppo: {item.groupTitle}
+                      {t("gloss.group", { title: item.groupTitle })}
                     </div>
 
                     {/* SHORT DEFINITION */}
@@ -627,7 +643,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                     {isExpanded && (
                       <div className="mt-3 text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-3 animate-fade-in">
                         <div className="font-semibold text-slate-200 text-[11px] uppercase tracking-wider text-cyan-400">
-                          Dettagli & Funzionamento:
+                          {t("gloss.detailsHeading")}
                         </div>
                         <div className="text-slate-300 whitespace-pre-line leading-relaxed text-[11px] bg-slate-950/40 p-2.5 rounded border border-slate-800/40">
                           {item.details}
@@ -635,7 +651,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
                         {item.keyFormulas && item.keyFormulas.length > 0 && (
                           <div className="bg-emerald-950/30 border border-emerald-500/30 p-2.5 rounded text-[11px] text-emerald-300 space-y-1">
-                            <span className="font-bold text-emerald-400">Formule Chiave:</span>
+                            <span className="font-bold text-emerald-400">{t("gloss.keyFormulasShort")}</span>
                             {item.keyFormulas.map((f, idx) => (
                               <div key={idx} className="font-mono text-[10px] bg-slate-950/80 p-1 rounded border border-emerald-500/20">
                                 {f}
@@ -651,7 +667,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                       <div className="mt-3 bg-amber-950/20 border border-amber-500/20 rounded-lg p-2.5 text-[11px] text-amber-300/90 flex items-start gap-2">
                         <GraduationCap className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-amber-400 font-semibold block text-[10px] uppercase tracking-wider">Exam Tip SY0-701:</strong>
+                          <strong className="text-amber-400 font-semibold block text-[10px] uppercase tracking-wider">{t("gloss.examTipShort")}</strong>
                           <span>{item.examTip}</span>
                         </div>
                       </div>
@@ -666,12 +682,12 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                     >
                       {isExpanded ? (
                         <>
-                          <span>Riduci</span>
+                          <span>{t("gloss.reduce")}</span>
                           <ChevronUp className="w-3.5 h-3.5" />
                         </>
                       ) : (
                         <>
-                          <span>Mostra Dettagli</span>
+                          <span>{t("gloss.showDetails")}</span>
                           <ChevronDown className="w-3.5 h-3.5" />
                         </>
                       )}
@@ -681,20 +697,20 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                       <button
                         onClick={(e) => handleCopyTerm(item, e)}
                         className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1 text-[11px]"
-                        title="Copia definizione"
+                        title={t("gloss.copyDefinition")}
                       >
                         {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{isCopied ? "Copiato!" : "Copia"}</span>
+                        <span>{isCopied ? t("gloss.copied") : t("gloss.copy")}</span>
                       </button>
 
                       {onAskAI && (
                         <button
                           onClick={(e) => handleAskAIAboutTerm(item, e)}
                           className="p-1.5 rounded text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors flex items-center gap-1 text-[11px] font-medium"
-                          title="Chiedi spiegazioni all'AI Trainer"
+                          title={t("gloss.askAITitle")}
                         >
                           <MessageSquare className="w-3.5 h-3.5" />
-                          <span>Chiedi AI</span>
+                          <span>{t("gloss.askAI")}</span>
                         </button>
                       )}
                     </div>
