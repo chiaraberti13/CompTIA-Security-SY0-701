@@ -2096,6 +2096,78 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Generators represent the fundamental resource for long-term energy resilience. Because they require 1 to 3 minutes to start, warm up and stabilize the electrical supply, they are always paired with UPS systems (which cover the immediate battery interruption). They must be tested periodically under real load and supported by priority fuel-supply contracts.",
     examTip: "While the UPS provides short-term, instant-switching battery power, the Generator guarantees the supply of long-term electrical energy (days or weeks) during prolonged emergencies.",
   },
+  IoTConcept_New: {
+    name: "IoT",
+    definition: "Internet of Things: the global network of physical devices (such as appliances, sensors, cameras) connected to the Internet, able to collect and process data.",
+    details: "IoT devices often lack traditional security controls (e.g. antivirus, monitoring agents) and use known default credentials, making logical network segmentation (isolated VLANs) and disabling UPnP imperative.",
+    examTip: "On the exam, network segmentation (a dedicated isolated VLAN) is the primary compensating countermeasure to protect IoT devices that cannot host antivirus.",
+  },
+  EmbeddedSystemConcept_New: {
+    name: "Embedded System",
+    definition: "Embedded System: a computer system integrated with dedicated, hard-coded firmware designed to perform specific, repetitive tasks within a larger system.",
+    details: "Examples include automotive microcontrollers, medical pacemakers and smart printers. They present a high risk of firmware vulnerabilities because it is impossible or very difficult to apply corrective patches over time.",
+    examTip: "Embedded systems carry the intrinsic risk that timely security patches are impossible or extremely difficult to apply because the software is embedded in the firmware.",
+  },
+  RTOSConcept_New: {
+    name: "RTOS",
+    definition: "Real-Time Operating System: a specialized, lightweight operating system designed to process and execute control tasks under strict, deterministic timing requirements (with no tolerance for delay).",
+    details: "Used in critical industrial systems, drones and medical devices. Because they prioritize timing immediacy, they often lack advanced memory protections (ASLR, Stack Canaries), introducing vulnerability to attacks such as buffer overflow.",
+    examTip: "An RTOS prioritizes strict, deterministic response times over heavy security controls; this can expose it more to Buffer Overflow vulnerabilities.",
+  },
+  SCADAConcept_New: {
+    name: "SCADA",
+    definition: "Supervisory Control and Data Acquisition: an industrial control systems (ICS) architecture that monitors and controls physical processes and critical infrastructure across a wide geographic scale.",
+    details: "Used for power grids, water systems and pipelines. It relies on a central monitoring system that communicates with peripheral devices through industrial protocols (often unencrypted and legacy) such as Modbus, requiring strong perimeter isolation.",
+    examTip: "SCADA focuses on high-level geographic supervision of physical processes and requires rigorous isolation and encryption of communications to avoid catastrophic attacks.",
+  },
+  ICSConcept_New: {
+    name: "ICS",
+    definition: "Industrial Control Systems: a collective term encompassing several types of control systems and associated instrumentation (including SCADA and PLCs) used to manage local and factory industrial processes.",
+    details: "The security of ICS systems (Operational Technology - OT) differs from standard IT because the absolute priority is human safety and the physical integrity of the plant, followed by continuous service availability, leaving confidentiality last.",
+    examTip: "In ICS (OT) security, physical safety and continuous service availability clearly prevail over data confidentiality.",
+  },
+  VPNPBQ: {
+    name: "VPN Configuration",
+    definition: "Practical scenario on choosing and implementing the most suitable VPN protocol based on business needs.",
+    details: "In VPN PBQ exam labs you will need to:\n* **Match the correct protocol:**\n  - Use **IPSec (ESP in Tunnel Mode)** to interconnect two entire sites in a stable, permanent way (Site-to-Site VPN).\n  - Use **TLS (HTTPS/SSTP)** or **L2TP/IPSec** to connect individual remote users (Client-to-Site VPN), allowing the use of web browsers (Clientless) or client apps.\n* **Configure the tunnel mode:** Choose *Full Tunneling* to enforce corporate security on all traffic, or *Split Tunneling* to optimize bandwidth for user video conferencing.\n\n* **Small Focused Example:** A company has its headquarters in Rome and a branch in Milan. The network designer configures a permanent **Site-to-Site VPN** based on **IPSec** between the two border routers in *Tunnel Mode* (full encryption of headers and data). For employees working from home, they instead enable a **Client-to-Site VPN** based on **TLS**, accessible via browser.",
+    examTip: "In PBQs, if you are connecting two physical sites (HQ and Branch), always select IPSec and configure the routers/gateways at both ends of the tunnel.",
+  },
+  FirewallRulesPBQ: {
+    name: "Firewall Rules",
+    definition: "PBQ scenario on the configuration and optimal ordering of a corporate firewall's rules.",
+    details: "Key concepts to apply in the labs:\n* **Implicit Deny rule:** Every firewall must end with an implicit total-block rule (`Deny All` or `Drop All`) for all traffic not explicitly authorized.\n* **Rule Ordering:** The firewall processes rules top-down. More specific rules (e.g. allowing a single port from a single source IP) must be placed **above** more generic rules to prevent a generic block or allow rule from overriding later ones.\n* **DMZ Setup:** Isolate public servers (web, mail) in a DMZ, forbidding direct connections from the DMZ to the protected internal LAN.\n\n* **Small Focused Example:** An administrator configures the corporate firewall by placing the specific rule `Allow TCP 443 from internal-LAN to Web-Server-IP` at the top. Below it, they insert less specific rules and, finally, place the implicit **Implicit Deny** rule (`Deny Any Any`) at the bottom of the list to block any other traffic not explicitly authorized.",
+    examTip: "In a firewall PBQ, always order rules from most specific (at the top) to generic (at the bottom), placing the 'Deny Any' rule at the end.",
+  },
+  SSHPBQ: {
+    name: "SSH",
+    definition: "PBQ scenario on hardening remote administration connections and configuring asymmetric SSH keys.",
+    details: "Practical actions required in the exam:\n* **Key generation:** Generate a key pair on the client and place the public key in the remote server's `authorized_keys` file.\n* **Hardening configuration (`sshd_config`):**\n  - Disable ordinary password authentication (`PasswordAuthentication no`).\n  - Disable root user login (`PermitRootLogin no`).\n  - Change the standard TCP port 22 to a non-standard port to mitigate automated scanning attacks.\n\n* **Small Focused Example:** To protect a Linux server exposed on the Internet, the administrator edits `/etc/ssh/sshd_config`: sets `PasswordAuthentication no` to force the use of public/private cryptographic keys, sets `PermitRootLogin no` to forbid direct root login, and moves the service from standard port 22 to TCP port 2222 to avoid automated bot attacks.",
+    examTip: "To make SSH 100% secure, the key countermeasure is to completely disable passwords and enforce public/private cryptographic keys exclusively.",
+  },
+  WPA3PBQ: {
+    name: "WPA3",
+    definition: "PBQ scenario on choosing enterprise-grade wireless protocols to protect corporate Wi-Fi access.",
+    details: "Configurable elements in the wireless lab:\n* **SSID setup:** Configuration of a hardened corporate SSID.\n* **Security choice:** Avoid WEP (totally insecure) and WPA2-Personal (vulnerable to offline brute force). Set **WPA3-Enterprise** to maximize encryption.\n* **SAE encryption:** For small or guest networks that use a pre-shared key, enforce the use of WPA3-Personal with **SAE** (Simultaneous Authentication of Equals) to prevent offline interception and decoding of wireless traffic.\n\n* **Small Focused Example:** A new corporate wireless network is installed in an office. For employees, **WPA3-Enterprise** authentication (with centralized 802.1X authentication) is enabled. For the guest meeting room, **WPA3-Personal** protection with the **SAE** (Simultaneous Authentication of Equals) standard is configured, protecting the key exchange and preventing offline dictionary attacks.",
+    examTip: "In enterprise wireless PBQs, always select WPA3-Enterprise by enabling the 802.1X standard to forward authentication to a RADIUS server.",
+  },
+  RADIUSPBQ: {
+    name: "RADIUS",
+    definition: "PBQ scenario on integrating AAA authentication servers with wireless or VPN appliances.",
+    details: "Configuring the RADIUS ecosystem:\n* **Components:**\n  - *RADIUS Client (or NAS):* The Wi-Fi Access Point or corporate VPN router that receives the user's physical connection requests.\n  - *RADIUS Server:* The central server (e.g. Microsoft NPS) that validates requests against a user database (Active Directory).\n* **Practical configuration:** Configure the same RADIUS server IP address and the same shared password (Shared Secret) on the Access Point so they can communicate securely.\n\n* **Small Focused Example:** To centralize wireless access, an administrator configures a **RADIUS** server (Microsoft NPS). On the Access Points (RADIUS clients) they enter the RADIUS server's IP address and a shared password (*Shared Secret*). When a user tries to connect to the Wi-Fi, the Access Point forwards the credentials to the RADIUS server, which validates them against Active Directory.",
+    examTip: "If the Wi-Fi Access Point fails to authenticate corporate users, verify that the RADIUS server IP address and the Shared Secret match on both devices.",
+  },
+  EncryptionVsHashingPBQ: {
+    name: "Encryption vs Hashing",
+    definition: "Exam scenario on the logical distinction and correct application of encryption versus hash functions.",
+    details: "Conceptual matching lab:\n* **Encryption (Symmetric/Asymmetric):** A two-way process. Plaintext is encrypted and can be decrypted with the correct key. Goal: **Confidentiality**.\n* **Hashing:** A one-way process. You can never 'decrypt' a hash to recover the original data. Goal: **Integrity** or secure password storage.\n* **Correct matches:**\n  - Choose **AES (symmetric encryption)** to protect databases or backups from exposure.\n  - Choose **SHA-256 (Hashing)** to verify that a downloaded firmware has not been altered.\n  - Choose **bcrypt or PBKDF2** to store passwords in a database.\n\n* **Small Focused Example:** To securely store user credentials on a web portal, the developer applies a hashing function such as **bcrypt** to passwords before saving them in the database (ensuring **Integrity** and avoiding cleartext decryption). For sensitive customer billing data, they instead use **AES-256** encryption, which allows the data to be decrypted and read when needed (ensuring **Confidentiality**).",
+    examTip: "Encryption ensures confidentiality and is reversible; hashing ensures integrity and is one-way. Never confuse these purposes on the exam!",
+  },
+  BackupRecoveryPBQ: {
+    name: "Backup & Recovery",
+    definition: "Practical exam scenario on configuring optimal backup schemes to satisfy precise RTO, RPO and resilience constraints.",
+    details: "Solving the lab requirements:\n* **Meeting the RPO:** If the company tolerates a maximum loss of 12 hours of data (RPO = 12 hours), backups must run at least twice a day (every 12 hours).\n* **3-2-1 Strategy:** Ensure backups follow the three copies, on two different media (e.g. tape and cloud), with one copy strictly kept offsite or physically isolated (Air-gapped) to resist ransomware.\n* **Choosing the type:** Configure daily incremental backups to minimize evening compute time, while knowing that recovery will require the last Full plus all incrementals in order.\n\n* **Small Focused Example:** A company sets an RPO of 12 hours. To meet this requirement, the administrator configures an automatic backup **every 12 hours**. They apply the **3-2-1** rule: create 3 copies of the data (production, local NAS backup, remote cloud backup), on 2 different media (local hard disks and cloud object storage), with 1 copy kept offsite in the cloud fully isolated (air-gapped) to resist ransomware attacks.",
+    examTip: "If the exam goal is to maximize recovery speed at the expense of storage used, the optimal solution is the combination of Full Backup and Differential Backup.",
+  },
   },
 };
 
