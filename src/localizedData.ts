@@ -37,8 +37,11 @@ const IT_QUESTIONS: Record<number, Question[]> = {
 const topicsCache: Partial<Record<Lang, Record<number, TopicGroup[]>>> = {};
 const questionsCache: Partial<Record<Lang, Record<number, Question[]>>> = {};
 
-function localizeSubtopic(sub: Subtopic): Subtopic {
-  const o = SUBTOPIC_EN[sub.checklistKey];
+type SubtopicOverrides = Record<string, (typeof SUBTOPIC_EN)[number][string] | undefined>;
+type QuestionOverrides = Record<number, (typeof QUESTION_EN)[number][number] | undefined>;
+
+function localizeSubtopic(sub: Subtopic, subOverrides: SubtopicOverrides): Subtopic {
+  const o = subOverrides[sub.checklistKey];
   if (!o) return sub;
   return {
     ...sub,
@@ -51,18 +54,18 @@ function localizeSubtopic(sub: Subtopic): Subtopic {
   };
 }
 
-function localizeGroup(group: TopicGroup): TopicGroup {
+function localizeGroup(group: TopicGroup, subOverrides: SubtopicOverrides): TopicGroup {
   const g = GROUP_EN[group.title];
   return {
     ...group,
     title: g?.title ?? group.title,
     description: g?.description ?? group.description,
-    subtopics: group.subtopics.map(localizeSubtopic),
+    subtopics: group.subtopics.map((s) => localizeSubtopic(s, subOverrides)),
   };
 }
 
-function localizeQuestion(q: Question): Question {
-  const o = QUESTION_EN[q.id];
+function localizeQuestion(q: Question, qOverrides: QuestionOverrides): Question {
+  const o = qOverrides[q.id];
   if (!o) return q;
   return {
     ...q,
@@ -80,7 +83,10 @@ export function getDomainTopics(domainId: number, lang: Lang): TopicGroup[] {
   if (lang === "it") return it;
   const cache = (topicsCache[lang] ??= {});
   if (!cache[domainId]) {
-    cache[domainId] = it.map(localizeGroup);
+    // English subtopic overrides are scoped per domain because checklistKeys
+    // are not globally unique across domains.
+    const subOverrides = SUBTOPIC_EN[domainId] || {};
+    cache[domainId] = it.map((g) => localizeGroup(g, subOverrides));
   }
   return cache[domainId];
 }
@@ -91,7 +97,10 @@ export function getDomainQuestions(domainId: number, lang: Lang): Question[] {
   if (lang === "it") return it;
   const cache = (questionsCache[lang] ??= {});
   if (!cache[domainId]) {
-    cache[domainId] = it.map(localizeQuestion);
+    // English question overrides are scoped per domain because question ids
+    // are reused across domains in the Italian source.
+    const qOverrides = QUESTION_EN[domainId] || {};
+    cache[domainId] = it.map((q) => localizeQuestion(q, qOverrides));
   }
   return cache[domainId];
 }

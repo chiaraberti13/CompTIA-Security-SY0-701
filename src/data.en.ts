@@ -231,7 +231,8 @@ export const GROUP_EN: Record<string, GroupOverride> = {
  * Populated in batches. Anything missing falls back to Italian.
  * ------------------------------------------------------------------ */
 
-export const SUBTOPIC_EN: Record<string, SubtopicOverride> = {
+export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
+  1: {
   /* ---------------- Domain 1 · Group 1: Exam Fundamentals ---------------- */
   CIATriad: {
     name: "CIA Triad",
@@ -721,8 +722,10 @@ export const SUBTOPIC_EN: Record<string, SubtopicOverride> = {
     details: "Permission restrictions ensure that identities cannot perform malicious or unauthorized actions:\n* **Permission Restrictions:** The application of constraints that specify which files, directories, databases or software features a subject can view, create, modify or delete.\n* **ACL (Access Control List):** Lists that granularly map user or group identifiers to their access rights (Read, Write, Execute) directly on File System objects or network nodes (Firewall ACL).\n* **RBAC (Role-Based Access Control):** A model that aligns permissions with organizational roles or employees' job functions (e.g. 'HR Manager'), avoiding the manual configuration of individual permissions for each user.\n* **Least Privilege:** The golden rule of cybersecurity that requires assigning to each user and process only the minimum indispensable set of privileges needed to complete the active task, drastically reducing the blast radius in case of compromise.",
     examTip: "On the exam, the rigorous application of Least Privilege supported by file-system-level ACLs and structured RBAC roles prevents privilege creep and neutralizes insider threats.",
   },
+  },
 
   /* ================= Domain 2 ================= */
+  2: {
   /* ---- Group 1: Threat Actors ---- */
   NationStateActor: {
     name: "Nation State",
@@ -1114,6 +1117,7 @@ export const SUBTOPIC_EN: Record<string, SubtopicOverride> = {
     details: "**Dark Web Intelligence** makes it possible to intercept breaches well before they have a devastating impact:\n* **What is searched for:** Corporate databases put up for sale, employee credentials stolen through infostealer malware, discussions in hacker forums on how to penetrate the organization's network, or ready-to-use ransomware kits to hit the brand.\n* **Tools:** Automated bots and analysts infiltrated in protected channels (Telegram, closed forums) that scan the sources without compromising the security of the corporate assets.",
     examTip: "Dark web intelligence is crucial for the early detection of credential theft or data leaks that have already occurred but not yet been discovered internally by IT.",
   },
+  },
 };
 
 /* ------------------------------------------------------------------ *
@@ -1121,7 +1125,8 @@ export const SUBTOPIC_EN: Record<string, SubtopicOverride> = {
  * Populated in batches. Anything missing falls back to Italian.
  * ------------------------------------------------------------------ */
 
-export const QUESTION_EN: Record<number, QuestionOverride> = {
+export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
+  1: {
   41: {
     topic: "Compliance & Auditing",
     scenario: "A financial services company is required to regularly submit formal documentation proving its full adherence to the applicable regulatory security standards. This documentation includes audit results, risk assessments and evidence of the effectiveness of the implemented data-protection measures.",
@@ -2382,8 +2387,10 @@ export const QUESTION_EN: Record<number, QuestionOverride> = {
     ],
     explanation: "The correct answer is **D) RPO (Recovery Point Objective)**.\n\n* **Why it's correct:** The RPO (Recovery Point Objective) defines the maximum acceptable amount of data loss measured in time, determining the optimal backup frequency.\n* **Analysis of the distractors:**\n  * **A) MTBF** measures the average time between hardware failures, indicating the reliability of a system, not the tolerance to data loss.\n  * **B) RTO (Recovery Time Objective)** indicates the maximum tolerable time to restore the infrastructure and make the service operational again after a disaster.\n  * **C) SLA (Service Level Agreement)** is the formal agreement that establishes the performance and service levels agreed with a supplier.\n\n* **Focused Mini-Example:** If a company sets an RPO of 4 hours for its financial databases, backups must be performed at least every 4 hours so that, in the event of a disaster, no more than 4 hours of transactions are lost.\n\n*Question ID: 654972c623b1cc31a82e92db*",
   },
+  },
 
   /* ================= Domain 2 ================= */
+  2: {
   31: {
     topic: "Threat Actors & Motivations",
     scenario: "A critical government infrastructure suffers an extremely sophisticated cyber-espionage campaign that has been going on silently for over six months. Analysts detect the use of highly customized malware and previously uncataloged zero-day exploits, with no ransom demand or financial extortion.",
@@ -2743,5 +2750,6 @@ export const QUESTION_EN: Record<number, QuestionOverride> = {
       "D) Brute-force attack",
     ],
     explanation: "The correct answer is **C) Pretexting**.\n\n* **Why it's correct:** **Pretexting** consists of creating a fabricated scenario (a pretext) to deceive the victim and induce them to provide information or perform an action. In this case, the artificial urgency and the reference to known colleagues pushed Jason to act without verifying the sender's identity.\n* **Analysis of the distractors:**\n  * **A) Cloning** refers to the duplication of badges, access cards or digital identities to gain unauthorized access, not to the creation of deceptive scenarios.\n  * **B) Whaling** is a type of phishing that specifically targets high-profile executives (CEO, CFO), not generic employees like Jason.\n  * **D) A brute-force attack** tries all possible combinations of passwords or cryptographic keys; it is absolutely not relevant to this social-engineering scenario.\n\n*Question ID: 652632586f507d8e8ff089a7*",
+  },
   },
 };
