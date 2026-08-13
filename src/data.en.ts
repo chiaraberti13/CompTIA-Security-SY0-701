@@ -1622,6 +1622,122 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "The key technologies include:\n* **SD-WAN (Software-Defined WAN):** A software-programmable WAN architecture that intelligently routes corporate traffic by combining heterogeneous geographic connections (e.g. MPLS, broadband, 5G) to optimize costs and performance.\n* **SASE (Secure Access Service Edge):** A framework that unifies network connectivity (SD-WAN) and security functions (CASB, FWaaS, SWG, Zero Trust) into a single fully cloud-managed service.\n* **CASB (Cloud Access Security Broker):** A software control point or cloud service inserted between corporate users and cloud (SaaS) applications to monitor cloud usage, apply compliance policies, prevent DLP and detect anomalous access.\n* **FWaaS (Firewall as a Service):** A next-generation firewall solution delivered directly from the cloud, which eliminates the need for local hardware appliances and centralizes the security rules for all employees, including remote ones.\n* **Zero Trust:** A security philosophy summarized in the motto 'Never trust, always verify'. It assumes that any device or user, even if located within the traditional corporate perimeter, is potentially compromised, enforcing continuous authentication and minimum privileges.\n* **SWG (Secure Web Gateway):** A web security solution (on-prem or cloud) that filters users' web traffic by applying malware controls, URL filtering, SSL/TLS inspection and DLP prevention in real time.",
     examTip: "The CASB is the go-to exam answer when you must monitor, protect and verify the compliance of corporate employees accessing external SaaS cloud applications (such as Office365 or Salesforce).",
   },
+
+  /* ---- Group 3: Firewalls ---- */
+  NGFWFire: {
+    name: "NGFW",
+    definition: "Next-Generation Firewall: an advanced network filtering device that combines traditional functions with application-level inspection and threat intelligence.",
+    details: "Advanced capabilities compared to legacy firewalls:\n* **Deep Packet Inspection (DPI):** It analyzes the actual content of the data packets (payload) at all OSI levels, not limiting itself to checking IP headers and ports.\n* **Application Awareness:** It recognizes and controls specific applications (e.g. blocking file transfer on Skype while allowing video chats).\n* **Integrated IPS:** It detects and blocks network attacks and intrusions in real time based on signatures and anomalies.\n* **Active Directory Integration:** It associates the filtering rules directly with corporate users and logical groups rather than only with static IP addresses.\n\n* **Focused Mini-Example:** A company configures a Palo Alto **NGFW** at its borders: the firewall detects that an internal computer is using the BitTorrent protocol disguised on TCP port 443 (normally used for HTTPS) and blocks the session thanks to Layer 7 inspection (**Deep Packet Inspection**).",
+    examTip: "An NGFW operates up to Layer 7 (Application) of the OSI model and natively includes IPS functionality and granular application control.",
+  },
+  WAFFire: {
+    name: "WAF",
+    definition: "Web Application Firewall: a specialized firewall placed in front of web servers to filter and analyze HTTP/HTTPS traffic at the application level (Layer 7).",
+    details: "Main characteristics:\n* **Target:** It protects corporate web applications and websites from web-specific software attacks and vulnerabilities (e.g. OWASP Top 10).\n* **Attack prevention:** It identifies and eliminates SQL Injection, Cross-Site Scripting (XSS), XML External Entities (XXE), and CSRF attempts.\n* **Mechanism:** It inspects GET and POST requests before they reach the backend web server, blocking anomalous or malicious input patterns.\n\n* **Focused Mini-Example:** A malicious user types `' OR '1'='1` into the login form of an e-commerce site. The **WAF** placed in front of the web server analyzes the HTTP POST request, recognizes the typical signature of a SQL Injection and instantly blocks the attacker's IP address with a 403 error page.",
+    examTip: "The WAF is the only firewall explicitly designed to interpret HTTP/HTTPS traffic at the application level to defend web servers from SQL Injection and XSS.",
+  },
+  UTMFire: {
+    name: "UTM",
+    definition: "Unified Threat Management: a single integrated security appliance that combines multiple defensive functions into one economical and easy-to-manage device.",
+    details: "Functions typically consolidated in a UTM:\n* Stateful Firewall and VPN Gateway.\n* Gateway Antivirus, Antispyware and Antispam.\n* Web content filtering (URL/Content Filtering).\n* Intrusion Prevention System (IPS).\n* **Intended use:** Specifically designed for small and medium-sized businesses (SMBs) or branch offices that lack dedicated IT staff to manage multiple specialized systems.\n\n* **Focused Mini-Example:** A small partnership firm buys a Fortinet FortiGate appliance (**UTM**) for its office. This single device performs the filtering of websites not allowed to employees, scans incoming emails for spam and performs antivirus inspection on all downloads.",
+    examTip: "The UTM is the ideal solution to simplify security management for SMBs by integrating multiple defenses into a single centralized (All-in-one) hardware.",
+  },
+  FirewallBase_New: {
+    name: "Firewall",
+    definition: "A network security device designed to monitor and filter incoming and outgoing traffic based on predefined security rules.",
+    details: "It can be implemented as dedicated hardware, software installed on a computer, or as a cloud service (FWaaS). It acts as a protective barrier between a trusted internal network and untrusted external networks (e.g. the Internet).",
+    examTip: "A firewall acts as the first level of perimeter defense, allowing or blocking traffic based on the configuration of the access rules (ACL).",
+  },
+  StatefulFirewall_New: {
+    name: "Stateful firewall",
+    definition: "A type of firewall able to monitor the active state of connections and filter packets by analyzing their entire context.",
+    details: "Main characteristics:\n* **State Table:** It records all the active communication sessions (e.g. completed TCP handshakes).\n* **Intelligent Inspection:** It recognizes whether an incoming packet belongs to a legitimate session already established from within the company, automatically allowing it through.\n* **Security:** Compared to static packet-filtering, it prevents attackers from bypassing the filter by sending isolated packets with fake TCP flags.",
+    examTip: "Stateful firewalls are superior to stateless ones (packet-filtering) because they track the state of connections, making decisions based on the session context.",
+  },
+  PacketFilteringFirewall_New: {
+    name: "Packet-filtering firewall",
+    definition: "A basic firewall that individually examines each single data packet, deciding whether to pass it based solely on the headers.",
+    details: "Main characteristics:\n* **Stateless:** It does not track the session state; each packet is evaluated completely independently of the others.\n* **Filter Parameters:** It makes decisions based exclusively on source/destination IP addresses, protocol type (TCP/UDP/ICMP) and port numbers (OSI Layer 3 and Layer 4).\n* **Performance:** Very fast and consumes very few resources, but it is more vulnerable to spoofing and TCP-flag bypass techniques.",
+    examTip: "Packet-filtering firewalls operate at Layer 3 and 4, are stateless and filter traffic by comparing exclusively the packet headers against static rules.",
+  },
+  ProxyFirewall_New: {
+    name: "Proxy firewall",
+    definition: "A type of firewall (also known as an Application Gateway) that acts as an intermediary between internal clients and external destination servers.",
+    details: "How it works:\n* **Complete Intermediation:** It receives the internal client's request, performs a complete application-level (Layer 7) inspection, establishes a new separate connection to the destination server on behalf of the client and returns the retrieved data.\n* **Total Isolation:** There is never a direct passage of packets between the client and the external resource, completely hiding the internal addressing.\n* **Deep Inspection:** It can block specific content (e.g. malicious code or unapproved websites) but introduces latency due to the double processing of the sessions.",
+    examTip: "A proxy firewall (Application-level Gateway) operates at Layer 7 of the OSI model, breaks the direct connection between sender and recipient and performs the highest level of payload inspection.",
+  },
+  FailClosed_New: {
+    name: "Fail-closed",
+    definition: "A security design principle in which, in case of failure, anomaly or blackout, access to a resource is completely blocked by default.",
+    details: "Details:\n* **Maximum Security:** It prioritizes system security over business availability and operability.\n* **Physical examples:** Magnetic locks of armored vaults that remain mechanically locked if the electrical power fails.\n* **Logical examples:** A firewall that, if its CPU or memory crashes, blocks all transit traffic rather than allowing the uncontrolled passage of data.",
+    examTip: "The Fail-closed (or fail-secure) mode ensures that, if an error or power outage occurs, the systems and access remain blocked by default to prevent intrusions.",
+  },
+  FailOpen_New: {
+    name: "Fail-open",
+    definition: "A design principle in which, in case of anomaly or power interruption, the system allows access or transit for everyone by default.",
+    details: "Details:\n* **Maximum Availability:** It prioritizes the safety of people and service continuity over the physical or logical security of the assets.\n* **Physical examples:** Fire doors or emergency exit gates that unlock automatically in case of a fire alarm or blackout to facilitate rapid evacuation.\n* **Logical examples:** An in-line IPS that, if it turns off or suffers a hardware failure, activates a physical bypass letting the traffic pass so as not to interrupt the company's network connectivity.",
+    examTip: "The Fail-open (or fail-safe) mode ensures continuity and the safeguarding of human life in emergency situations by unlocking all gates or allowing traffic to transit.",
+  },
+  RateBasedFiltering_New: {
+    name: "Rate-based filtering",
+    definition: "A filtering mechanism that limits the frequency or rate of packets or requests allowed from a single IP address or user.",
+    details: "Details:\n* **Main purpose:** To mitigate DoS, DDoS attacks (such as HTTP Floods), automatic brute-force attempts on login pages and massive web-scraping activity.\n* **Operation:** If a user's IP address exceeds a preset maximum threshold of requests per second (e.g. 100 requests/sec), the firewall or web server temporarily blocks the IP or requires the solving of a CAPTCHA.",
+    examTip: "Rate-based filtering is a key technique to protect web portals from application DoS attacks and brute scanning.",
+  },
+  StatelessFirewallConcept: {
+    name: "Stateless",
+    definition: "A stateless network traffic filtering model in which each packet is examined completely independently, without retaining information about active sessions.",
+    details: "Also known as static packet-filtering, it analyzes exclusively the headers of the single packet (source/destination IP, port, protocol). It is extremely fast but vulnerable to advanced attacks and does not recognize the responses to legitimate connections initiated from within.",
+    examTip: "A stateless filter operates without keeping track of the connection state; therefore it requires explicit bidirectional rules to allow the outgoing and return traffic.",
+  },
+  DPIFire: {
+    name: "DPI",
+    definition: "Deep Packet Inspection: an advanced network-packet analysis technology that examines both the headers and the entire information content (payload) of the packet up to the application level (Layer 7).",
+    details: "Unlike traditional filtering that checks only IP and ports, DPI decodes and inspects the actual transmitted data to identify hidden malware, protocol violations, policy violations or exploit attempts, introducing however a minimal amount of latency due to the processing time.",
+    examTip: "Deep Packet Inspection (DPI) is the enabling technology of Next-Generation Firewalls (NGFW) and IPS to inspect the actual content of the traffic at the application level (Layer 7).",
+  },
+  AllowRule: {
+    name: "Allow",
+    definition: "The explicit rule in a firewall's Access Control List (ACL) that authorizes the transit of traffic matching certain criteria.",
+    details: "It is used to permit legitimate and desired traffic flows based on specific IP addresses, ports or protocols.",
+    examTip: "In a Zero Trust configuration, every allowed traffic must be made explicit through a specific 'Allow' rule.",
+  },
+  DenyRule: {
+    name: "Deny",
+    definition: "The explicit or implicit rule in a firewall's Access Control List (ACL) that blocks and discards unauthorized traffic.",
+    details: "It can be implemented explicitly (to block specific IP addresses or protocols) or implicitly (Implicit Deny) to automatically discard all traffic not explicitly allowed.",
+    examTip: "The final implicit rule of a firewall is always a 'Deny All' (Implicit Deny) to guarantee maximum security by default.",
+  },
+  InboundTraffic: {
+    name: "Inbound",
+    definition: "Inbound Traffic: the incoming network data flow that comes from an external network (e.g. the Internet) directed toward the inside of the private corporate network.",
+    details: "Inbound traffic must be controlled with extreme strictness, authorizing only connections directed to publicly exposed services (such as web servers in the DMZ) and blocking everything else.",
+    examTip: "Inbound traffic represents the main attack vector, which is why firewall rules are set to block it by default, except for specific exceptions.",
+  },
+  OutboundTraffic: {
+    name: "Outbound",
+    definition: "Outbound Traffic: the outgoing network data flow originated from the internal network's devices and directed toward external networks (e.g. the Internet).",
+    details: "Although historically less controlled, filtering Outbound traffic (Egress Filtering) is vital to prevent the exfiltration of sensitive data and interrupt malware communications with Command & Control (C2) servers.",
+    examTip: "Controlling Outbound traffic is essential for data-loss prevention (DLP) and to prevent infected internal machines from contacting malicious external servers.",
+  },
+  NetFirewallNATConcept: {
+    name: "Network Firewall & NAT (Network Address Translation)",
+    definition: "The combination of perimeter network firewalls (Network Firewall) and address translation (NAT) to protect and mask the internal topology.",
+    details: "The two concepts work in synergy:\n* **Network Firewall:** A device dedicated to filtering traffic between different networks (e.g. LAN and Internet). It examines IP addresses, ports and connection states (L3/L4) to block unauthorized flows.\n* **NAT (Network Address Translation):** A technology that allows multiple private (internal) IP addresses to be mapped to a single or few public (external) IP addresses for browsing the Internet. It masks the internal private addressing, making the internal devices invisible to any unsolicited connection coming from outside.",
+    examTip: "NAT masks the internal corporate network topology by translating private IPs into a single public IP, preventing the internal devices from being scanned or contacted directly from the Internet.",
+  },
+  NGFWCapabilitiesConcept: {
+    name: "NGFW Advanced Capabilities (Application Awareness, URL Filtering)",
+    definition: "The distinctive features of a Next-Generation Firewall (NGFW), including application control and web address (URL) filtering.",
+    details: "In addition to static and stateful filtering, NGFWs include:\n* **Application Awareness:** The ability to identify and inspect traffic at Layer 7 to understand which specific application is transmitting data (e.g. distinguishing Skype traffic from BitTorrent traffic even if they use the same port 443).\n* **URL Filtering:** It blocks or allows access to specific websites based on predefined blacklists, content categories (e.g. gambling, social networks) or domain reputation to prevent phishing and malware attacks.\n* **Deep Packet Inspection (DPI):** The deep inspection of the packet payload to detect hidden threats and application-level exploits.",
+    examTip: "Application Awareness allows administrators to block specific features of an application (e.g. preventing file transfer on a corporate chat) while keeping the application itself active.",
+  },
+  SecurityZonesConcept: {
+    name: "Security Zones (Trusted, Untrusted, Screened)",
+    definition: "The logical division of a network infrastructure into zones with different levels of trust and security permissions.",
+    details: "The three classic perimeter zones are:\n* **Trusted Zone:** The organization's internal network (LAN) where the corporate devices and employees reside. Access is strictly controlled and protected.\n* **Untrusted Zone:** Any network outside the organization's control (e.g. the Internet or guest networks), considered hostile and exposed to threats.\n* **Screened Zone / Screened Subnet (DMZ):** An isolated subnet placed between the trusted and untrusted networks. It hosts the servers that must be accessible from outside (e.g. web, mail, DNS servers), preventing their compromise from allowing direct access to the trusted LAN.",
+    examTip: "On the exam, the Screened Subnet (formerly known as DMZ) is the mandatory architectural solution to host public servers, ensuring that external traffic can never directly reach the trusted LAN devices.",
+  },
   },
 };
 
