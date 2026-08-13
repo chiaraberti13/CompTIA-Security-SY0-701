@@ -1574,6 +1574,54 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Characteristics of the Control Plane:\n* **Decision-making:** It defines the network topology by exchanging messages and information with the other local or global network appliances.\n* **Active protocols:** It runs complex algorithms and manages dynamic routing protocols such as OSPF, BGP, RIP, STP.\n* **Centralization in SDN:** In traditional networks, each appliance has its own local Control Plane. In SDN, the Control Plane is extracted and centralized within a software called the **SDN Controller**, leaving only the simple Data Plane on the physical switches.",
     examTip: "On the exam, the Control Plane is the network's decision-making brain that computes the routes and routing tables; in SDN it is centralized into a single software controller.",
   },
+  ManagementPlaneConcept: {
+    name: "Management Plane",
+    definition: "Management Plane: the component of the network architecture used by system administrators to configure, monitor and manage the devices and the global network infrastructure.",
+    details: "Characteristics of the Management Plane:\n* **Administrative Access:** It allows human or programmatic interaction with the device through the console, command-line interfaces (CLI), web panels (GUI) or monitoring protocols.\n* **Management protocols:** Telnet, SSH, SNMPv3, NETCONF, RESTCONF, HTTP/HTTPS.\n* **Security:** It is essential to isolate the Management Plane by protecting the connections through encryption (SSH/SNMPv3), MFA requirements and configuring a dedicated Management VLAN inaccessible to ordinary users.",
+    examTip: "Protecting the Management Plane requires the exclusive use of encrypted protocols (SSH, HTTPS, SNMPv3) and the isolation of the management traffic in a dedicated (out-of-band) VLAN.",
+  },
+  ResponsivenessPerformance: {
+    name: "Responsiveness",
+    definition: "System Responsiveness: the measure of how quickly and promptly an application or IT service responds to requests initiated by end users.",
+    details: "Characteristics of Responsiveness:\n* **User Experience:** It directly influences the productivity and the customers' perception of the service quality.\n* **Degradation indicators:** A slowdown in responsiveness is usually the first warning sign of structural problems, such as server overload, ongoing DDoS attacks, or exhaustion of computational resources (RAM/CPU).\n* **Monitoring:** Tracked through APM (Application Performance Monitoring) metrics and transactional response times.",
+    examTip: "Responsiveness measures the response speed perceived by the user, and is critical for detecting anomalies or overloads in real time.",
+  },
+  LatencyPerformance: {
+    name: "Latency",
+    definition: "Latency: the time delay (measured in milliseconds) between the sending of a data request by a client and the receipt of the corresponding response.",
+    details: "Factors that determine latency:\n* **Geographic Distance:** The propagation of physical signals through fiber-optic cables is affected by distance (solved through CDN - Content Delivery Network).\n* **Network Latency:** Delays caused by the number of hops between routers and by congestion of the network channels.\n* **Firewall processing:** Advanced firewalls (such as NGFW or IPS) that perform deep packet inspection (DPI) introduce a minimal amount of latency due to the computation time needed for inspection.\n* **Security impact:** Non-optimized cryptographic protocols (e.g. slow TLS handshakes) increase latency.",
+    examTip: "Latency measures the propagation and computation delay of the packets; compressing handshake times (e.g. TLS 1.3) and hardware-assisted inspection are essential to contain it.",
+  },
+  NetSegmentationPortSecurityConcept: {
+    name: "Network Segmentation & Port Security",
+    definition: "Network subdivision (Segmentation) and control measures to limit access to the physical ports of the appliances (Port Security).",
+    details: "It includes:\n* **Segmentation:** The architectural practice of dividing a network into isolated segments (VLAN, subnet) to limit the propagation of attacks (blast radius) and block the lateral movement of malware.\n* **Port Security:** A feature of Layer 2 switches that controls access to the physical ports. It allows each port to be associated with one or more authorized MAC addresses (static or dynamic through 'sticky MAC'). If an unregistered MAC is detected, the switch applies countermeasures (e.g. 'shutdown' of the port or restriction of the traffic, sending an SNMP notification).",
+    examTip: "Port Security at the switch level prevents the insertion of unauthorized devices by physically blocking access based on the computer's MAC address.",
+  },
+  IEEE8021XAuthConcept: {
+    name: "802.1X Wired & Wireless Authentication",
+    definition: "The port-based network access control standard, which requires authentication before unlocking data transit.",
+    details: "The three fundamental pillars of the IEEE 802.1X standard are:\n* **Supplicant (Client):** The software or device of the end user (e.g. laptop) that requests access and provides the credentials.\n* **Authenticator (Switch or Access Point):** The physical network appliance that controls material access to the port. It does not directly validate the credentials, but acts as an intermediary by forwarding them to the authentication server.\n* **Authentication Server (RADIUS Server):** The centralized server that validates the supplicant's identity by consulting a directory (e.g. Active Directory) and sends a success or failure message to the authenticator to unlock or block the port.",
+    examTip: "On the exam, remember that in an 802.1X scenario the Authenticator (the switch or access point) does not validate the credentials, but merely acts as an intermediary by forwarding them to the RADIUS server.",
+  },
+  TrafficCaptureTAPConcept: {
+    name: "Traffic Capture & Copying (SPAN, Port Mirroring, TAP)",
+    definition: "Hardware and software methodologies to capture, copy and duplicate network traffic for passive inspection by IDS or protocol analyzers.",
+    details: "It includes:\n* **Port Mirroring / SPAN (Switched Port Analyzer):** A software feature of the switch that copies all the traffic of one or more ports (or VLANs) and redirects it to a specific port connected to a sensor (e.g. IDS or Wireshark). It can degrade the switch's performance under very high traffic loads.\n* **Network TAP (Test Access Point):** A passive, independent hardware device physically inserted into the network cabling to split the optical or electrical signal. It guarantees the exact copy of 100% of the packets (including traffic with checksum errors) without introducing delays or consuming the switch's resources, remaining invisible on the network.",
+    examTip: "The Network TAP is a dedicated physical hardware more reliable and secure than software Port Mirroring (SPAN), because it guarantees the capture of all the traffic even in case of extreme switch overload.",
+  },
+  ProxyTypesAdvancedConcept: {
+    name: "Advanced Proxy Types (Forward, Reverse, Open)",
+    definition: "The different types of proxy server used to route, protect and optimize the traffic flows between clients and servers.",
+    details: "Three architectures are distinguished:\n* **Forward Proxy:** Placed within the local network on behalf of the internal clients. It receives requests destined for the Internet, forwards them by masking the client's private IP and applying content filters and security controls (URL Filtering).\n* **Reverse Proxy:** Placed in front of one or more backend web servers. It receives requests coming from the Internet and dispatches them to the internal servers, hiding the corporate network structure. It performs key tasks such as SSL/TLS termination (traffic decryption), caching and load balancing.\n* **Open Proxy:** A proxy server configured incorrectly or deliberately to be accessible by anyone on the Internet. Often abused by malicious actors to hide their identity during cyberattacks.",
+    examTip: "While a Forward Proxy protects and masks the internal clients going out to the Internet, a Reverse Proxy is placed to defend the corporate servers by receiving incoming requests from the Internet.",
+  },
+  ModernCloudNetArchitectures: {
+    name: "Modern Cloud & Secure Access Architectures (SD-WAN, SASE, CASB, Zero Trust, SWG)",
+    definition: "The modern cloud-based network and security architectural paradigms to manage distributed connectivity and secure access of remote users.",
+    details: "The key technologies include:\n* **SD-WAN (Software-Defined WAN):** A software-programmable WAN architecture that intelligently routes corporate traffic by combining heterogeneous geographic connections (e.g. MPLS, broadband, 5G) to optimize costs and performance.\n* **SASE (Secure Access Service Edge):** A framework that unifies network connectivity (SD-WAN) and security functions (CASB, FWaaS, SWG, Zero Trust) into a single fully cloud-managed service.\n* **CASB (Cloud Access Security Broker):** A software control point or cloud service inserted between corporate users and cloud (SaaS) applications to monitor cloud usage, apply compliance policies, prevent DLP and detect anomalous access.\n* **FWaaS (Firewall as a Service):** A next-generation firewall solution delivered directly from the cloud, which eliminates the need for local hardware appliances and centralizes the security rules for all employees, including remote ones.\n* **Zero Trust:** A security philosophy summarized in the motto 'Never trust, always verify'. It assumes that any device or user, even if located within the traditional corporate perimeter, is potentially compromised, enforcing continuous authentication and minimum privileges.\n* **SWG (Secure Web Gateway):** A web security solution (on-prem or cloud) that filters users' web traffic by applying malware controls, URL filtering, SSL/TLS inspection and DLP prevention in real time.",
+    examTip: "The CASB is the go-to exam answer when you must monitor, protect and verify the compliance of corporate employees accessing external SaaS cloud applications (such as Office365 or Salesforce).",
+  },
   },
 };
 
