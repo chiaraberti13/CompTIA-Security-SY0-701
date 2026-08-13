@@ -721,6 +721,399 @@ export const SUBTOPIC_EN: Record<string, SubtopicOverride> = {
     details: "Permission restrictions ensure that identities cannot perform malicious or unauthorized actions:\n* **Permission Restrictions:** The application of constraints that specify which files, directories, databases or software features a subject can view, create, modify or delete.\n* **ACL (Access Control List):** Lists that granularly map user or group identifiers to their access rights (Read, Write, Execute) directly on File System objects or network nodes (Firewall ACL).\n* **RBAC (Role-Based Access Control):** A model that aligns permissions with organizational roles or employees' job functions (e.g. 'HR Manager'), avoiding the manual configuration of individual permissions for each user.\n* **Least Privilege:** The golden rule of cybersecurity that requires assigning to each user and process only the minimum indispensable set of privileges needed to complete the active task, drastically reducing the blast radius in case of compromise.",
     examTip: "On the exam, the rigorous application of Least Privilege supported by file-system-level ACLs and structured RBAC roles prevents privilege creep and neutralizes insider threats.",
   },
+
+  /* ================= Domain 2 ================= */
+  /* ---- Group 1: Threat Actors ---- */
+  NationStateActor: {
+    name: "Nation State",
+    definition: "Government-sponsored actors with almost unlimited financial and expert resources.",
+    details: "Nation State actors act on behalf of national governments:\n* **Objectives:** Industrial and geopolitical espionage, theft of military secrets, sabotage of critical infrastructure (SCADA/ICS).\n* **Methodology:** They conduct APT (Advanced Persistent Threat) campaigns that stay silent and embedded for months or years.\n* **Capabilities:** They develop exclusive Zero-Day exploits and have advanced cryptographic research labs.\n\n* **Focused Mini-Example:** A government APT group penetrates the systems of a national energy provider by exploiting a zero-day, installing a backdoor firmware on the PLCs to monitor the power grid and be able to disable its turbines in the event of a geopolitical conflict.",
+    examTip: "For exam questions about actors with extreme persistence, advanced tools and state-level budgets, the correct answer is always the Nation State (or APT).",
+  },
+  InsiderThreatActor: {
+    name: "Insider Threat",
+    definition: "Employees, former employees or business partners who abuse their legitimate access to harm the organization.",
+    details: "Insider threats are particularly insidious:\n* **Advantage:** They already know the network structure, the sensitive data and the security procedures.\n* **Types:**\n  - *Malicious Insider:* Acts intentionally for revenge, gain or espionage.\n  - *Negligent Insider:* Causes incidents through carelessness, poor training or failure to follow policies.\n* **Mitigations:** Separation of Duties, Job Rotation, and rigorous log monitoring.\n\n* **Focused Mini-Example:** An angry employee in the finance department downloads the entire salary database and sends it to a journalist to take revenge for a missed promotion.",
+    examTip: "The main countermeasure against a malicious insider is the strict application of the Least Privilege principle.",
+  },
+  OrganizedCrimeActor: {
+    name: "Organized Crime",
+    definition: "Structured, professional criminal groups motivated primarily by financial profit.",
+    details: "Organized cybercrime operates like a real industry:\n* **Business Model:** Ransomware-as-a-Service (RaaS), multiple extortion, large-scale theft of financial data, mass phishing.\n* **Structure:** They have developers, IT infrastructure administrators, ransom negotiators and even help desks to assist victims in paying the ransoms.\n\n* **Focused Mini-Example:** A Russian criminal group buys a ransomware payload on the dark web, hits a private hospital's network by encrypting its medical records and demands 2 million dollars in Bitcoin not to publish the sensitive data online.",
+    examTip: "If the primary motivation of the described attack is Financial Gain through ransomware or fraud, the actor is Organized Crime.",
+  },
+  HacktivistActor: {
+    name: "Hacktivist",
+    definition: "Attackers driven by ideological, political, social or religious motivations.",
+    details: "Hacktivists use technology to express dissent or promote a cause:\n* **Common techniques:** Defacement of institutional websites, DDoS attacks to make public portals inaccessible, exfiltration and publication of confidential data (leaks) to expose alleged illicit behavior.\n* **Known groups:** Anonymous is the most famous historical example.\n\n* **Focused Mini-Example:** A group of environmental activists launches a massive DDoS attack against the website of an oil multinational to protest against new drilling, taking the company's e-commerce portal offline for 48 hours.",
+    examTip: "The key on the exam to identifying a Hacktivist lies in the motivation: promoting a social/political cause, not financial gain.",
+  },
+  ScriptKiddieActor: {
+    name: "Script Kiddie",
+    definition: "Attackers with poor technical skills who use ready-made tools and scripts written by others.",
+    details: "Script Kiddies lack deep knowledge of how exploits work:\n* **Resources:** They download free toolkits or buy illegal services on the dark web.\n* **Motivations:** They often act out of boredom, to gain notoriety within their circle of friends, or for pure digital vandalism.\n* **Danger:** Although unsophisticated, they can cause real damage to unprotected systems or ones lacking basic patches.\n\n* **Focused Mini-Example:** A teenager downloads an automatic scanning and exploit tool for known vulnerabilities and hits their local school's website, causing it to temporarily crash to show off on a Discord server.",
+    examTip: "The exclusive use of others' automated tools without understanding the underlying code characterizes the Script Kiddie.",
+  },
+  CompetitorActor: {
+    name: "Competitor",
+    definition: "Rival companies that resort to illicit digital means to gain an unfair competitive advantage.",
+    details: "Competitors' actions focus on corporate espionage:\n* **Actions:** Theft of patents, industrial plans, chemical formulas, source code or customer lists.\n* **Damage:** They may attempt to sabotage the rival company's systems during a crucial product launch to damage its reputation.\n\n* **Focused Mini-Example:** A car company hires an external hacker to infiltrate a direct competitor's CAD servers and steal the designs of the new electric motor before it is patented.",
+    examTip: "The exfiltration of proprietary or industrial information for the direct benefit of a competing company defines this actor.",
+  },
+
+  /* ---- Group 2: Motivations ---- */
+  FinancialGainMotiv: {
+    name: "Financial Gain",
+    definition: "The pursuit of direct or indirect monetary profit through illicit activities.",
+    details: "It is by far the most common motivation in the digital age:\n* **Mechanisms:** Ransomware ransom demands, sale of credit-card numbers or medical records on the dark web, theft of cryptocurrency from exchanges, or fraudulent transfer of funds (Business Email Compromise - BEC).\n\n* **Focused Mini-Example:** A criminal group sends a spear phishing email pretending to be the CEO and convinces the administrative staff to make an urgent transfer of €50,000 to an untraceable foreign account.",
+    examTip: "Financial gain dominates scenarios linked to organized crime.",
+  },
+  EspionageMotiv: {
+    name: "Espionage",
+    definition: "The systematic theft of confidential, military, state or industrial information without being detected.",
+    details: "Espionage aims to gather long-term intelligence:\n* **Characteristics:** The attacker wants to stay hidden as long as possible (low profile). If they destroyed the systems, they would be discovered immediately.\n* **Subjects:** Carried out predominantly by Nation-States for military/geopolitical purposes or by large competing companies.\n\n* **Focused Mini-Example:** A state-sponsored hacker installs a low-profile persistent malware on the servers of an aerospace company, exfiltrating over six months the confidential designs of a new military radar system without altering any service.",
+    examTip: "In espionage the objective is the Confidentiality of the data, while the Integrity and Availability of the systems are usually not altered in order not to arouse suspicion.",
+  },
+  RevengeMotiv: {
+    name: "Revenge",
+    definition: "The desire for retaliation and to cause reputational or material damage in response to a perceived wrong.",
+    details: "Revenge is the typical motivation of insider threats:\n* **Examples:** A system administrator who is fired and activates a programmed Logic Bomb, or a dissatisfied employee who deletes critical databases before leaving.\n* **Damage:** Often aimed at altering the Availability or Integrity of corporate systems.\n\n* **Focused Mini-Example:** A system administrator fired on the spot, before their accounts are deactivated, connects via VPN and destroys the main tables of the company's production database to damage corporate revenue.",
+    examTip: "In revenge-motivated attacks, the person typically has a prior or ongoing relationship with the victim.",
+  },
+  IdeologyMotiv: {
+    name: "Ideology",
+    definition: "The drive to carry out attacks to support political, ecological, ethical or religious ideals.",
+    details: "Ideology drives hacktivists and digital protest groups:\n* **Examples:** Attacks against oil companies by climate activists, or breaches of government sites during political elections to protest against censorship.\n* **Objective:** To draw media attention to a specific cause.\n\n* **Focused Mini-Example:** A collective of hacktivists penetrates the website of a pharmaceutical company and publishes the list of animal testing to raise public awareness against the exploitation of wildlife.",
+    examTip: "If the attack yields no financial profit but aims to raise public awareness on an ethical topic, the motivation is ideology.",
+  },
+  ChaosMotiv: {
+    name: "Chaos",
+    definition: "The pure destructive will to generate disorder, disruption or instability without any further aim.",
+    details: "Attacks carried out to demonstrate power or for simple nihilistic amusement:\n* **Examples:** Releasing a destructive worm onto the internet to see how far it can spread, or carrying out random DDoS attacks against popular websites.\n* **Actors:** Often associated with Script Kiddies or anarchist groups.\n\n* **Focused Mini-Example:** A group of amateur programmers spreads a destructive virus on the web that randomly deletes Windows configuration files, with the sole purpose of sowing panic among users worldwide.",
+    examTip: "Chaos directly targets the annihilation of Availability and the disruption of services, without ransom demands.",
+  },
+
+  /* ---- Group 3: Threat Vectors & Attack Surfaces ---- */
+  ThreatVectorsDetails: {
+    name: "Threat Vectors",
+    definition: "The channels or paths used by threat actors to access or compromise a system.",
+    details: "Common threat vectors include:\n* **Email (Phishing):** One of the most used vectors; the user receives deceptive emails to install malware or steal credentials.\n* **Wireless:** Exploiting vulnerabilities in Wi-Fi (weak WPA2, Rogue AP) or Bluetooth (Bluejacking, Bluesnarfing).\n* **Removable Media (USB):** Physical insertion of infected USB sticks to bypass network defenses and run payloads.\n* **Cloud:** Exploiting misconfigurations (e.g. open S3 buckets) or API credentials exposed on public repositories.\n* **Supply Chain:** Compromising a trusted third-party supplier to hit the final victim (e.g. the SolarWinds attack).\n* **Direct Access / Physical:** Direct physical access to servers, switches or unlocked workstations to steal data or install hardware keyloggers.\n* **Social Media:** Gathering information through OSINT or social-engineering lures to bait employees.\n\n* **Focused Mini-Example:** An attacker intentionally drops a USB stick labeled 'Employee Payslips' in the corporate parking lot. A curious employee picks it up, inserts it into their office PC and triggers a trojan malware.",
+    examTip: "The Supply Chain is a subtle vector because it exploits the implicit trust a company places in the software or services of approved external partners.",
+  },
+  AttackSurfacesDetails: {
+    name: "Attack Surfaces",
+    definition: "The set of all vulnerable or exposed entry points where an attacker can attempt to breach a system.",
+    details: "Attack surfaces are divided into:\n* **Software Attack Surface:** Exposed code, public APIs, active unpatched services, operating systems and open ports. It is reduced through hardening (disabling superfluous services, closing ports) and applying patches.\n* **Hardware Attack Surface:** Physical devices, vulnerable firmware (outdated BIOS/UEFI), exposed physical ports (Ethernet ports in public areas) or accessible USB ports.\n* **Physical Attack Surface:** The physical area of the company or the data centers (security doors, fences, unattended workstations).\n* **Human Attack Surface:** The organization's users and employees, who can be tricked through social engineering or make configuration errors.\n\n* **Focused Mini-Example:** A corporate server with Remote Desktop (RDP) ports exposed directly on the Internet without access restrictions and an unlocked physical switchboard in the hallway constitute two huge and obvious attack surfaces (software and physical).",
+    examTip: "To reduce the software attack surface, the primary exam rule is to apply the least-privilege principle, perform systematic hardening and close all ports and services that are not strictly necessary.",
+  },
+
+  /* ---- Group 4: Malware ---- */
+  VirusMalware: {
+    name: "Virus",
+    definition: "Malicious software that requires a host file and human action to be executed and spread.",
+    details: "Characteristics of the virus:\n* **Infection:** It attaches to an executable program or a document (e.g. a macro in a Word file).\n* **Propagation:** It cannot spread by itself to other computers; it requires a user to actively move and open the infected file (e.g. via a USB stick or email).\n\n* **Focused Mini-Example:** A user receives an Excel file containing infected macros; the user enables macro execution, launching the virus code that infects all the `.exe` files on the machine.",
+    examTip: "Remember the exam distinction: the Virus always requires user action to spread, whereas the Worm acts completely autonomously.",
+  },
+  WormMalware: {
+    name: "Worm",
+    definition: "Self-sufficient malicious software that spreads automatically over the network by exploiting service vulnerabilities.",
+    details: "Characteristics of the worm:\n* **Independence:** It does not need a host file to attach to.\n* **Speed:** It can infect hundreds of thousands of computers in a few minutes by scanning the network looking for open ports and vulnerable services (e.g. WannaCry exploiting MS17-010 EternalBlue).\n* **Impact:** It consumes large amounts of network bandwidth and system resources.\n\n* **Focused Mini-Example:** The Conficker malware constantly scans the local subnet and spreads autonomously to other PCs on the corporate network without requiring any interaction from any user.",
+    examTip: "Worms exploit network-software bugs to propagate automatically (self-replicating) without any human interaction.",
+  },
+  TrojanMalware: {
+    name: "Trojan",
+    definition: "An apparently harmless or useful program that hides a destructive payload or a backdoor.",
+    details: "Deception mechanism:\n* **Example:** A user downloads a free game or a PC-optimization utility. On launch the software works normally, but in the background it installs a remote-control backdoor (RAT - Remote Access Trojan).\n* **Purpose:** To bypass perimeter controls by inducing the user to authorize the execution of the software.\n\n* **Focused Mini-Example:** A user downloads a cracked PDF editor. The program reads and edits files correctly, but in the background it opens the host's SSH port 2222 to allow the attacker to connect.",
+    examTip: "The Trojan relies on the Trojan-horse technique: the user is deceived about the usefulness of the application.",
+  },
+  RansomwareMalware: {
+    name: "Ransomware",
+    definition: "Malware that encrypts the user's data and demands a payment in cryptocurrency to unlock it.",
+    details: "Advanced ransomware techniques:\n* **Double Extortion:** In addition to encrypting the local files, the attacker exfiltrates the sensitive data before encryption. If the victim has backups and refuses to pay to decrypt, the attacker threatens to publish the sensitive data online.\n* **Triple Extortion:** It also includes DDoS attacks against the company or direct threats to the victim's customers.\n\n* **Focused Mini-Example:** An employee opens a malicious attachment; within seconds the corporate databases take on the `.encrypted` extension and a text file appears demanding 5 Bitcoin in exchange for the cryptographic key.",
+    examTip: "The primary defense against ransomware is having an offline or immutable backup plan (not accessible from the ordinary network).",
+  },
+  RootkitMalware: {
+    name: "Rootkit",
+    definition: "Malware designed to gain administrator-level (root/system) permissions while actively hiding itself from the operating system.",
+    details: "Depth of infiltration:\n* **How it works:** It modifies the operating system's System Calls. If an antivirus asks for the list of active processes, the rootkit intercepts the request and removes itself from the list before sending it.\n* **Level:** It often operates at the kernel or firmware (UEFI) level, making detection almost impossible with standard software tools running on the same operating system.\n\n* **Focused Mini-Example:** A kernel-level rootkit intercepts the antivirus's file-exploration queries, hiding the folder where its malicious binary files reside.",
+    examTip: "To detect or remove a rootkit, it is often necessary to reboot the system from a clean, externally secure boot medium (e.g. a live antivirus USB stick).",
+  },
+  SpywareMalware: {
+    name: "Spyware",
+    definition: "Software that secretly collects information about a user's activities without their consent.",
+    details: "Data collected by spyware:\n* Web browsing history, typed banking credentials, screen screenshots or webcam usage.\n* It is often installed bundled with freeware or through drive-by download attacks on compromised sites.\n\n* **Focused Mini-Example:** An adware software installed surreptitiously records the user's online shopping sessions and sends their purchase preferences to external advertising servers.",
+    examTip: "Spyware specifically aims to compromise the Confidentiality of personal information.",
+  },
+  KeyloggerMalware: {
+    name: "Keylogger",
+    definition: "A hardware device or software program designed to record every single key pressed on the keyboard.",
+    details: "Types:\n* **Software Keylogger:** Captures keyboard input at the driver or operating-system API level and periodically sends it to a server controlled by the attacker.\n* **Hardware Keylogger:** A small physical connector inserted between the USB keyboard cable and the computer port, totally invisible to ordinary antivirus software.\n\n* **Focused Mini-Example:** A small USB dongle inserted between the keyboard and the administrative staff's computer stores offline every single credential combination typed in the clear.",
+    examTip: "Keyloggers are used mainly to steal passwords and corporate credentials during typing.",
+  },
+  LogicBombMalware: {
+    name: "Logic Bomb",
+    definition: "Malicious code intentionally inserted into a program that remains dormant until a specific condition occurs.",
+    details: "Trigger factors:\n* **Date/Time (Time Bomb):** For example, programmed to activate on Friday the 13th or on a contract's expiration date.\n* **Logical action:** The absence of a certain record in the database (e.g. if the user 'Mario Rossi' is deleted from the employee registry, the logic bomb wipes the entire server).\n\n* **Focused Mini-Example:** A programmer leaves in the backend code a routine that deletes the system logs and databases if their tax code is removed from the payroll database list.",
+    examTip: "Logic bombs are typically created by malicious insiders (angry programmers or system administrators).",
+  },
+
+  /* ---- Group 5: Social Engineering ---- */
+  PhishingSE: {
+    name: "Phishing",
+    definition: "Mass sending of deceptive emails containing malicious attachments or links to counterfeit websites.",
+    details: "Phishing variants:\n* **Generic Phishing:** Broadcast sending with no personalization.\n* **Spear Phishing:** Attack targeted at a specific individual or company, personalized with real data (e.g. citing the manager's name or a real company project).\n* **Whaling:** Spear phishing targeted exclusively at high-level executives (CEO, CFO) to authorize large money transfers.\n\n* **Focused Mini-Example:** An administrative employee receives an email apparently coming from the corporate CFO (**Whaling**) requesting the urgent settlement of an overdue invoice to a fake foreign supplier, attaching an infected PDF form.",
+    examTip: "A fraudulent email specifically addressed to the Chief Financial Officer to have them sign an urgent transfer is called Whaling.",
+  },
+  SmishingSE: {
+    name: "Smishing",
+    definition: "Phishing conducted through SMS messages or mobile messaging apps.",
+    details: "It exploits the high open rate of messages on mobile phones:\n* **Examples:** Counterfeit SMS that appear to come from banks, postal services or express couriers (e.g. 'Package blocked, click here to pay the customs fee').\n* **Danger:** Users tend to trust their smartphone more than email.\n\n* **Focused Mini-Example:** A technician receives an SMS on the corporate phone from sender 'IT Department' (**Smishing**) stating that their account is suspended and providing a link to confirm the login credentials.",
+    examTip: "Smishing = SMS + Phishing.",
+  },
+  VishingSE: {
+    name: "Vishing",
+    definition: "Phishing conducted through phone calls or interactive voice systems.",
+    details: "The attacker uses the voice to create urgency:\n* **Technique:** They can use VoIP technology to falsify the caller ID (Caller ID Spoofing) making the real bank's or IT support's number appear.\n* **AI Voice Cloning:** Recent use of voice deepfakes to perfectly imitate the voice of the company's CEO.\n\n* **Focused Mini-Example:** An operator receives a VoIP call in which a fraudster, perfectly simulating the CEO's voice through artificial intelligence (**Vishing**), orders them to bypass procedures and send the not-yet-public financial statements.",
+    examTip: "Vishing = Voice + Phishing.",
+  },
+  PretextingSE: {
+    name: "Pretexting",
+    definition: "Creating a fictitious or credible pretext before the attack to induce the victim to cooperate.",
+    details: "How it works:\n* The attacker does not ask for the data right away, but builds a solid story. For example, they call pretending to be a fraud investigator or a census office worker, first asking routine questions and then extracting confidential access data.\n\n* **Focused Mini-Example:** An attacker phones the front desk pretending to be a network technician of the national telephone operator engaged in a line check. They ask trivial questions about connectivity and then get the router-panel access credentials dictated to them.",
+    examTip: "Pretexting is the preparatory phase of creating the fictitious scenario that lends legitimacy to the attacker's subsequent requests.",
+  },
+  ImpersonationSE: {
+    name: "Impersonation",
+    definition: "Actively passing oneself off as another physical person or as an authoritative role.",
+    details: "Practical examples:\n* Physically showing up at the company entrance dressed as a courier with boxes in hand to get the back door opened.\n* Phoning while posing as the vice president or an external IT support technician to order a password reset.\n\n* **Focused Mini-Example:** An attacker shows up at the company premises wearing an electrician's uniform, showing a fake badge and carrying a toolbox. They say they need to check an electrical panel in the server room and manage to be given direct physical access.",
+    examTip: "Impersonation leverages the principles of Authority and Social Proof to bypass physical or logical controls.",
+  },
+  WateringHoleSE: {
+    name: "Watering Hole",
+    definition: "Compromising a legitimate third-party website habitually frequented by the attack's target group.",
+    details: "The oasis-in-the-desert metaphor:\n* Instead of directly attacking the fortified network of the Ministry of Defense, the attacker infects a local discussion forum or a catering site located opposite the Ministry and frequented by its employees.\n* When the employees visit that site, their browsers are infected through silent web exploits.\n\n* **Focused Mini-Example:** An APT group compromises the menu attachment on the portal of the favorite restaurant of a high-tech multinational's programmers, infecting the employees' PCs as soon as they download the list of the day's dishes.",
+    examTip: "If a specific group of employees is infected by visiting a known niche external site, the exam scenario describes a Watering Hole attack.",
+  },
+  TyposquattingSE: {
+    name: "Typosquatting",
+    definition: "Registration of misspelled domain names that are very similar to those of famous brands, exploiting users' typing errors.",
+    details: "Examples:\n* Registering `goggle.com` instead of `google.com`, or `paypa1.com` instead of `paypal.com`.\n* **Use:** Hosting login pages identical to the originals to steal the credentials of careless users.\n\n* **Focused Mini-Example:** A user wants to access their bank account but accidentally types `bancaun1credit.it` instead of `bancaunicredit.it`. They are faced with an identical copy of the portal that captures their credentials to forward them to the fraudsters.",
+    examTip: "Also called URL Hijacking, it exploits the human typing error on the browser's address bar.",
+  },
+  CloningSE: {
+    name: "Cloning",
+    definition: "The duplication or cloning of legitimate emails, websites or multimedia files to deceive users or steal information.",
+    details: "Main characteristics of cloning:\n* **Clone Phishing:** An attack in which a legitimate, previously sent email containing a real attachment or link is copied (cloned) and modified by inserting a malicious link or attachment. The email is then sent from an address that mimics the original sender.\n* **Website Cloning:** Creating a mirror, visually identical replica of a legitimate website (e.g. a bank's login portal) to induce users to enter their credentials.\n* **AI Voice Cloning:** Using voice samples of a user (e.g. an executive) through artificial intelligence to imitate their voice and carry out targeted vishing attacks.",
+    examTip: "On the exam, remember that Clone Phishing consists of swapping the link or attachment of a real, trusted, previously received email with a counterfeit version.",
+  },
+  WhalingSE_New: {
+    name: "Whaling",
+    definition: "A highly specific type of spear phishing attack directed exclusively at very high-level corporate executives.",
+    details: "Characteristics of Whaling:\n* **Executive Target:** It targets top figures such as the CEO, the CFO or board members.\n* **Large Impact:** Often associated with BEC (Business Email Compromise) scams for the approval of urgent transfers of large sums of money.\n* **Extremely Formal Tone:** It often uses legal pretexts, fictitious lawsuits, or formal notices from government agencies.",
+    examTip: "If the exam question specifies that the phishing target is a high-level executive (CEO/CFO), the correct answer is Whaling.",
+  },
+  MisinformationSE_New: {
+    name: "Misinformation",
+    definition: "The unintentional or unwitting spread of false, incorrect or unverified information.",
+    details: "Fundamental distinction:\n* **Misinformation (unintentional):** Incorrect information spread without an explicit and coordinated intent to deceive or cause harm (e.g. a user who shares a fake post believing it to be true).\n* **Disinformation (intentional):** The deliberate creation and spread of fake news with the specific intent to manipulate public opinion, mislead investigations or damage a competitor.\n* **Malinformation:** Real information but used out of context or intentionally disclosed to cause harm (e.g. a leak of private messages).",
+    examTip: "On the exam, remember that the key difference between Misinformation and Disinformation lies entirely in intentionality (Misinformation has no coordinated malicious intent at the start).",
+  },
+  PhishingCampaignSE_New: {
+    name: "Phishing campaign",
+    definition: "A coordinated operation of sending fraudulent emails to a group of users for malicious or training purposes.",
+    details: "Phases and types of campaigns:\n* **Malicious Campaigns:** Conducted by external attackers to gather credentials, install malware or launch large-scale ransomware attacks within an organization.\n* **Simulation Campaigns (Simulated Phishing):** A fundamental Security Awareness tool managed by the internal security team. It allows the vulnerability of the staff to be measured, statistics (click-rate) to be gathered and the users who fall for the trap to be trained.",
+    examTip: "Simulated phishing campaigns help companies identify the most vulnerable employees and train them dynamically and interactively.",
+  },
+
+  /* ---- Group 6: Password Attacks ---- */
+  BruteForceAtt: {
+    name: "Brute-force attack",
+    definition: "Systematic and exhaustive attempt of every possible character combination until the exact password is found.",
+    details: "Characteristics:\n* **Offline Brute Force:** The attacker steals the database of password hashes and makes the attempts locally on their own hardware (very fast, no account-lockout policy).\n* **Online Brute Force:** Attempts made directly on the web login page (slow and easily blockable).\n\n* **Focused Mini-Example:** A user adopts a weak 4-digit password (`8291`). An automatic program instantly tries all 10,000 possible combinations on the login page in less than a second until it finds it.",
+    examTip: "The main defense against offline brute-forcing is the use of slow, resistant hashing algorithms (e.g. bcrypt, PBKDF2) and long password lengths.",
+  },
+  DictionaryAtt: {
+    name: "Dictionary",
+    definition: "Targeted attack that systematically tries predefined words drawn from a list or dictionary.",
+    details: "Optimization of brute-force:\n* Instead of trying random combinations (e.g. `aaaa`, `aaab`), the attack tries meaningful words, names, historical dates and common passwords present in previous leaks (e.g. `Password123`, `Love`, `Juventus`).\n\n* **Focused Mini-Example:** An attacker loads a wordlist containing the most common Italian dictionary terms and passwords leaked over the years, and guesses in a few moments the password of an administrator who had set `soleemare2020`.",
+    examTip: "The use of passphrases (phrases made up of several random words) makes dictionary attacks ineffective.",
+  },
+  PasswordSprayingAtt: {
+    name: "Password Spraying",
+    definition: "Attempting to access very many different accounts by trying very few extremely common passwords.",
+    details: "How it works and why it bypasses lockout:\n* If you try 5 wrong passwords in a row on `mario.rossi`'s account, the system locks it (Account Lockout).\n* If instead you try the single password `Password123!` just once on 1000 different users, no account will exceed the lockout threshold, allowing the attacker to silently sneak into any vulnerable profile.\n\n* **Focused Mini-Example:** A bot contacts the corporate exchange mail servers testing the username of hundreds of employees by trying the seasonal combination `Winter2026!` without triggering any lockout policy on any specific account.",
+    examTip: "Password Spraying is a horizontal ('one-to-many') attack specifically designed to bypass Account Lockout policies.",
+  },
+  CredentialStuffingAtt: {
+    name: "Credential Stuffing",
+    definition: "Automatic input of username/password pairs leaked from past breaches across various websites.",
+    details: "It exploits the human weakness of credential reuse:\n* If a user uses the same password on both a gaming forum (breached in the past) and the corporate email inbox, the attacker uses automated bots to try those exact credentials on the corporate portal.\n\n* **Focused Mini-Example:** A database of credentials stolen from a minor e-commerce site is acquired by a criminal, who uses an automated script to test those email addresses and passwords on the site of a well-known national online bank, finding several valid accounts.",
+    examTip: "The only definitive mitigation against Credential Stuffing is enabling Multi-Factor Authentication (MFA).",
+  },
+
+  /* ---- Group 7: Network, Wireless & App Attacks ---- */
+  NetworkWirelessAttacks: {
+    name: "Network & Wireless Attacks",
+    definition: "Attacks aimed at intercepting, disrupting or diverting wired or wireless network traffic.",
+    details: "Network attack vectors include:\n* **DDoS (Distributed Denial of Service):** Overloading a server with traffic using botnets to make it unavailable to legitimate users.\n* **On-path Attack (MITM):** Positioning oneself between two computers to spy on or modify the data in transit (e.g. session hijacking).\n* **DNS Poisoning:** Inserting fake IPs into DNS servers to divert users to fraudulent sites.\n* **ARP Spoofing:** Associating a legitimate gateway's IP with the attacker's MAC address in a LAN to intercept all local traffic.\n* **MAC Flooding:** Flooding a switch's memory with fake MAC addresses forcing it to transmit packets in 'fail-open' mode (behaving like a hub) to sniff the packets.\n* **Rogue Access Point (Rogue AP):** An unauthorized wireless AP connected to the physical port of the corporate network without controls.\n* **Evil Twin:** A fraudulent AP that duplicates the same SSID and channels of a corporate Wi-Fi to intercept the login credentials of tricked users.\n* **Bluejacking & Bluesnarfing:** Exploiting Bluetooth connections to send spam (jacking) or steal personal information (snarfing).\n\n* **Focused Mini-Example:** A malicious actor sits in the corporate waiting room and sets up a hotspot with the fictitious name 'Company_Guests_Free' (**Evil Twin**). Visitors connect thinking they are browsing for free, exposing the credentials of their social media and email accounts.",
+    examTip: "The Evil Twin deliberately imitates the name (SSID) of an existing network to induce users to connect spontaneously, whereas the Rogue AP is simply an unauthorized access point physically installed on the network.",
+  },
+  AppCryptoAttacks: {
+    name: "Application & Cryptographic Attacks",
+    definition: "Attacks on the logical flaws of the code or on the implementation of cryptographic algorithms.",
+    details: "The types of application and cryptographic attacks include:\n* **SQL Injection (SQLi):** Injecting SQL commands into unsanitized input fields to gain unauthorized access to the database or destroy data.\n* **Cross-Site Scripting (XSS):** Injecting malicious scripts executed in the browser of legitimate users who visit the vulnerable site.\n* **Buffer Overflow:** Writing data beyond a buffer's fixed memory limit to crash the app or overwrite the return instruction and execute arbitrary code.\n* **CSRF (Cross-Site Request Forgery):** Exploiting the user's active session and cookies to force them to perform unwanted actions (e.g. money transfers) on a trusted web application.\n* **SSRF (Server-Side Request Forgery):** Forcing the vulnerable server to make HTTP requests to internal resources not exposed to the Internet.\n* **Directory Traversal:** Navigating the server's file system through unvalidated input (e.g. `../etc/passwd`) to read confidential system files.\n* **Replay Attack:** Intercepting an authenticated data packet (e.g. a password hash in transit) and retransmitting it to deceive the server and gain access.\n* **Downgrade Attack:** Forcing two systems to establish an obsolete and insecure cryptographic connection in order to decrypt the data more easily.\n* **Birthday Attack:** An attack based on hash-algorithm collisions exploiting the birthday paradox to break the integrity of signatures.\n\n* **Focused Mini-Example:** An attacker enters the string `' OR '1'='1` into the search field of the bank's site (**SQL Injection**). The server interprets the input as a query and returns the complete registry of the bank accounts instead of searching for a single record.",
+    examTip: "Rigorous input validation and output sanitization (Output Encoding) remain the main and most-tested exam defenses against SQL Injection and XSS.",
+  },
+  AmplifiedDDoS_New: {
+    name: "Amplified DDoS attack",
+    definition: "A type of DDoS attack that exploits vulnerable third-party servers (UDP-based) to send disproportionately large responses to the victim, overloading it.",
+    details: "How amplification works:\n* **IP Spoofing:** The attacker sends small requests to open services such as DNS, NTP, SNMP, or SSDP, falsifying the source IP with that of the victim.\n* **Amplification Factor:** The servers respond by sending the victim huge responses (up to hundreds of times larger than the original request).\n* **Impact:** Complete saturation of the victim's bandwidth, causing an immediate block.",
+    examTip: "The amplified DDoS attack relies on the UDP protocol (which requires no handshake, allowing IP spoofing) and on open third-party servers that generate responses much larger than the initial request.",
+  },
+  ReflectedDDoS_New: {
+    name: "Reflected DDoS attack",
+    definition: "A DDoS attack in which the attack requests are bounced or reflected off legitimate intermediary servers before hitting the final target.",
+    details: "Characteristics of Reflected DDoS:\n* **No Direct Contact:** The attacker does not communicate directly with the victim, hiding the real origin of the attack.\n* **IP Spoofing:** The attacker sends request packets to legitimate reflecting servers, setting the victim's IP as the sender IP.\n* **Bounce:** The reflecting servers respond by sending packets to the victim, believing that the victim requested them.\n* **Mitigation:** Difficult to block because the traffic comes from legitimate, authoritative public servers.",
+    examTip: "In a Reflected DDoS attack, the attacker bounces ('reflects') the attack traffic using innocent intermediary servers through spoofing of the victim's IP.",
+  },
+  SQLi_New: {
+    name: "SQL injection",
+    definition: "An attack in which malicious SQL commands are inserted into the application's input fields to manipulate or extract data from the database.",
+    details: "Details of the attack:\n* **Lack of Sanitization:** It occurs when the application concatenates the user's input directly into an SQL query without performing checks.\n* **Effects:** It allows the attacker to bypass authentication, read confidential data, modify it, delete it, or even run administrative commands on the database server (through stored procedures).\n* **Main Countermeasure:** Use of parameterized queries (Prepared Statements) and rigorous input sanitization.",
+    examTip: "The definitive and most-tested exam defense against SQL injection is the systematic adoption of Prepared Statements (parameterized queries).",
+  },
+
+  /* ---- Group 8: Vulnerabilities ---- */
+  CVEVuln: {
+    name: "CVE",
+    definition: "Common Vulnerabilities and Exposures: the standardized public list of known security flaws.",
+    details: "Characteristics of the CVE:\n* **Identification:** It provides a unique ID for each discovered vulnerability (e.g. `CVE-2017-0144` for EternalBlue).\n* **Purpose:** It allows security professionals and vendors to exchange precise information about the same exact flaw using a common international naming.\n\n* **Focused Mini-Example:** An analyst reads that their Fortinet firewall is affected by the vulnerability named `CVE-2023-27997` and can plan the application of the corrective patch pointing exactly to the official datasheet.",
+    examTip: "The CVE is a dictionary of public, known vulnerabilities, not a proprietary or secret database.",
+  },
+  CVSSVuln: {
+    name: "CVSS",
+    definition: "Common Vulnerability Scoring System: a standard framework for assessing and communicating the severity of a vulnerability.",
+    details: "The CVSS score ranges from 0.0 to 10.0 (Critical):\n* **Main Metrics:**\n  - *Base Metrics:* Intrinsic characteristics of the flaw (attack vector, attack complexity, privileges required, user interaction, impact on C-I-A).\n  - *Temporal Metrics:* How the flaw evolves over time (e.g. availability of public exploit code, availability of an official patch).\n  - *Environmental Metrics:* The importance of the affected system in the company's real infrastructure.\n\n* **Focused Mini-Example:** A vulnerability scanner finds a CVSS v3 flaw with a score of `9.8` on the company's web-facing Apache server, forcing the analysts to act for immediate patching outside working hours.",
+    examTip: "A CVSS score between 9.0 and 10.0 indicates a critical severity on the exam that requires immediate action (usually remotely exploitable without authentication).",
+  },
+  ZeroDayVuln: {
+    name: "Zero-Day",
+    definition: "A software vulnerability not yet known to the manufacturer or lacking an official patch or remedy.",
+    details: "Exposure window:\n* **Name:** It comes from the fact that the manufacturer had 'zero days' of notice to prepare a corrective patch.\n* **Danger:** Extremely valuable to sophisticated attackers (Nation-States) because traditional signature-based detection systems cannot intercept it.\n\n* **Focused Mini-Example:** A security company discovers that Apple iOS operating systems are vulnerable to an invisible attack via iMessage with no user interaction (**Zero-Day**). The manufacturer is alerted to prepare and release an emergency update.",
+    examTip: "Anomaly-based IPS systems and sandboxing are the best defenses for identifying Zero-Day exploits before patches are released.",
+  },
+  FalsePositiveVuln: {
+    name: "False Positive",
+    definition: "The erroneous reporting by a scanner or an IDS of a nonexistent vulnerability or attack.",
+    details: "Business impact:\n* It generates noise and wastes time for the security analysts who investigate fictitious alerts.\n* **Solution:** Optimizing and customizing the scan rules and the IDS/SIEM signatures.\n\n* **Focused Mini-Example:** The central antivirus sends a critical Trojan-detection alert on a custom internally developed application, but a manual analysis reveals that it is only harmless code miscataloged by the heuristic engine.",
+    examTip: "On the exam, a credentialed scan drastically reduces False Positives because it directly accesses the registry and local configuration files.",
+  },
+  FalseNegativeVuln: {
+    name: "False Negative",
+    definition: "The failure of the defense tools to report a truly existing vulnerability or attack.",
+    details: "The most serious danger:\n* The vulnerability scanner reports that the system is secure, but in reality it hosts a critical open flaw. This leaves the organization exposed without any awareness of the risk.\n* Typical of Zero-Day attacks or polymorphic malware.\n\n* **Focused Mini-Example:** A malware programmed to mutate its binary signature silently bypasses the corporate defenses because the local antivirus software detects no match and declares the workstation 'protected and clean'.",
+    examTip: "False Negatives expose the company to the maximum level of risk because they create a false sense of security.",
+  },
+
+  /* ---- Group 9: Mitigations ---- */
+  ACLMiti: {
+    name: "ACL",
+    definition: "Access Control List: lists of rules that control and limit access to resources or network traffic.",
+    details: "Scopes of application:\n* **Network ACL (Firewall/Router):** Sequential rules that allow or deny IP packets in transit based on source/destination IP, protocol and ports (e.g. 'Allow TCP traffic on port 443').\n* **FileSystem ACL:** Permissions on files and folders that specify which users or groups can Read, Write or Execute.\n\n* **Focused Mini-Example:** An administrator configures a rule on the corporate router (**Network ACL**) that blocks all incoming traffic except connections coming from the main office's static IP address on port 22 for secure SSH management.",
+    examTip: "Network ACLs typically contain a final implicit rule denying all traffic not explicitly authorized (Implicit Deny).",
+  },
+  SegmentationMiti: {
+    name: "Segmentation",
+    definition: "The practice of dividing a network into isolated, independent subnetworks to limit the reach of an attack.",
+    details: "Security benefits:\n* **Containment:** If a computer in a test network is infected, segmentation prevents the malware from spreading to the sensitive accounting network.\n* **Implementation:** Achieved through VLANs, distinct subnets and the placement of departmental firewalls.\n\n* **Focused Mini-Example:** An administrator configures two distinct VLANs to isolate the guest Wi-Fi network from the internal accounting one (**Segmentation**), preventing an infected guest laptop from scanning or attacking the financial servers.",
+    examTip: "Network segmentation mitigates an attacker's lateral movements within the LAN.",
+  },
+  LeastPrivilegeMiti: {
+    name: "Least Privilege",
+    definition: "The fundamental principle of assigning each user, process or system only the minimum indispensable permissions.",
+    details: "Application:\n* It prevents ordinary users from having local administrative rights on their laptops.\n* It reduces the impact of a malware infection: if the infected user is not an administrator, the malware cannot install itself deeply or disable the antivirus.\n\n* **Focused Mini-Example:** An HR employee is granted permission to access exclusively the employee-contracts folder, but not the financial-statements one (**Least Privilege**), reducing the exposure of corporate data.",
+    examTip: "Least Privilege is the golden rule for countering insider threats and containing account compromise.",
+  },
+  PatchingMiti: {
+    name: "Patching",
+    definition: "The periodic and systematic application of software updates to fix discovered vulnerabilities.",
+    details: "Patch Management cycle:\n* **Test:** Verifying the patch in a pre-production environment before release (to avoid incompatibilities).\n* **Release:** Orderly application during maintenance windows.\n* **Verification:** A new scan to confirm the closure of the vulnerability.\n\n* **Focused Mini-Example:** The IT team receives a notification about a critical web-server vulnerability and schedules an immediate application of the corrective update (**Patching**) during the nightly maintenance window to prevent possible intrusions.",
+    examTip: "Failing to apply patches promptly is the main cause of success for attacks based on known exploits on the exam.",
+  },
+  AppAllowListMiti: {
+    name: "Application Allow List",
+    definition: "A technique that prevents the execution of any software except those explicitly authorized in a list.",
+    details: "Compared to blocking (Block List/Blacklist):\n* **Approach:** It is much more secure because it follows the default-deny philosophy. Any new virus or unknown script will never be able to start, because it is not part of the list of programs authorized by the administrator.\n\n* **Focused Mini-Example:** An employee downloads a freeware PDF-editing program and tries to launch it, but receives a block message from the operating system because the application is not present in the list of authorized ones (**Application Allow List**).",
+    examTip: "Formerly called Whitelisting, it is the most powerful control against the launching of unidentified malicious executables.",
+  },
+  IsolationMiti: {
+    name: "Isolation",
+    definition: "Physically or logically isolating compromised or untrusted systems from the rest of the corporate network.",
+    details: "Methodologies:\n* **Quarantine:** Moving a ransomware-infected endpoint to a special VLAN with no internet or contact with other hosts.\n* **Sandbox:** Running potentially harmful files or links in a fortified, isolated virtualized environment to analyze their behavior in complete safety.\n\n* **Focused Mini-Example:** A user opens a suspicious attachment and the antivirus system automatically launches it inside a temporary, network-less virtual machine (**Sandbox**) to check whether it tries to encrypt files.",
+    examTip: "Isolating an infected machine is the very first Containment action in the Incident Response plan.",
+  },
+  EncryptionMiti: {
+    name: "Encryption",
+    definition: "The use of cryptography to protect the confidentiality of data both at rest and in transit.",
+    details: "Types:\n* **Data-at-rest:** Encryption of hard disks (FDE, BitLocker), databases, files and backups.\n* **Data-in-transit:** Encryption of network packets (HTTPS/TLS, IPsec VPN) to avoid interception.\n\n* **Focused Mini-Example:** An employee loses the corporate laptop at the airport, but the data remains inaccessible to whoever finds the device because the entire hard disk is protected by full encryption (**Data-at-rest Encryption**).",
+    examTip: "Encryption makes stolen data useless to attackers attempting ransomware extortion.",
+  },
+  MonitoringMiti: {
+    name: "Monitoring",
+    definition: "The continuous collection, aggregation and analysis of logs and security events in real time.",
+    details: "Key tools:\n* **SIEM (Security Information and Event Management):** Centralizes the logs of firewalls, servers, databases and performs event correlation looking for attacks.\n* **SOC (Security Operations Center):** The team of specialists that monitors the systems 24/7/365.\n\n* **Focused Mini-Example:** A SIEM server (**Monitoring**) detects a sudden burst of failed login attempts followed by a successful login from a foreign IP at 3 a.m., immediately sending a critical alert to the SOC on-call staff.",
+    examTip: "Continuous monitoring provides the proactive visibility needed to detect complex attacks before they cause serious damage.",
+  },
+  DisablePortsMiti: {
+    name: "Disable Ports/Protocols",
+    definition: "Disabling unused services, superfluous open network ports and insecure cleartext protocols.",
+    details: "Basic hardening:\n* **Ports:** Turning off the physical switch ports in unused offices to prevent unauthorized physical connections.\n* **Protocols:** Banning obsolete protocols such as Telnet (port 23), FTP (port 21), HTTP (port 80) and mandating the secure variants SSH (port 22), SFTP (port 22), HTTPS (port 443).\n\n* **Focused Mini-Example:** While securing a new Linux server, the administrator turns off the Telnet service and disables port 23, forcing operators to use exclusively encrypted SSH connections on port 22.",
+    examTip: "Disabling unused ports and unneeded services is the first fundamental exam step for host hardening.",
+  },
+  ChangePasswordsMiti: {
+    name: "Change Default Passwords",
+    definition: "Immediately replacing the credentials set by the manufacturer (e.g. admin/admin) on any new hardware or software.",
+    details: "Automated attacks:\n* Bots continuously look for the IP addresses of internet-connected IP cameras, routers and printers, trying public lists of default credentials.\n* Failing to change them exposes the systems to a trivial compromise within minutes of installation.\n\n* **Focused Mini-Example:** When installing a new network printer for the office, the IT administrator accesses the web management page and immediately changes the original credentials `admin/1234` with a complex passphrase.",
+    examTip: "The very first security configuration on a new IoT device or network appliance must be changing the default passwords.",
+  },
+  RemoveSoftwareMiti: {
+    name: "Remove Unnecessary Software",
+    definition: "Removing any program, utility, compiler or service not strictly necessary to the server's operation.",
+    details: "Reducing attack vectors:\n* Less installed software means less code exposed to potential future bugs or exploits.\n* It also makes the patch-management process and memory-resource optimization faster.\n\n* **Focused Mini-Example:** On a production Oracle database server, the administrator uninstalls the web browsers, the games built into the operating system and the unused Python and GCC compilers (**Remove Unnecessary Software**), zeroing out the avenues for local privilege escalation.",
+    examTip: "Removing unneeded software directly reduces a host's Software Attack Surface.",
+  },
+
+  /* ---- Group 10: Threat Intelligence ---- */
+  ThreatIntelligenceRes: {
+    name: "Threat Intelligence",
+    definition: "Structured, evidence-based information regarding emerging threats, hostile actors, their motivations, capabilities and attack patterns, used to make informed defensive decisions.",
+    details: "**Threat Intelligence** is structured into three operational levels:\n* **Strategic Intelligence:** High-level information intended for corporate management to understand global threat trends, geopolitical risks and plan long-term security investments.\n* **Tactical Intelligence:** Technical details on the Tactics, Techniques and Procedures (TTP) used by attackers. It helps SOC defenders understand how threats move.\n* **Operational/Technical Intelligence:** Specific and immediate Indicators of Compromise (IoC), such as malicious IP addresses, command-and-control (C2) domains, or malware file hashes, used to instantly configure firewalls, IDS and SIEM.",
+    examTip: "Threat Intelligence allows organizations to move from a purely reactive defense to a proactive posture, anticipating attackers' moves before they hit the infrastructure.",
+  },
+  OSINTRes: {
+    name: "OSINT",
+    definition: "Open Source Intelligence: the methodology of collecting, analyzing and correlating sensitive or useful data and information coming exclusively from public, freely accessible and legal sources.",
+    details: "**OSINT** is widely used both by ethical hackers for passive reconnaissance and by attackers to prepare targeted attacks:\n* **Common Sources:**\n  - *Social Networks:* LinkedIn, Facebook or Twitter profiles to identify the roles and org chart of company employees.\n  - *Public Databases:* DNS records, WHOIS databases, registered IP addresses, chamber-of-commerce registries.\n  - *Search Engines:* Google Dorking to find sensitive files indexed by mistake, Shodan to map IoT devices and appliances exposed on the internet.\n  - *Code Repositories:* GitHub or GitLab to spot passwords, API keys or debug comments accidentally left by programmers.",
+    examTip: "OSINT relies on public-domain sources and generates no direct traffic toward the target's servers, making it completely invisible to the victim's monitoring systems.",
+  },
+  ProprietaryIntelligenceRes: {
+    name: "Proprietary Intelligence",
+    definition: "Commercial, private and exclusive threat information collected and analyzed by specialized cybersecurity companies, provided to customers on a paid subscription basis.",
+    details: "Unlike public or open-source sources, **Proprietary Intelligence** offers key competitive advantages:\n* **Quality and Accuracy:** The data is constantly validated and analyzed by dedicated teams of human analysts, drastically reducing false positives.\n* **Real-Time Feeds:** It provides exclusive IoCs and security advisories well before they are disclosed in national public databases.\n* **Examples:** Commercial threat feeds provided by market-leading vendors such as CrowdStrike, Mandiant or Palo Alto Networks.",
+    examTip: "Proprietary Intelligence offers the highest reliability and timeliness of information because it is based on non-public proprietary data constantly validated by dedicated experts.",
+  },
+  InformationSharingRes: {
+    name: "Information Sharing",
+    definition: "The collaborative practice in which public and private organizations in the same or different sectors exchange data and IoCs about the cyberattacks they have suffered to strengthen the common defense.",
+    details: "Information sharing makes it possible to counter large-scale coordinated attacks:\n* **ISAC (Information Sharing and Analysis Centers):** Sector-based organizations (e.g. FS-ISAC for the financial sector, Aviation-ISAC for aviation) dedicated to the secure exchange of intelligence among competing companies united in security.\n* **Standards and Protocols:** To automate the exchange of machine-readable information, the following standards are used:\n  - *STIX (Structured Threat Information eXpression):* A standardized XML/JSON language to describe threat information.\n  - *TAXII (Trusted Automated eXchange of Intelligence Information):* A secure application-layer network protocol designed specifically to transport STIX messages.",
+    examTip: "STIX defines 'what' is shared (the data structure of the threat), while TAXII defines 'how' that information is securely exchanged over the network.",
+  },
+  DarkWebIntelligenceRes: {
+    name: "Dark Web Intelligence",
+    definition: "The proactive monitoring and inspection of the channels and illegal markets on anonymous networks (such as Tor or I2P) looking for stolen corporate credentials, exfiltrated data or attack plans directed against the organization.",
+    details: "**Dark Web Intelligence** makes it possible to intercept breaches well before they have a devastating impact:\n* **What is searched for:** Corporate databases put up for sale, employee credentials stolen through infostealer malware, discussions in hacker forums on how to penetrate the organization's network, or ready-to-use ransomware kits to hit the brand.\n* **Tools:** Automated bots and analysts infiltrated in protected channels (Telegram, closed forums) that scan the sources without compromising the security of the corporate assets.",
+    examTip: "Dark web intelligence is crucial for the early detection of credential theft or data leaks that have already occurred but not yet been discovered internally by IT.",
+  },
 };
 
 /* ------------------------------------------------------------------ *
