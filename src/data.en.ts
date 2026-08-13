@@ -1118,6 +1118,143 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "Dark web intelligence is crucial for the early detection of credential theft or data leaks that have already occurred but not yet been discovered internally by IT.",
   },
   },
+
+  /* ================= Domain 3 ================= */
+  3: {
+  /* ---- Group 1: Cloud ---- */
+  OnPremisesArchitecture: {
+    name: "On-premises",
+    definition: "An architectural model that involves hosting, installing and directly managing the IT infrastructure within the organization's physical premises.",
+    details: "In the on-premises (or on-prem) model, the company has physical ownership and total control over servers, network and data. It can be configured in either a centralized or decentralized way. Although it offers maximum control and compliance for ultra-sensitive data, it requires high initial investment (CapEx), constant maintenance and physical security management (cooling, power, surveillance).",
+    examTip: "The On-premises architecture indicates that the hardware is physically located within the corporate premises, placing the entire responsibility for security (physical and logical) on the organization itself.",
+  },
+  CentralizedArchitecture: {
+    name: "Centralized",
+    definition: "An architectural model that involves using a single point of control or a central authority to manage an entire system or service.",
+    details: "Centralized systems offer significant advantages in terms of management simplicity, consistency of security policies and ease of monitoring. However, they have critical drawbacks such as being a Single Point of Failure (SPOF), scalability limitations and a total lack of autonomy for the individual peripheral units.",
+    examTip: "A Centralized model concentrates all control and decision-making in a single point; this simplifies administration but creates a single critical point of failure.",
+  },
+  DecentralizedArchitecture: {
+    name: "Decentralized",
+    definition: "An architectural model that distributes control, decisions and management authority across multiple points distributed in the system.",
+    details: "Decentralized systems improve overall resilience (eliminating single points of failure), increase horizontal scalability and offer greater operational autonomy to the local nodes or departments. On the other hand, they introduce greater integration complexity, potential configuration inconsistencies and significant security challenges.",
+    examTip: "Unlike the centralized model, the Decentralized architecture distributes authority across multiple nodes, increasing resilience at the expense of greater management complexity.",
+  },
+  IaaSCloud: {
+    name: "IaaS",
+    definition: "Infrastructure as a Service: a cloud model in which the provider supplies fundamental compute, storage and network resources.",
+    details: "In an IaaS model:\n* **What the provider manages:** Physical servers, hypervisors, physical storage systems and physical network components (datacenter).\n* **What the customer manages:** Operating systems (OS), middleware, application runtimes, data and the exact applications.\n* **Examples:** AWS EC2, Google Compute Engine (GCE), Microsoft Azure VM.\n* **Security Implications:** The customer is responsible for host hardening, installing OS patches and configuring the virtual network firewalls (e.g. Security Groups).\n\n* **Focused Mini-Example:** A company launches three virtual machines on Amazon EC2 (**IaaS**) to host a database. The company must manually install the Linux OS security patches and configure the Security Groups to restrict access to the database port, while Amazon only takes care of the physical maintenance of the hardware and the hypervisor.",
+    examTip: "On the exam, in IaaS the customer has the highest level of administrative control and the greatest security responsibility compared to the other cloud models.",
+  },
+  PaaSCloud: {
+    name: "PaaS",
+    definition: "Platform as a Service: a model in which the provider supplies a ready-to-use runtime and development environment without having to manage the underlying hardware and operating systems.",
+    details: "In a PaaS model:\n* **What the provider manages:** All the hardware, virtualization, operating systems, middleware and backend databases.\n* **What the customer manages:** The code of their own applications and the access/operation configurations of the application.\n* **Examples:** Heroku, Google App Engine, AWS Elastic Beanstalk.\n* **Security Implications:** The security of the operating system and system patches is entirely managed by the cloud provider. The customer must focus only on the security of the code (Application Security, OWASP Top 10) and on identity and access management (IAM).\n\n* **Focused Mini-Example:** A team of developers uploads the code of a Node.js application to Google App Engine (**PaaS**). They do not have to worry about configuring web servers, Linux or patching the OS (managed by Google), but they must protect the application from SQL Injection vulnerabilities in their code.",
+    examTip: "In PaaS, the customer does not handle OS patching or the base network infrastructure; their focus is solely on the security of the code and data.",
+  },
+  FaaSCloud: {
+    name: "FaaS",
+    definition: "Function as a Service: a serverless cloud model in which the provider runs individual blocks of code (functions) triggered by specific events.",
+    details: "In a FaaS model (also known as Serverless):\n* **What the provider manages:** Physical servers, virtualization, operating systems, automatic scaling of resources (from zero to thousands and vice versa) and management of the code-execution runtime.\n* **What the customer manages:** Only the source code of the function and its triggers/access permissions (IAM).\n* **Examples:** AWS Lambda, Google Cloud Functions, Azure Functions.\n* **Security Implications:** The customer does not have to configure OS hardening or server security patches, but the attack surface shifts entirely to the APIs, the logical vulnerabilities of the function code and a correct and rigorous configuration of the IAM permissions to avoid unauthorized access to other resources.\n\n* **Focused Mini-Example:** A company implements a system in which, every time a user uploads a photo to the cloud, a function on AWS Lambda (**FaaS**) is triggered to resize it automatically. The company only pays for the actual milliseconds of the function's execution, without managing any web server.",
+    examTip: "On the CompTIA exam, the FaaS (Serverless) model shifts almost the entire infrastructure responsibility to the cloud provider, leaving the customer only the responsibility for the code and the access permissions.",
+  },
+  SaaSCloud: {
+    name: "SaaS",
+    definition: "Software as a Service: a model in which the provider distributes a complete, ready-to-use application accessible via web/API.",
+    details: "In a SaaS model:\n* **What the provider manages:** The entire technology stack, from the hardware to the software licenses, from application maintenance to the databases.\n* **What the customer manages:** Only user access, basic usage configurations and the protection/classification of the data entered into the application.\n* **Examples:** Microsoft 365, Google Workspace, Salesforce.\n* **Security Implications:** The customer has minimal or no control over the security of the application itself, having to rely on the provider's third-party certifications (e.g. SOC 2, ISO 27001). However, they must apply strong authentication policies (MFA, complex passwords) to protect the accounts.\n\n* **Focused Mini-Example:** A company adopts Microsoft 365 (**SaaS**) for email. The company's IT administrator cannot modify the security settings of Microsoft's mail servers, but configures mandatory multi-factor authentication (MFA) for all employees to avoid unauthorized access to the mailboxes.",
+    examTip: "Even in the SaaS model, the ultimate responsibility for the corporate data, its classification and the governance of access remains entirely the customer's.",
+  },
+  SharedResponsibilityCloud: {
+    name: "Shared Responsibility Model",
+    definition: "The fundamental cloud-computing framework that clearly outlines which security controls belong to the provider and which to the customer.",
+    details: "The cornerstone principle distinguishes between:\n* **Security OF the Cloud (the Provider's):** Physical protection of the datacenters, global hardware infrastructure, virtualization hypervisor, security of the native services provided.\n* **Security IN the Cloud (the Customer's):** Protection of the stored data, encryption (client-side and server-side), patches of the guest operating systems, identity and access management (IAM), software firewall rules, security of the app's code.\n* **Dynamic split:** The dividing line shifts upward as you move from IaaS, to PaaS, up to SaaS.\n\n* **Focused Mini-Example:** In compliance with the **Shared Responsibility Model**, if a cloud-hosted database server is breached because the IT administrator left the access port open to everyone without a password, the blame falls on the customer (security 'in' the cloud), not on the cloud provider that guarantees the power and physical security of the datacenter.",
+    examTip: "Remember that the physical security of the hardware and the security of the physical data centers always remain exclusively the Cloud Provider's responsibility.",
+  },
+  ResponsibilityMatrixConcept: {
+    name: "Responsibility matrix",
+    definition: "A formal document that clearly defines the security, compliance and operational roles and responsibilities between the different parties involved in a cloud service agreement (such as the provider, the customer and the end user). It is not an architectural model.",
+    details: "The responsibility matrix (often mapped through RACI models) clarifies who must manage, approve or supervise each aspect in a cloud environment. It is a crucial tool to avoid security gaps caused by misunderstandings about who should apply a specific patch, monitor the logs or manage the backups.",
+    examTip: "Remember that the Responsibility Matrix is NOT an architecture model, but a contractual and operational document that maps who is responsible for which security and operational controls in the cloud.",
+  },
+  MonolithicArchitecture: {
+    name: "Monolithic",
+    definition: "Monolithic Architecture: a software development model in which the entire application (user interface, business logic and data access) is designed and executed as a single cohesive and indivisible program.",
+    details: "Characteristics of monolithic architectures:\n* **Single block:** All the code resides in a single codebase and is compiled/deployed together on a single server or cluster.\n* **Initial simplicity:** Easy to develop, test and deploy initially for small projects.\n* **Security challenges:** If an attacker manages to exploit a single weakness in the user-interface code, they immediately gain access to the entire monolith, including the sensitive data, because the application runs with the same set of OS permissions.\n* **Operational disadvantages:** Difficult to scale horizontally (the entire monolith must be replicated) and vulnerable to global outages (a single bug can crash the entire application).",
+    examTip: "In monolithic architectures, the compromise of a single component of the application exposes the entire system to breach due to the lack of logical boundaries and process isolation.",
+  },
+  MicroservicesArchitecture: {
+    name: "Microservices",
+    definition: "Microservices Architecture: an architectural approach in which a complex application is divided into a collection of small, independent, decentralized and loosely coupled services.",
+    details: "Advantages and requirements of microservices:\n* **Process isolation:** Each microservice performs a specific business function (e.g. cart, authentication, payments), has its own dedicated database and communicates through lightweight APIs.\n* **Security robustness:** If one microservice (e.g. product catalog) is compromised, the attacker is isolated within that microservice and has no direct access to the payments or users microservice, mitigating lateral movement.\n* **Independent scalability:** It allows only the individual services that need it to be scaled horizontally.\n* **Complexity:** It introduces complex network challenges, management of authentication tokens and the need for API inspection.",
+    examTip: "The Microservices architecture reduces the blast radius of a compromise, ensuring that the failure or breach of one service does not automatically propagate to the others.",
+  },
+  APIArchitecture: {
+    name: "API",
+    definition: "Application Programming Interface: a set of definitions and protocols that allow different software modules or microservices to communicate, exchange data and integrate with each other in a structured and secure way.",
+    details: "The role of APIs in modern architectures:\n* **Data interchange:** They constitute the connective tissue of microservices and cloud applications, typically implemented through REST protocols (JSON over HTTPS) or gRPC.\n* **Attack surface:** They represent a primary target for attackers (e.g. OWASP API Security attacks, such as stolen credentials or violations of rate limits).\n* **API Protection:** They require the rigorous use of API Keys, robust authentication tokens (such as OAuth/JWT), transit encryption (TLS) and API Gateway solutions with rate limiting to prevent abuse and DoS attacks.",
+    examTip: "APIs expose programmatic functionality externally: to protect them, it is essential to apply channel encryption (HTTPS), token-based authentication (JWT/OAuth) and traffic-limiting filters (Rate Limiting).",
+  },
+  ServerlessArchitecture: {
+    name: "Serverless",
+    definition: "Serverless Architecture: a cloud execution model in which the cloud provider entirely manages the allocation of compute resources and the on-demand execution of code, relieving the developer of any server management.",
+    details: "Characteristics of the Serverless architecture:\n* **No servers to manage:** The infrastructure abstraction is complete. There are no virtual machines to configure, update or protect with OS-level patches.\n* **Automatic infinite scalability:** The system scales instantly and dynamically from zero to millions of requests based on the actual traffic.\n* **Pay per use:** Costs are calculated exclusively on the actual execution time (per millisecond) and the number of requests, eliminating idle costs (servers on but unused).\n* **Associated services:** It does not include only compute (FaaS, such as AWS Lambda), but also serverless databases (e.g. DynamoDB), object storage (e.g. S3) and messaging queues.",
+    examTip: "The Serverless architecture eliminates the need to install guest-OS patches, transferring this burden entirely to the cloud provider and redefining the shared responsibility matrix.",
+  },
+  HypervisorConcept: {
+    name: "Hypervisor",
+    definition: "Hypervisor (or Virtual Machine Monitor - VMM): the base software, firmware or hardware that creates, runs and manages virtual machines (VMs), controlling the allocation and isolation of the underlying physical resources.",
+    details: "Fundamental types of Hypervisor:\n* **Type 1 (Bare-Metal):** Runs directly on the host's physical hardware without an underlying operating system. It is the most secure, performant and efficient solution used in corporate data centers and in the cloud. Examples: VMware ESXi, Microsoft Hyper-V, KVM.\n* **Type 2 (Hosted):** Runs as an application within a pre-existing host operating system. Less performant and less secure, ideal for local development environments. Examples: VirtualBox, VMware Workstation.\n* **VM Escape Risk:** The most serious security threat for a hypervisor, in which an attacker inside a guest virtual machine manages to exploit a hypervisor vulnerability to break out of the VM's isolated environment and execute code on the host system or on the other co-located VMs.",
+    examTip: "The Type 1 (Bare-metal) Hypervisor offers superior performance and more robust security isolation than Type 2, because it eliminates the attack surface associated with an intermediate host operating system.",
+  },
+  VirtualMachineConcept: {
+    name: "Virtual Machine (VM)",
+    definition: "Virtual Machine: the complete software emulation of a physical computer that runs a guest operating system and its applications completely independently on shared hardware resources.",
+    details: "Characteristics and advantages of VMs:\n* **Complete isolation:** Each VM has its own complete OS kernel, a RAM partition, virtual storage space and dedicated, isolated CPU resources managed by the hypervisor.\n* **Hardware consolidation:** It allows dozens of different servers (Linux, Windows) to run on the same physical hardware server, optimizing resource usage.\n* **Portability:** VMs can be easily saved as files (OVA/OVF format), replicated, copied and moved between different hosts.",
+    examTip: "Virtual Machines (VMs) offer the highest level of software isolation for running workloads, because each environment runs a completely independent OS kernel.",
+  },
+  GuestOSConcept: {
+    name: "Guest OS",
+    definition: "Guest Operating System: the operating system installed and run inside a virtual machine or a logical partition managed by a hypervisor.",
+    details: "The security of the Guest OS in the infrastructure:\n* **Kernel independence:** The Guest OS acts as if it had dedicated physical hardware, ignoring the presence of other VMs co-located on the same host.\n* **Customer responsibility:** In the IaaS cloud model, the patching, hardening of local policies, installation of antivirus and configuration of the Guest OS's local firewall are the exclusive responsibility of the user/customer, not the cloud provider.\n* **Examples:** A Windows Server 2022 or an Ubuntu Linux distribution run as a VM inside an ESXi host.",
+    examTip: "The security and updating (patching) of the guest operating system (Guest OS) inside cloud virtual machines fall entirely under the responsibility of the customer/user.",
+  },
+  HostOSConcept: {
+    name: "Host OS",
+    definition: "Host Operating System: the main operating system that runs directly on the physical hardware of a server or computer, responsible for hosting Type 2 hypervisors or containerization engines.",
+    details: "The role of the Host OS in overall security:\n* **Single point of control:** It provides the base system services, hardware driver management and physical access to the machine's resources.\n* **Critical vulnerability:** If the Host OS is compromised, all the containers (Docker) or hosted virtual machines (Type 2) running on it are instantly compromised, because the attacker gains access to the kernel or the underlying physical storage system.\n* **Mandatory hardening:** It requires extremely rigorous log monitoring, the removal of superfluous software and continuous patching of the Host OS kernel.",
+    examTip: "In container-based architectures (such as Docker), the host operating system (Host OS) shares its kernel with all the containers running on it, making its protection the cornerstone of the security of the entire server.",
+  },
+  ContainerConcept: {
+    name: "Container",
+    definition: "Container: a lightweight OS-level virtualization technology that allows an application and all its dependencies (libraries, configuration files) to be packaged into a single isolated and executable image.",
+    details: "Characteristics of Containers compared to VMs:\n* **Kernel Sharing:** Unlike virtual machines, containers do not include an entire guest operating system; instead they share the Host OS kernel, isolating themselves at the software level through kernel constructs (such as namespaces and cgroups on Linux).\n* **Efficiency and lightness:** They are a few megabytes in size, start in fractions of a second and consume very little RAM/CPU compared to VMs.\n* **Container Escape Risk:** The security threat in which an attacker manages to exploit a local vulnerability of the shared kernel or a bad configuration of the container's privileges to 'escape' and gain root access on the Host OS.",
+    examTip: "Containers provide lightweight virtualization by sharing the Host OS kernel, which makes them very efficient but with a lower level of security isolation than traditional virtual machines.",
+  },
+  DockerConcept: {
+    name: "Docker",
+    definition: "Docker: the most widespread open-source containerization platform and runtime globally, used to create, distribute and run applications inside standardized containers.",
+    details: "The security and operation of Docker:\n* **Docker Engine:** The system daemon that manages the entire lifecycle of containers, images, virtual networks and storage volumes on the Host OS.\n* **Docker Registry:** Public or private databases (such as Docker Hub) used to store and download container images. Images uploaded by unknown third parties may contain malware or preinstalled vulnerabilities (they require image security-inspection and scanning tools).\n* **Security Best Practices:**\n  - Never run the container processes as the `root` user.\n  - Perform automated image scanning (Vulnerability Scanning) to detect vulnerable software libraries before deployment.\n  - Configure resources as read-only (Read-Only Root Filesystem) where possible to block hostile changes to the running container.",
+    examTip: "To protect Docker environments, always apply the least-privilege principle by configuring containers to run with non-root users and scan the images to detect vulnerabilities before deployment.",
+  },
+  CostCloud: {
+    name: "Cost",
+    definition: "Security and Infrastructure Cost: the overall economic assessment (Total Cost of Ownership - TCO) associated with the design, implementation, management and maintenance of security measures and IT resources.",
+    details: "The analysis of security costs involves:\n* **Security balancing:** The cost of implementing a security control should never exceed the monetary value of the asset it is intended to protect.\n* **TCO (Total Cost of Ownership):** It includes the costs of purchasing software/hardware, annual licenses, employee training, energy consumption, air conditioning and specialized personnel costs for management.\n* **Economic transition:** The move to the cloud completely restructures the organization's cost management, replacing large initial capital expenditures (CapEx) with a model of recurring operational expenditures (OpEx) based on real consumption.",
+    examTip: "Financial security planning requires calculating the return on investment (ROI) of the controls and ensuring that the cost of the countermeasures is proportionate to the value of the protected assets.",
+  },
+  CAPEXCloud: {
+    name: "CAPEX",
+    definition: "Capital Expenditure: the initial long-term funds and investments used by an organization to purchase, upgrade and maintain tangible physical assets such as servers, storage, network hardware and data center infrastructure.",
+    details: "Characteristics of CapEx in IT:\n* **Heavy initial investment:** It requires the immediate outlay of large financial capital even before the service or application is operational.\n* **Amortization and depreciation:** The purchased hardware constitutes a company asset that depreciates over time (typically in 3-5 years).\n* **Typical of the On-premises model:** The purchase of industrial air conditioners, diesel generators, physical network switches, fences and physical servers falls entirely under the CapEx classification.",
+    examTip: "The construction and setup of a private on-premises physical data center constitutes a classic capital expenditure (CapEx) due to the large initial hardware investment required.",
+  },
+  OPEXCloud: {
+    name: "OPEX",
+    definition: "Operational Expenditure: the ongoing, recurring costs associated with the ordinary management of the business and the day-to-day IT infrastructure, paid on a recurring basis.",
+    details: "Characteristics of OpEx in IT:\n* **Consumption-based model:** Services are paid in the form of monthly fees, subscriptions or billed based on the resources actually consumed per minute or hour.\n* **Flexibility and scalability:** It allows the organization to increase or reduce IT resources instantly based on market needs, paying only for what is actually needed (pay-as-you-go).\n* **Typical of Cloud Computing:** The expenses for using IaaS cloud instances (e.g. AWS Lambda or EC2 virtual machines), the subscription to SaaS services (e.g. Microsoft 365) and the internet connectivity fee fall entirely under the OpEx classification.",
+    examTip: "Cloud Computing transforms the financial management of corporate IT by shifting costs from large initial capital expenditures (CapEx) to flexible, recurring operational expenditures (OpEx).",
+  },
+  },
 };
 
 /* ------------------------------------------------------------------ *
