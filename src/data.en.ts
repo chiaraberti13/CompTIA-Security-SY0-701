@@ -2338,6 +2338,78 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Frequent in embedded systems, medical devices, industrial systems (ICS) and legacy systems running no-longer-supported software. It requires external compensating security measures (such as firewalls or segmentation).",
     examTip: "Faced with the Inability to Patch a critical system, applying compensating controls such as physical or logical segmentation is the correct exam answer.",
   },
+  ActiveReconnaissanceConcept: {
+    name: "Active reconnaissance",
+    definition: "The systematic gathering of information about a target's IT infrastructure through direct technical interaction with its systems or network.",
+    details: "**Active Reconnaissance** involves sending targeted packets toward the victim's systems to map their topology. Main examples include:\n* **Port scanning:** Identification of open TCP/UDP ports on a host (e.g. through Nmap).\n* **Banner grabbing:** Reading service headers to determine the exact version of the software or operating system.\n* **Ping sweep:** Detection of active hosts in a given IP subnet.\nBecause it interacts directly with the servers, this approach always leaves evident traces in the logs of firewalls, IDS/IPS and operating systems.",
+    examTip: "Active reconnaissance is distinguished by its direct interactivity with the target, which entails a high risk of detection by security monitoring systems (SOC).",
+  },
+  PassiveReconnaissanceConcept: {
+    name: "Passive reconnaissance",
+    definition: "The gathering of information about a target conducted without directly interacting with or sending traffic to its systems and network infrastructure.",
+    details: "**Passive Reconnaissance** relies on public, third-party or freely accessible sources to collect sensitive information without alerting the target. Main examples include:\n* **OSINT (Open Source Intelligence):** Searches on public search engines or professional social networks (e.g. LinkedIn) to map the org chart or the technologies cited in job postings.\n* **DNS Queries:** Querying public DNS records (MX, TXT, SPF, DKIM records) and WHOIS information.\n* **Shodan / Censys:** Consulting third-party databases and search engines that index previously scanned IoT devices and servers.",
+    examTip: "Passive reconnaissance is completely invisible to the target's detection systems (such as IDS/IPS and firewalls) since the attacker sends no packet directly to the victim's infrastructure.",
+  },
+  VulnerabilityAssessmentConcept: {
+    name: "Vulnerability Assessment",
+    definition: "A systematic and scheduled process to identify, quantify and prioritize the known vulnerabilities present in enterprise systems, networks and applications, without actively exploiting them.",
+    details: "The Vulnerability Assessment (VA) focuses on discovering and classifying weaknesses, using automated vulnerability scanners. The phases include asset identification, scanning, analysis of the results (discarding false positives) and drafting a report with remediation recommendations, ordering the flaws by severity (e.g. through CVSS).",
+    examTip: "Unlike Penetration Testing, which simulates real attacks to actively exploit flaws, the Vulnerability Assessment is purely diagnostic and stops at the identification and prioritization of the weak points.",
+  },
+  BlackBoxTesting: {
+    name: "Black box",
+    definition: "A penetration testing or assessment methodology in which the security analyst has no prior knowledge of the target's infrastructure, source code or systems.",
+    details: "In **Black Box** testing, the professional acts exactly like a hostile external attacker, having to entirely carry out the reconnaissance phase to discover IP addresses, architecture and exposed services. It is useful for testing the external perimeter security posture and the detection systems (IDS/firewall) under real conditions.",
+    examTip: "Black Box testing most faithfully simulates an external cyber attack, but requires more time for reconnaissance and risks overlooking critical internal vulnerabilities.",
+  },
+  WhiteBoxTesting: {
+    name: "White box",
+    definition: "A testing or analysis methodology in which the tester has full access to all the target's internal information, including source code, network diagrams, configurations and administrative credentials.",
+    details: "In **White Box** testing, the analyst has complete visibility of the system. This allows performing thorough code reviews (static code analysis), meticulous configuration checks and identifying deep logical flaws in reduced time, without having to waste time finding access or mapping the systems.",
+    examTip: "White Box testing ensures maximum coverage and depth of analysis, but does not realistically simulate the difficulties and the real path of an external attacker.",
+  },
+  GreyBoxTesting: {
+    name: "Grey box",
+    definition: "A middle ground between Black Box and White Box testing, in which the tester has access to partial information about the system, such as a standard user's credentials or basic network diagrams.",
+    details: "**Grey Box** testing is extremely widespread and efficient. It simulates realistic scenarios in which a malicious insider (insider threat) or an external attacker who has already compromised a standard account tries to breach the system to escalate their privileges (privilege escalation) or move laterally.",
+    examTip: "Grey Box testing optimizes the time and costs of audit activities, focusing directly on verifying internal security controls starting from a realistic preliminary access point.",
+  },
+  PassiveTestingConcept: {
+    name: "Passive",
+    definition: "A non-invasive and non-intrusive approach to security assessment, limited to observing, listening to and analyzing information or network traffic without sending packets or interacting with the targets.",
+    details: "**Passive** activities include the silent capture of network packets (sniffing) to analyze open ports or vulnerable protocols in transit, and reconnaissance based on public OSINT sources. It does not generate anomalous traffic on the target systems, reducing to zero the risk of causing instability or disruptions and of being detected by defensive systems.",
+    examTip: "The Passive approach ensures that no information or packet is sent directly to the target, ruling out any risk of alerting the SOC monitoring system or interrupting production services.",
+  },
+  RulesOfEngagementRes: {
+    name: "Rules of Engagement (RoE)",
+    definition: "Rules of Engagement: Formal and binding document that defines the operational limits, boundaries, authorizations, emergency contacts and legal constraints of a penetration test.",
+    details: "The **Rules of Engagement** document specifies:\n* **Scope:** Which hosts, IP addresses, subnets, services or applications can be scanned or attacked, and which are explicitly excluded (e.g. critical production servers or third-party cloud systems).\n* **Timing:** Authorized time windows for executing the tests (e.g. only on weekends or at night to reduce the impact on the business).\n* **Permitted techniques:** Whether the use of DDoS attacks, social engineering on staff (phishing) or physical attacks on the premises is allowed.\n* **Communications:** Who to notify in case of an unexpected system crash or the discovery of a critical-level vulnerability (Zero-Day).\n\n* **Small Focused Example:** Before starting the annual test, the bank and the cybersecurity company sign the **Rules of Engagement** (RoE), which establishes that the home banking portal can be attacked only between 02:00 and 05:00 in the morning, and that carrying out Denial of Service (DoS) attacks is strictly forbidden so as not to interrupt customers' real operations.",
+    examTip: "The Rules of Engagement (RoE) are indispensable legally and operationally before conducting any penetration test to avoid criminal penalties and accidental damage to systems.",
+  },
+  ExploitationRes: {
+    name: "Exploitation",
+    definition: "Exploitation: The phase of the penetration test or cyber attack in which specific code (exploit) is used to actively exploit an identified vulnerability and gain unauthorized access.",
+    details: "**Exploitation** represents the crucial step that differentiates penetration testing from a simple passive vulnerability scan:\n* **Goal:** To demonstrate the real field exploitability of a software bug, bypassing security controls.\n* **Payload:** The attack code (exploit) carries a payload (e.g. a reverse shell) to allow the attacker to execute commands remotely on the victim server.\n* **Risks:** It can cause system crashes, database corruption or interruption of business services.\n\n* **Small Focused Example:** Having identified an unpatched Apache Tomcat vulnerability, the penetration tester performs **Exploitation** by launching a known exploit found online. The remote machine processes the malicious request and returns a command shell with system privileges to the tester, confirming that the flaw is really exploitable.",
+    examTip: "While the Vulnerability Scan merely reports the theoretical presence of a vulnerability, the Exploitation phase demonstrates its real exploitability and the consequent logical impact on the system.",
+  },
+  LateralMovementRes: {
+    name: "Lateral Movement",
+    definition: "Lateral Movement: The techniques used by an attacker or tester to extend their control to other systems, servers and resources within the same corporate network once an initial access point is obtained.",
+    details: "**Lateral Movement** allows the attacker to explore the internal network looking for the final target (e.g. the financial database or the domain controller):\n* **Credential Harvesting:** Extracting passwords or hashes from the local memory of the compromised host (e.g. through Mimikatz).\n* **Exploiting Trust:** Using the obtained credentials or tokens to legitimately authenticate to other servers on the network.\n* **Common Protocols:** Using native remote administration tools such as RDP, SSH, PowerShell Remoting (WinRM) or SMB/WMI to move between Windows/Linux computers.\n\n* **Small Focused Example:** After compromising a marketing user's PC through phishing, the attacker analyzes the machine's RAM, extracts the credentials of a local support administrator and reuses them to connect via **RDP** to a staging server on the same local network, thus moving 'laterally'.",
+    examTip: "Network segmentation (VLANs, isolated subnets) and the strict application of the Least Privilege principle are the primary countermeasures to block lateral movement within the company.",
+  },
+  PersistenceRes: {
+    name: "Persistence",
+    definition: "Persistence: The set of techniques that allow an attacker or penetration tester to maintain access to a compromised system even in case of a server reboot, change of user credentials or interruption of the initial connection.",
+    details: "The goal of **Persistence** is to avoid having to re-run the exploitation phase (which could be detected or no longer feasible):\n* **Common Methods:**\n  - *Registry Run Keys:* Creating automatic-startup registry keys in Windows.\n  - *Scheduled Tasks:* Configuring scheduled tasks or cron jobs that periodically execute the backdoor.\n  - *Backdoor Services:* Installing deceptive new system services or counterfeit firmware.\n  - *Local Accounts:* Secretly creating dormant administrative accounts.\n\n* **Small Focused Example:** A penetration tester gains access to a Linux server and, to ensure **Persistence**, adds a line to the system's `cron` file. This instruction forces the server to open a reverse-shell connection to the tester's IP every Monday at 02:00 in the morning, regardless of whether the server is rebooted by the sysadmins.",
+    examTip: "Detecting persistence requires continuous monitoring of registry changes, inspection of scheduled tasks and the use of EDR tools able to analyze unusual processes started at boot.",
+  },
+  PivotingRes: {
+    name: "Pivoting",
+    definition: "Pivoting (or Tunneling): The technique of using an already-compromised host (called a Pivot) as a logical intermediary to launch scans or attacks against other internal systems located in an otherwise inaccessible isolated network.",
+    details: "**Pivoting** allows bypassing perimeter firewalls and exploring private internal networks:\n* **How it works:** The attacker establishes a logical tunnel (often through a SOCKS proxy or SSH port forwarding) through the breached computer. All the attack traffic generated by the attacker's machine is routed through the pivot host, making it appear as legitimate traffic originating from within the network.\n* **Classic Example:** Connecting from the Internet to a Web server exposed in the DMZ and using that Web server to scan and attack the internal databases located in the protected backend VLAN.\n\n* **Small Focused Example:** A hacker penetrates a corporate computer connected both to the Internet and to the protected internal network of the POS terminals. They configure a SOCKS proxy on the breached machine (pivot) and run a vulnerability scan against the POS terminals directly from their remote workstation on the Internet, channeling the traffic through the compromised PC.",
+    examTip: "Pivoting represents the key logical step in which a compromised host in a low-security zone is used as a bridge to breach systems placed in high-security zones.",
+  },
   },
 };
 
