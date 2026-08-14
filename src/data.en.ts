@@ -2824,6 +2824,42 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Automation applies to various processes, such as scheduled vulnerability scanning, the automatic application of critical patches or the blocking of malicious IPs on firewalls. It increases operational scalability, consistency and reduces response times.",
     examTip: "Automation reduces the human-error factor and ensures that security controls are executed uniformly and continuously across all the company's systems.",
   },
+  PBQLogAnalysis: {
+    name: "Log Analysis",
+    definition: "Practical exam scenario on inspecting and interpreting web-server or proxy logs to identify the origin and type of attack.",
+    details: "In the **Log Analysis** scenario:\n* You are asked to examine Apache or IIS logs.\n* Goal: identify the IP address of the attack's sender, the resource hit, the HTTP response status codes (e.g. 200 OK vs 403 Forbidden), and determine whether the attack succeeded or was blocked.",
+    examTip: "In log questions, isolate the records that present hostile payloads (characters such as `'`, `SELECT`, `../`) associated with HTTP 200 OK status codes to identify the successful breaches.",
+  },
+  PBQFirewallLogs: {
+    name: "Firewall Logs",
+    definition: "Practical scenario of analyzing firewall logs to trace configuration anomalies or unauthorized traffic and propose corrective changes to the ACLs.",
+    details: "In the **Firewall Logs** scenario:\n* You are asked to cross-reference the log records with the firewall's active rules table.\n* Goal: identify erroneous, overly permissive, or non-optimally placed rules (e.g. an ALLOW rule that prevails over a subsequent DENY) that allow traffic on critical ports (22, 3389, 445).",
+    examTip: "Firewall rules are processed from top to bottom (sequentially). Remember to always place the implicit 'Deny All' rule at the bottom of the list as a catch-all.",
+  },
+  PBQIncidentInvestigation: {
+    name: "Incident Investigation",
+    definition: "Practical scenario of chronologically reconstructing a multi-stage breach by correlating the logs of various corporate systems.",
+    details: "In the **Incident Investigation** scenario:\n* You analyze indicators of attack distributed over time (e.g. initial phishing, payload download, escalation, lateral movement).\n* Goal: map the correct chronology of events by correlating the log timestamps (synchronized through an NTP server) of the firewall, Active Directory and application servers.",
+    examTip: "Correct time synchronization through the NTP protocol is the indispensable technical foundation for correlating and faithfully reconstructing the attacker's activity.",
+  },
+  PBQMalwareId: {
+    name: "Malware Identification",
+    definition: "Practical scenario of inspecting active processes and local persistence keys to locate hidden malicious software.",
+    details: "In the **Malware Identification** scenario:\n* You analyze the list of the operating system's active processes, the established TCP/UDP connections (`netstat` command) and the automatic-startup keys of the Windows registry.\n* Goal: identify suspicious processes with falsified names (e.g. `svch0st.exe`), unusual paths (e.g. the Temp folder), or connected to anomalous external IP addresses.",
+    examTip: "A process presenting deceptive names (Typosquatting) or launched from temporary public paths is a clear indicator of malware persistence.",
+  },
+  PBQHostIsolation: {
+    name: "Host Isolation",
+    definition: "Exam scenario on choosing and instantly applying the correct host-containment technique in the presence of an active breach.",
+    details: "In the **Host Isolation** scenario:\n* You identify a severely compromised host (e.g. ongoing ransomware activity or massive data exfiltration).\n* Goal: isolate the host at the network level to contain the threat while safeguarding the Order of Volatility (e.g. logically isolate via EDR software or shut down the switch port, but do NOT abruptly power off the machine or remove the power supply).",
+    examTip: "Network isolation (Host Isolation) halts the spread of malware while preserving the state of RAM memory for subsequent forensic investigations.",
+  },
+  PBQAccessLogReview: {
+    name: "Access Log Review",
+    definition: "Practical scenario of inspecting authentication logs to identify privilege abuse, compromised credentials or access violations.",
+    details: "In the **Access Log Review** scenario:\n* You analyze the access logs (e.g. VPN, Active Directory or RDP logs).\n* Goal: identify repeated failed logins, accesses performed from geographically impossible locations within close time intervals (Impossible Travel), or anomalous access activity outside working hours.",
+    examTip: "Successful access attempts (ALLOW) from geographically incompatible locations or at atypical hours indicate an account abuse or the compromise of user credentials.",
+  },
   },
 };
 
