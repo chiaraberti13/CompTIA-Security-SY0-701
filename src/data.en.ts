@@ -2169,6 +2169,104 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "If the exam goal is to maximize recovery speed at the expense of storage used, the optimal solution is the combination of Full Backup and Differential Backup.",
   },
   },
+  4: {
+  HardeningConcept: {
+    name: "Hardening",
+    definition: "The systematic process of strengthening a system (hardware, software, server, workstation or network device) to reduce its attack surface by minimizing known vulnerabilities.",
+    details: "The fundamental principles of Hardening include:\n* **Removing the superfluous:** Uninstalling all unnecessary applications, utilities, modules and compilers, disabling unrequired services and systematically closing all unnecessary TCP/UDP ports.\n* **Disabling default credentials:** Changing or disabling all default passwords or administrative accounts provided by the manufacturer.\n* **Least Privilege:** Running processes, daemons and software with the minimum operational privileges necessary, avoiding the use of administrative users (e.g. `root` or `SYSTEM`).\n* **Continuous patching:** Regularly updating the software, operating system and device firmware (BIOS/UEFI).\n* **Security Controls:** Configuring host-based firewalls, log-file auditing systems and removing local administrative permissions from ordinary users.",
+    examTip: "Hardening reduces the attack surface by preemptively eliminating potential compromise vectors, constituting one of the most important proactive defenses.",
+  },
+  ServerHardening: {
+    name: "Server Hardening",
+    definition: "Security configurations to eliminate vulnerabilities and superfluous access on server machines.",
+    details: "The key strategies for **Server Hardening** include:\n* **Removing unnecessary services:** Systematically disabling daemons, ports and services not strictly necessary to the hosted application (e.g. FTP servers, SMTP or printing services).\n* **Uninstalling unnecessary software:** Eliminating unrequired utilities, compilers and third-party software to minimize the attack surface (Software Attack Surface).\n* **Changing default credentials:** Mandatory change of all default administrator passwords and pre-provisioned accounts.\n* **Least Privilege:** Running services and daemons with dedicated minimum-privilege accounts, avoiding the use of the `root` or `SYSTEM` user.\n* **Host-Based Firewall:** Configuring restrictive inbound and outbound rules directly on the host.\n\n* **Small Focused Example:** A system administrator configures a new production Linux web server: disables unused daemons like `postfix` and `cups`, uninstalls the `gcc` compiler (to prevent the attacker from compiling exploits locally), sets a policy so the web server runs under the unprivileged user `www-data` instead of `root`, and enables a host-based firewall (IPTables/UFW) that allows only TCP ports 80 and 443.",
+    examTip: "Disabling superfluous services and uninstalling unnecessary compilers directly reduces the host server's attack surface.",
+  },
+  WorkstationHardening: {
+    name: "Workstation Hardening",
+    definition: "Security measures applied to end-user workstations to mitigate client-side compromises.",
+    details: "**Workstation Hardening** includes the following practices:\n* **Removing local privileges:** Revoking ordinary users' membership in the local administrators group.\n* **Disabling AutoRun/AutoPlay:** Preventing the automatic execution of scripts or programs from removable USB drives or CDs.\n* **Full Disk Encryption (FDE):** Configuring full disk encryption (BitLocker on Windows, FileVault on macOS) to safeguard data at rest in case of loss or physical theft of the laptop.\n* **Endpoint Protection:** Installing and updating Antivirus, Antimalware and EDR (Endpoint Detection and Response) agents.\n* **Screensaver Lock:** Configuring automatic screen locking after a short period of inactivity (e.g. 10-15 minutes).\n\n* **Small Focused Example:** The IT department configures the new corporate laptops: removes ordinary users from the `Local Administrators` group (so they cannot install arbitrary software or unsigned drivers), disables Windows AutoRun/AutoPlay to prevent the automatic execution of scripts from unknown USB drives, and forces the activation of full disk encryption through **BitLocker** paired with a TPM chip.",
+    examTip: "Removing users' local administrative privileges is one of the most effective operational/technical controls to prevent the installation of hostile software (malware) on workstations.",
+  },
+  RouterHardening: {
+    name: "Router Hardening",
+    definition: "Security configurations to protect the integrity and availability of network routing devices.",
+    details: "The measures for **Router Hardening** include:\n* **Disabling legacy cleartext protocols:** Disabling Telnet, HTTP and SNMPv1/v2c in favor of encrypted and secure channels such as SSHv2, HTTPS and SNMPv3.\n* **Management ACLs:** Configuring administrative Access Control Lists (ACLs) to limit connections to the management channels (VTY, console) exclusively to the IP addresses of the authorized management VLAN.\n* **Centralized Authentication:** Integrating administrator authentication with centralized AAA servers such as TACACS+ (which encrypts the entire session payload) or RADIUS.\n* **Control Plane Policing (CoPP):** Limiting traffic rates directed toward the router's CPU to prevent Denial of Service (DoS) attacks.\n* **Disabling unnecessary services:** Turning off protocols such as CDP (Cisco Discovery Protocol), proxy ARP or IP directed broadcasts.\n\n* **Small Focused Example:** To protect the border router, the network administrator blocks unprotected Telnet access and mandates the exclusive use of **SSHv2** with cryptographic keys. Additionally, they apply a **management ACL** so that administrative commands are accepted only if coming from the IP address of the administrator's workstation (management VLAN 99).",
+    examTip: "To protect network devices, always disable legacy cleartext protocols (Telnet) in favor of SSH, and apply ACLs to restrict administrative access to the dedicated VLAN only.",
+  },
+  SwitchHardening: {
+    name: "Switch Hardening",
+    definition: "Security controls to protect the local network infrastructure at the data-link layer (Layer 2).",
+    details: "The strategies for **Switch Hardening** include:\n* **Port Security:** Limiting the number of MAC addresses authorized to connect to a specific physical port. It allows defining actions in case of a violation (e.g. immediate port shutdown, issuing an SNMP trap, blocking unauthorized traffic).\n* **Disabling unused ports:** Bringing all unconnected physical ports to the administrative `shutdown` state and associating them with an orphan/dead, unrouted VLAN.\n* **DHCP Snooping:** Monitoring DHCP messages to prevent the introduction of unauthorized DHCP servers (rogue DHCP) by trusting only the uplink ports and examining packets directed to client ports.\n* **Dynamic ARP Inspection (DAI):** Preventing ARP spoofing/poisoning attacks by comparing transiting ARP messages with the trusted binding table created by DHCP Snooping.\n* **Spanning Tree Guard:** Configuring BPDU Guard on access ports to disable them if they detect foreign switches, preventing topological anomalies.\n\n* **Small Focused Example:** On an office Cisco switch, the administrator applies **Port Security**: limits to a maximum of 1 the MAC address enabled on each physical port at the employees' desks, configuring the `shutdown` action (immediate port shutdown) if a foreign MAC is detected (such as a personal Wi-Fi router illicitly connected).",
+    examTip: "Configuring Port Security on a switch and shutting down unused physical ports prevents local physical attackers from connecting rogue access points or foreign devices to the corporate network.",
+  },
+  MobileDeviceHardening: {
+    name: "Mobile Device Hardening",
+    definition: "Security configurations to harden the attack surface of smartphones and tablets.",
+    details: "**Mobile Device Hardening** includes:\n* **Strong authentication:** Enforcing robust PINs (alphanumeric), passwords and biometric unlocking, disabling unlocking through simple patterns.\n* **Data encryption:** Mandatory enabling of full device encryption (FDE/Storage Encryption).\n* **Sideloading Restriction:** Disabling the option to install applications from unverified third-party sources.\n* **Auto-Wipe:** Configuring automatic factory reset or data wipe if a threshold of failed unlock attempts is exceeded (e.g. 10 attempts).\n* **Disabling unused connections:** Automatically turning off or restricting Bluetooth, Wi-Fi and NFC when not in use.\n\n* **Small Focused Example:** A company distributes corporate smartphones by configuring a policy that requires an alphanumeric PIN of at least 8 characters with biometric unlocking, disables the sideloading of apps outside the official store, and activates **Auto-Wipe** that erases the entire content of the phone after 10 consecutive incorrect unlock attempts to prevent physical brute-force attacks.",
+    examTip: "In case of physical theft of a corporate phone, the centralized enforcement of at-rest encryption and the remote-wipe function ensure the confidentiality of corporate data.",
+  },
+  IoTHardening: {
+    name: "IoT Hardening",
+    definition: "Security strategies to mitigate the inherent risks and vulnerabilities of Internet of Things devices.",
+    details: "**IoT Hardening** is crucial due to the often non-updatable software installed on these devices:\n* **Network Segmentation:** Rigorous isolation of IoT devices within dedicated separate VLANs, protected by unidirectional firewall rules (e.g. the IoT cannot communicate with the internal corporate network).\n* **Changing default passwords:** Immediate and mandatory change of all factory-preconfigured credentials (often widely known or published online).\n* **Disabling plug-and-play:** Disabling UPnP (Universal Plug and Play) to prevent the automatic opening of ports on the external firewall.\n* **Firmware Updates:** Systematic and controlled application of firmware updates released by the vendors.\n\n* **Small Focused Example:** To install Wi-Fi security cameras in the warehouse, the IT team associates them with an **IoT VLAN completely isolated** from the main corporate LAN. It immediately changes the cameras' default `admin/admin` credentials with complex random passwords generated by a manager, and disables the vulnerable UPnP protocol on the external router to prevent automatic exposure on the Internet.",
+    examTip: "Because many IoT devices do not support the installation of local agents or antivirus software, logical segmentation (isolated VLANs) is the main compensating control.",
+  },
+  AntivirusScanningConcept: {
+    name: "Antivirus scanning",
+    definition: "Antivirus Scanning: The automated process of scanning, identifying, isolating and removing malicious files (malware) present on the local disk or loaded into memory.",
+    details: "Modern antivirus and endpoint-security solutions use three methodologies:\n* **Signature-based detection:** Static inspection based on signatures, comparing the file's hash with an archive of known threats. Extremely fast but ineffective against polymorphic or zero-day variants.\n* **Heuristic/Behavioral analysis:** Heuristic and behavioral analysis, examining the file's instructions or its actions in memory (e.g. attempts to write to system folders or inject into other processes) to detect anomalous behaviors attributable to generic malware.\n* **Cloud reputation scanning:** Real-time verification of an executable's trustworthiness and global popularity through queries to the vendors' cloud databases.",
+    examTip: "Signature-based scanning detects only known threats identified by their respective hash, while to mitigate unknown or zero-day threats, heuristic or behavioral analysis is indispensable.",
+  },
+  SecurityBaselineRes: {
+    name: "Security Baseline",
+    definition: "Security Baseline: A set of minimum security requirements and standard configurations approved by the organization that every system must comply with before being put into production.",
+    details: "Characteristics and implementation:\n* **Standard Configuration:** Provides a consistent and tested starting configuration for operating systems, databases or applications.\n* **Deviation (Drift) Detection:** Enables continuous monitoring to detect when a system deviates from the authorized configuration (config drift).\n* **Exam Tools:** Often derived from recognized frameworks such as the CIS Benchmarks (Center for Internet Security) or the U.S. Department of Defense's STIGs (Security Technical Implementation Guides).",
+    examTip: "The Security Baseline establishes the initial approved security standard for systems; any unauthorized deviation (drift) must be detected and corrected.",
+  },
+  PatchManagementRes: {
+    name: "Patch Management",
+    definition: "Patch Management: The systematic process of identifying, testing, acquiring and installing software updates (patches) to fix vulnerabilities, bugs and improve performance.",
+    details: "Phases of the Patch Management process:\n* **Monitoring and Identification:** Detecting the release of new security updates from manufacturers.\n* **Testing Phase (FUNDAMENTAL):** Preemptively testing the patches in a non-production staging environment to verify they do not cause conflicts or application crashes.\n* **Approval and Distribution:** Planning controlled installation during maintenance windows.\n* **Integrity Verification:** Confirming the installation occurred and verifying the resolution of the vulnerability.",
+    examTip: "Before deploying a security patch on production servers, it must always be thoroughly tested in an isolated lab/staging environment to avoid service interruptions.",
+  },
+  GroupPolicyRes: {
+    name: "Group Policy",
+    definition: "Group Policy (GPO): A Microsoft Active Directory feature that allows administrators to centrally configure and enforce security settings, preferences and operational behaviors for users and computers within a domain.",
+    details: "How GPOs work and their advantages:\n* **Centralized Administration:** Allows applying configuration changes or restrictions to thousands of computers simultaneously from the Active Directory Domain Controller.\n* **Enforcing Security Policies:** Used to enforce minimum password length, disable the use of USB drives, configure local firewall settings or enforce the automatic execution of a password-protected screensaver.\n* **Hierarchical Application:** Applied at the Site, Domain or Organizational Unit (OU) level with inheritance logic.",
+    examTip: "Active Directory Group Policies (GPOs) are the main tool for centrally enforcing security policies and hardening configurations on all the domain's Windows clients and servers.",
+  },
+  CISBenchmarkRes: {
+    name: "CIS Benchmark",
+    definition: "Secure configuration and hardening guidelines developed by the Center for Internet Security (CIS) to protect systems, software and networks from cyber threats.",
+    details: "The **CIS Benchmarks**:\n* Provide prescriptive hardening recommendations divided into two security levels: **Level 1** (essential security requirements with minimal impact on productivity) and **Level 2** (high-protection security measures, with potential impact on functionality).\n* Are recognized worldwide and help organizations meet various regulatory compliance frameworks (e.g. PCI-DSS, NIST, HIPAA).\n* Are often distributed through XML/SCAP files to be automatically evaluated by dedicated vulnerability scanners.",
+    examTip: "The CIS Benchmarks represent the non-governmental industry 'best practice' standard for the secure configuration of operating systems and applications.",
+  },
+  BenchmarkRes: {
+    name: "Benchmark",
+    definition: "A standardized set of requirements, metrics and reference configurations used as a baseline to evaluate and measure the security of a system or process.",
+    details: "A security **Benchmark**:\n* Acts as an objective reference point against which to measure the current hardening state of systems.\n* Allows detecting 'Configuration Drift' (deviation from the initial authorized secure configuration).\n* Helps the security team establish progress metrics in the continuous vulnerability-remediation process.",
+    examTip: "A benchmark provides a solid starting and objective-measurement point for the organization's hardening and security-audit programs.",
+  },
+  AntivirusRes: {
+    name: "Antivirus",
+    definition: "Software program installed locally on the host designed to scan, detect, isolate and remove viruses and malicious files.",
+    details: "Traditional **Antivirus** systems:\n* Rely mainly on **Signature-based detection**: they compare the cryptographic hash of each file with a local database of known signatures.\n* Require constant and daily updating of the signatures from the vendor's cloud to remain effective.\n* Have limited effectiveness against zero-day threats, polymorphic modified files and fileless malware that acts only in RAM.",
+    examTip: "Signature-based antivirus is extremely effective and fast at blocking known and common threats, but fails in the face of zero-day attacks.",
+  },
+  AntiMalwareRes: {
+    name: "Anti-malware",
+    definition: "Endpoint protection solution focused on blocking, detecting and eliminating modern and complex malicious threats, including Trojans, ransomware, adware, spyware and malicious scripts.",
+    details: "Modern **Anti-malware** technologies:\n* Go beyond simple signatures, incorporating **heuristic analysis** and **behavioral analysis** (Heuristic & Behavioral analysis).\n* Constantly monitor the active processes in RAM looking for suspicious actions (e.g. a process that tries to encrypt user files in rapid sequence or inject code into system packages).\n* Often integrate real-time cloud telemetry to verify the reputation of unknown files.",
+    examTip: "Unlike classic antivirus, modern anti-malware with behavioral analysis is able to identify novel malware variants or zero-day attacks by analyzing their actions.",
+  },
+  QuarantineRes: {
+    name: "Quarantine",
+    definition: "The process of logical, encrypted and protected isolation of a file identified as malicious or suspicious by the security software, to prevent its execution and contact with the rest of the system.",
+    details: "During **Quarantine**:\n* The file is moved to a special protected directory, renamed and encrypted to render it harmless.\n* It is not deleted immediately to allow the security administrator to analyze it and avoid the accidental loss of data in case of a false positive.\n* The analyst can decide whether to restore the file (if safe) or delete it permanently.",
+    examTip: "Quarantine is the standard corrective control that safely isolates infected files without destroying them immediately, preserving their integrity for possible forensic analysis.",
+  },
+  },
 };
 
 /* ------------------------------------------------------------------ *
