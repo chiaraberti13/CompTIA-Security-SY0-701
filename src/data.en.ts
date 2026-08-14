@@ -2266,6 +2266,78 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "During **Quarantine**:\n* The file is moved to a special protected directory, renamed and encrypted to render it harmless.\n* It is not deleted immediately to allow the security administrator to analyze it and avoid the accidental loss of data in case of a false positive.\n* The analyst can decide whether to restore the file (if safe) or delete it permanently.",
     examTip: "Quarantine is the standard corrective control that safely isolates infected files without destroying them immediately, preserving their integrity for possible forensic analysis.",
   },
+  MDM: {
+    name: "MDM",
+    definition: "Mobile Device Management: centralized software infrastructure for the administration, configuration and securing of corporate mobile devices.",
+    details: "An **MDM** solution allows IT to:\n* Apply group security policies (e.g. minimum PIN requirements, mandatory encryption, hardware restrictions such as disabled camera).\n* Perform the **Remote Wipe** of the device in case of loss or confirmed compromise.\n* Manage the distribution of corporate network profiles (VPN, protected Wi-Fi configurations) and digital certificates for authentication without manual credential entry.\n* Verify software compliance and block illicitly unlocked devices (Jailbroken or Rooted).",
+    examTip: "The MDM suite is the cornerstone tool for centrally applying storage-level encryption policies and initializing the remote wipe.",
+  },
+  BYOD: {
+    name: "BYOD",
+    definition: "Bring Your Own Device: organizational model in which employees use their own personal mobile devices for work purposes.",
+    details: "The **BYOD** model presents the following dynamics:\n* **Advantages:** High reduction of hardware costs for the company and usage familiarity for the employee.\n* **Disadvantages and Risks:** High probability of personal malware infections, loss of corporate data, difficulty in enforcing heavy restrictions on the entire device (privacy concerns).\n* **Technical Solution:** Use of **MAM (Mobile Application Management)** or containerization solutions. These tools create a separate logical and encrypted sandbox for corporate apps and data (e.g. work email, documents), leaving the user's personal data (photos, private messages, personal apps) intact and private.",
+    examTip: "In BYOD scenarios, adopting MAM solutions allows IT to wipe only the corporate data and applications (Corporate Wipe) while safeguarding the employee's personal content.",
+  },
+  COPE: {
+    name: "COPE",
+    definition: "Corporate-Owned, Personally Enabled: model in which the company provides the mobile device but allows its regulated personal use.",
+    details: "The **COPE** model offers an optimal middle ground:\n* The company purchases and maintains full ownership of the mobile device.\n* IT applies complete MDM controls at the operating-system level, being able to manage security updates and basic restrictions.\n* The employee is allowed to use the device for personal purposes as well (e.g. private calls, approved social media), increasing usage satisfaction without compromising the corporate governance of the hardware.",
+    examTip: "In the COPE model the company retains total control of the operating system and hardware, unlike the BYOD model where the hardware is owned by the user.",
+  },
+  CYOD: {
+    name: "CYOD",
+    definition: "Choose Your Own Device: organizational model in which the employee selects their own device from a pre-approved list of company-managed models.",
+    details: "The **CYOD** model combines the advantages of corporate devices with the freedom of choice:\n* IT defines a limited basket of mobile devices tested and deemed compliant with corporate security standards.\n* The company purchases and remains the owner of the device selected by the user.\n* It drastically simplifies IT support, patch testing and the uniformity of MDM configurations, reducing the heterogeneity typical of BYOD.",
+    examTip: "CYOD reduces support costs and standardizes MDM profiles by limiting the variety of hardware models present in the company.",
+  },
+  VulnerabilityScan: {
+    name: "Vulnerability Scan",
+    definition: "Automated process of scanning systems and networks looking for vulnerabilities, misconfigurations and missing patches against a database of known flaws.",
+    details: "The key concepts include:\n* **Credentialed vs Non-Credentialed:** Credentialed scans connect by authenticating locally on the target, reading file versions and registry keys; they provide maximum accuracy, drastically reducing false positives. Non-credentialed scans act from the outside (examining open ports and banners), simulating an external attacker.\n* **Active vs Passive Scanning:** Active scans send targeted packets to the targets (risk of network instability); passive scans only analyze the network traffic in transit to infer software versions.",
+    examTip: "Credentialed scans ensure maximum accuracy of results and avoid false positives/negatives tied to misleading service banners.",
+  },
+  PenetrationTest: {
+    name: "Penetration Test",
+    definition: "Active, controlled and formally authorized attack simulation conducted by specialists to verify the real exploitability of system weaknesses.",
+    details: "The phases of a standard Pen Test include:\n* **Reconnaissance:** Information gathering (Passive through OSINT or Active through port scanning).\n* **Exploitation:** Active attempts to breach the targets by bypassing defenses, exploiting the vulnerabilities found.\n* **Post-Exploitation:** Privilege Escalation, persistence, and lateral movement (Pivoting) to reach other internal hosts.\n* **Rules of Engagement (RoE):** Formal written agreement that establishes the scope, allowed hours, included and excluded IP addresses and emergency notification procedures.",
+    examTip: "Unlike the Vulnerability Scan, which only detects the potential presence of flaws, the Penetration Test involves active exploitation to demonstrate their real business impact.",
+  },
+  CVE: {
+    name: "CVE",
+    definition: "Common Vulnerabilities and Exposures: public standard and international dictionary that uniquely identifies known cybersecurity vulnerabilities.",
+    details: "The **CVE** system:\n* Assigns a standardized and unique identifier (format: `CVE-YYYY-N...`, e.g. `CVE-2021-44228` for Log4Shell) to each discovered vulnerability.\n* Is managed by the MITRE Corporation and funded by the DHS (Department of Homeland Security).\n* Enables interoperability and consistent dialogue between different scanning tools, threat databases and vendor advisories.",
+    examTip: "The CVE format standardizes the identification of flaws to allow rapid correlation and tracking between different security scanners and vendor advisories.",
+  },
+  CVSS: {
+    name: "CVSS",
+    definition: "Common Vulnerability Scoring System: standardized framework used to calculate a numeric score indicating the severity of a software vulnerability.",
+    details: "The **CVSS** score ranges from 0.0 to 10.0 (Critical severity) and is composed of three groups of metrics:\n* **Base Score Metrics:** Intrinsic and permanent characteristics of a vulnerability, such as the attack vector (AV), attack complexity (AC), privileges required (PR), user interaction (UI) and impact on CIA.\n* **Temporal Score Metrics:** Dynamic characteristics that vary over time, such as the availability of public exploit code and the status of official patches.\n* **Environmental Score Metrics:** Customization factors based on the organization's actual infrastructure context (asset importance, modified CIA requirements).",
+    examTip: "The CVSS Base Metrics measure the stable and permanent attributes of a vulnerability, determining the initial priority and severity level for the exam.",
+  },
+  PatchManagement: {
+    name: "Patch Management",
+    definition: "Structured and planned lifecycle for researching, acquiring, testing and systematically applying software patches released by vendors.",
+    details: "An effective **Patch Management** process involves:\n* **Monitoring feeds:** Constant detection of new vulnerabilities (CVEs) and their related updates released by vendors.\n* **Patch testing:** Mandatory preliminary installation of patches in a lab (pre-production) environment to prevent system instability or incompatibility with corporate applications.\n* **Planning:** Change approval (Change Management) and scheduling of maintenance windows.\n* **Post-installation verification:** Running subsequent security scans to confirm the flaw has been mitigated.",
+    examTip: "Security patches must always be tested in advance in controlled environments before mass installation in production to ensure business continuity.",
+  },
+  PatchConcept: {
+    name: "Patch",
+    definition: "A specific software update released by the manufacturer (vendor) to fix known security vulnerabilities or functional bugs.",
+    details: "It represents the direct cure for a discovered software vulnerability. It can come in the form of a hotfix (urgent, single function) or periodic cumulative updates.",
+    examTip: "On the exam, the timely application of an official vendor patch is the main direct countermeasure (Remediation) to resolve a CVE vulnerability.",
+  },
+  PatchAvailabilityConcept: {
+    name: "Patch Availability",
+    definition: "The actual availability of an official patch released by the manufacturer to resolve a specific identified vulnerability (CVE).",
+    details: "It is a critical variable in the risk-prioritization process (CVSS). If a patch is not available (Zero-Day or end of software support), the risk remains critical and requires the immediate adoption of compensating controls.",
+    examTip: "If a system is vulnerable and 'Patch Availability' is absent, the only solution to reduce the risk is to implement compensating controls (e.g. isolation or segmentation).",
+  },
+  InabilityToPatchConcept: {
+    name: "Inability to Patch",
+    definition: "The impossibility or extreme technical and operational difficulty of applying a security patch to a system, due to compatibility constraints, obsolete hardware or integrated firmware.",
+    details: "Frequent in embedded systems, medical devices, industrial systems (ICS) and legacy systems running no-longer-supported software. It requires external compensating security measures (such as firewalls or segmentation).",
+    examTip: "Faced with the Inability to Patch a critical system, applying compensating controls such as physical or logical segmentation is the correct exam answer.",
+  },
   },
 };
 
