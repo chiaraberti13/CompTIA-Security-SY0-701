@@ -9950,5 +9950,149 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **B) Quantitative risk analysis**.\n\n* **Why it's correct:** Quantitative risk analysis assigns precise monetary values and concrete numerical data to all elements of risk, enabling accurate cost-benefit analyses (ROI) of the security controls to be implemented.\n* **Analysis of the distractors:**\n  * **A) Qualitative risk analysis** is based on subjective judgments and expert opinions expressed through descriptive and qualitative scales (e.g. High, Medium, Low).\n  * **C) Annualized loss expectancy (ALE)** is a specific calculation indicator resulting from quantitative analysis, not the entire analysis methodology.\n  * **D) Risk Matrix** is a graphical-descriptive tool usually used in qualitative analysis to map probability and impact."
   },
+  77: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "Rippled, a beverage manufacturer, is developing a disaster recovery plan to ensure the rapid restoration of critical systems and processes in the event of an interruption. They are defining a specific metric that represents the maximum acceptable amount of time to restore normal business operations.",
+    question: "Which metric are they defining?",
+    options: [
+      "A) MTBF (Mean Time Between Failures)",
+      "B) MTTR (Mean Time to Repair)",
+      "C) RTO (Recovery Time Objective)",
+      "D) RPO (Recovery Point Objective)"
+    ],
+    explanation: "The correct answer is **C) RTO (Recovery Time Objective)**.\n\n* **Why it's correct:** The **RTO (Recovery Time Objective)** defines the maximum tolerable period of time within which an interrupted system, application or business process must be restored and made operational again before causing unacceptable consequences for the organization.\n* **Analysis of the distractors:**\n  * **A) MTBF** represents the average uptime between two consecutive failures (a hardware/software reliability indicator).\n  * **B) MTTR** is the average time required to repair or restore a broken or defective hardware component.\n  * **D) RPO (Recovery Point Objective)** establishes the maximum amount of acceptable data loss measured in time (e.g. how many hours or days of data changes one is willing to lose before having to resort to the backup)."
+  },
+  78: {
+    topic: "Risk Management & Analysis",
+    scenario: "At Dion Defenders, the risk management team has completed the risk assessment process for corporate information systems. They now prepare to communicate the risk information to business stakeholders and management to support informed strategic decisions.",
+    question: "Which phase of the risk management process are they addressing?",
+    options: [
+      "A) Risk reporting",
+      "B) Risk identification",
+      "C) Risk assessment",
+      "D) Risk analysis"
+    ],
+    explanation: "The correct answer is **A) Risk reporting**.\n\n* **Why it's correct:** **Risk reporting** consists of the formalization and structured communication of the results of risk analysis and assessment to the relevant stakeholders and corporate leadership, ensuring that key information is understood in order to make informed decisions and approve budgets.\n* **Analysis of the distractors:**\n  * **B) Risk identification** is the preliminary phase of discovering and inventorying the potential threats and vulnerabilities of the environment.\n  * **C) Risk assessment** encompasses the entire process of identification, analysis and initial evaluation, not just the final communication of the results.\n  * **D) Risk analysis** is the in-depth examination to estimate the probability and impact of the individual risks discovered."
+  },
+  79: {
+    topic: "Risk Management & Analysis",
+    scenario: "The members of Eclipse's Risk Management Team, an awning manufacturer, are discussing the organization's approach to risk management. They are evaluating the overall level of risk they are willing to accept to achieve the very aggressive growth objectives set by the CEO.",
+    question: "Which term defines the overall level of risk the organization is willing to accept?",
+    options: [
+      "A) Risk appetite",
+      "B) Risk acceptance",
+      "C) Risk deterrence",
+      "D) Risk tolerance"
+    ],
+    explanation: "The correct answer is **A) Risk appetite**.\n\n* **Why it's correct:** **Risk appetite** refers to the macroscopic strategic attitude and the overall amount of risk that an organization is actively willing to tolerate or assume in the pursuit of its commercial and growth objectives.\n* **Analysis of the distractors:**\n  * **B) Risk acceptance** is the formal and conscious action of deciding not to mitigate a specific risk, simply acknowledging it without investing in countermeasures.\n  * **C) Risk deterrence** aims to discourage attackers by introducing visible psychological or legal barriers.\n  * **D) Risk tolerance** represents the practical translation of risk appetite in the form of precise numerical thresholds tolerable for operational objectives (e.g. maximum allowed delay or unforeseen expense)."
+  },
+  80: {
+    topic: "Risk Management & Analysis",
+    scenario: "At DionTraining, the risk management team has completed a thorough assessment and identified potential threats in various departments. To ensure continuous monitoring and traceability of these threats over time, they want to implement a centralized tool that lists the risks, their impact and their respective owners.",
+    question: "Which element of the risk management process should the team implement to track risks over time?",
+    options: [
+      "A) Business impact analysis (BIA)",
+      "B) Risk register",
+      "C) Risk assessment",
+      "D) Risk reporting"
+    ],
+    explanation: "The correct answer is **B) Risk register**.\n\n* **Why it's correct:** The **Risk register** is a formal, living and continuously updated document or database that serves as a centralized repository to list all identified risks, their potential impact, planned responses, respective owners (risk owners) and current mitigation status.\n* **Analysis of the distractors:**\n  * **A) Business impact analysis (BIA)** serves to analyze critical business processes to define the Disaster Recovery RTO/RPO metrics, not to monitor individual operational business risks over time.\n  * **C) Risk assessment** is the point-in-time activity of identification and analysis, not the tool for continuous monitoring and recording.\n  * **D) Risk reporting** is the activity of formal reporting to stakeholders."
+  },
+  81: {
+    topic: "Social Engineering",
+    scenario: "A security officer at Kelly Innovations LLC is reviewing recent security incidents to evaluate potential threats within the organization. Two unusual behavior patterns raise strong concerns regarding a potential insider threat.",
+    question: "Which combination of behaviors represents the most obvious sign of a possible insider threat?",
+    options: [
+      "A) Irregular maintenance of corporate systems and Active support of policies",
+      "B) Frequent unauthorized access and Unusual data transfers",
+      "C) Unexpected increase in working hours and Irregular system maintenance",
+      "D) Active support of policies and Unexpected increase in working hours"
+    ],
+    explanation: "The correct answer is **B) Frequent unauthorized access and Unusual data transfers**.\n\n* **Why it's correct:** Repeated and frequent attempts to access files or directories outside one's job duties, combined with the exfiltration or transfer of large volumes of data to unauthorized external destinations (especially at anomalous hours), constitute the most critical and characteristic behavioral indicators of an insider threat or a compromised account.\n* **Analysis of the distractors:**\n  * **Irregular system maintenance** or the asynchronous application of patches is a common organizational/IT problem, not an insider attack signature.\n  * **The unexpected increase in working hours** (e.g. overtime) usually reflects work dedication or ordinary overtime, and is not a threat indicator in itself.\n  * **Active support of security policies (policy advocacy)** demonstrates positive employee commitment to the company's posture, the exact opposite of a malicious insider."
+  },
+  82: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "During a Business Process Analysis (BPA) focused on mission essential functions, the security team must identify the individual components of the process.",
+    question: "Which part of a BPA for mission essential functions provides a detailed, step-by-step description of the procedural tasks performed?",
+    options: [
+      "A) Outputs",
+      "B) Process flow",
+      "C) Hardware",
+      "D) Inputs"
+    ],
+    explanation: "The correct answer is **B) Process flow**.\n\n* **Why it's correct:** In a Business Process Analysis (BPA), the **process flow** describes in detail each operational phase, illustrating how the mission essential function is executed systematically step by step.\n* **Analysis of the distractors:**\n  * **A) Outputs** and **D) Inputs** represent respectively the final products/data generated or the initial requirements needed to start the process, but do not constitute the sequential operational guide.\n  * **C) Hardware** refers to the physical infrastructure used, not to the procedural narrative of the activity's steps."
+  },
+  83: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "A strong storm interrupts the electrical power of a company's main data center, taking essential systems offline. To ensure operational continuity, the IT team initiates the procedures to activate the backup systems at an alternate site and restore the critical data.",
+    question: "Which aspect of the organization's disaster recovery policy is being implemented in this scenario?",
+    options: [
+      "A) Risk assessment",
+      "B) Recovery and restoration processes",
+      "C) Data redundancy testing",
+      "D) Business continuity planning"
+    ],
+    explanation: "The correct answer is **B) Recovery and restoration processes**.\n\n* **Why it's correct:** This scenario illustrates the practical activation of the recovery and restoration procedures. The IT team's actions to activate the backup systems at the alternate site and restore the critical data are aimed directly at reactivating operational services and minimizing downtime after a disruption.\n* **Analysis of the distractors:**\n  * **A) Risk assessment** is the preventive analysis aimed at identifying and evaluating risks before they happen.\n  * **C) Data redundancy testing** concerns the periodic verification activities of replication and redundancy systems.\n  * **D) Business continuity planning** is the overall strategic planning (of which disaster recovery is a part), but the scenario describes the operational and technical execution of restoring the IT systems."
+  },
+  84: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "Bluebird Technologies has hired a penetration tester. During the test, she will attempt to access the corporate building using a fake badge and performing piggybacking (tailing an authorized employee) at the entrance.",
+    question: "Which type of penetration testing is she performing?",
+    options: [
+      "A) Partially known environment",
+      "B) Integrated",
+      "C) Known environment",
+      "D) Physical"
+    ],
+    explanation: "The correct answer is **D) Physical**.\n\n* **Why it's correct:** Physical penetration testing evaluates the effectiveness of an organization's physical security measures, such as access control, surveillance and monitoring, by attempting to physically access restricted areas through social engineering or barrier circumvention.\n* **Analysis of the distractors:**\n  * **A) Partially known environment** (also known as gray-box) and **C) Known environment** (white-box) refer to the level of information provided in advance to the tester about the networks or logical systems, not the physical domain.\n  * **B) Integrated** refers to a global approach that combines different types of tests (physical, logical, social engineering), but the described activity focuses specifically on the physical component."
+  },
+  85: {
+    topic: "Agreements & Contracts",
+    scenario: "Dion Training is evaluating a collaboration with a new IT services provider. To ensure compliance and adherence to industry standards, Dion Training wants to examine verifiable evaluations of the provider's security controls and practices. Specifically, the company wants to analyze the internal assessments that the provider itself has performed on its own security measures.",
+    question: "Which of the following options would provide Dion Training with detailed information about the internal assessments conducted by the provider?",
+    options: [
+      "A) Customer testimonials",
+      "B) Regulatory compliance certificates",
+      "C) External penetration test reports",
+      "D) Evidence of internal audits"
+    ],
+    explanation: "The correct answer is **D) Evidence of internal audits**.\n\n* **Why it's correct:** Evidence of internal audits demonstrates a provider's proactive approach in monitoring and improving its own security posture through rigorous self-assessments of controls, processes and vulnerabilities. This offers the customer a clear view of how the provider manages its security from within.\n* **Analysis of the distractors:**\n  * **A) Customer testimonials** reflect the commercial satisfaction of customers, but do not offer technical metrics or formal verification of controls.\n  * **B) Regulatory compliance certificates** attest that the provider complies with certain standards (e.g. ISO 27001) as seen by a third party, but do not show the detail of continuous internal audit processes.\n  * **C) External penetration test reports** are performed by external parties to find exploitable vulnerabilities at a given moment, and do not represent a periodic self-assessment of the provider's internal governance."
+  },
+  86: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A cloud service provider has recently undergone an independent audit to confirm its compliance with international data security standards. The final report provided by the auditors constitutes an attestation of the provider's security measures.",
+    question: "What does this attestation mean for the cloud service provider's customers?",
+    options: [
+      "A) It acknowledges that the provider's marketing strategies are effective.",
+      "B) It ensures that the provider's security controls comply with established standards.",
+      "C) It guarantees that the security controls are impenetrable and that all data is stored in an absolutely secure manner.",
+      "D) It certifies that the provider's services are the most convenient and cost-effective on the market."
+    ],
+    explanation: "The correct answer is **B) It ensures that the provider's security controls comply with established standards.**\n\n* **Why it's correct:** A compliance attestation provides customers with a formal level of assurance that the provider's security controls have been independently evaluated by a third-party auditor and found compliant with established standards (e.g. SOC 2 Type II or ISO 27001).\n* **Analysis of the distractors:**\n  * **A) and D)** Concern commercial, marketing or cost-efficiency aspects that do not fall within the objectives of a technical security audit.\n  * **C) The attestation does not guarantee absolute impenetrability** (no control is infallible), but only certifies that the declared measures have been implemented and verified correctly according to the standard's criteria."
+  },
+  87: {
+    topic: "Risk Management & Analysis",
+    scenario: "A security analyst is gathering the data needed to conduct a quantitative risk analysis on a critical corporate server. They must identify the percentage of the asset's value that would be lost in the event of an incident.",
+    question: "Which term refers to the percentage of an asset's value that is expected to be lost when a specific risk event occurs?",
+    options: [
+      "A) EF (Exposure Factor)",
+      "B) Asset impact",
+      "C) Damage proportion",
+      "D) SLE (Single Loss Expectancy)"
+    ],
+    explanation: "The correct answer is **A) EF (Exposure Factor)**.\n\n* **Why it's correct:** The **Exposure Factor (EF)** represents the percentage or fraction of an asset's total value that is expected to be lost due to a specific security incident (e.g. if a $10,000 server suffers 25% damage, the EF is 0.25).\n* **Analysis of the distractors:**\n  * **B) Asset impact** and **C) Damage proportion** are generic or informal descriptive terms, not standard parameters defined in quantitative risk analysis.\n  * **D) SLE (Single Loss Expectancy)** expresses the actual monetary loss for a single event (calculated as Asset Value * Exposure Factor), not the pure percentage."
+  },
+  88: {
+    topic: "Risk Management & Analysis",
+    scenario: "A company seeks to balance risk and return, making prudent investments but avoiding both excessively risky initiatives and overly cautious or conservative decisions.",
+    question: "Which type of risk appetite does this company demonstrate?",
+    options: [
+      "A) Risk-Averse",
+      "B) Neutral",
+      "C) Expansionary",
+      "D) Conservative"
+    ],
+    explanation: "The correct answer is **B) Neutral**.\n\n* **Why it's correct:** A **neutral** orientation aims for a balanced approach, carefully weighing the associated risks and benefits without falling into excessive caution nor a high risk tolerance.\n* **Analysis of the distractors:**\n  * **A) Risk-Averse** and **D) Conservative** tend to minimize risk at all costs, often giving up growth opportunities in order to avoid dangers.\n  * **C) Expansionary** accepts a very high and aggressive level of risk in order to achieve rapid expansion and growth rates."
+  },
   },
 };
