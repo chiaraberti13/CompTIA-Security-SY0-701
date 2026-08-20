@@ -3147,6 +3147,66 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "The **NIST** frameworks represent the reference standard for corporate security:\n* **NIST Cybersecurity Framework (CSF):** Divided into six key functions (Identify, Protect, Detect, Respond, Recover, Govern) to structure incident management and asset protection.\n* **NIST SP 800-53:** An extremely detailed catalog of security and privacy controls for federal and corporate information systems.\n* **NIST SP 800-37 (Risk Management Framework):** Structured guidelines on the risk-management lifecycle to guide strategic choices.",
     examTip: "NIST provides free, high-technical-quality guidelines and standards that, although born for US federal government agencies, constitute the de facto industry standard in the global private sector.",
   },
+  VendorAssessment: {
+    name: "Vendor Assessment",
+    definition: "The formal evaluation of an external supplier's security and compliance posture before granting them access to data.",
+    details: "It consists of requesting international certifications (e.g. ISO 27001) and independent third-party audit reports such as the SOC 2 Type II, which validates the effectiveness of the security controls managed by the supplier over an extended period.",
+    examTip: "A SOC 2 Type I report certifies only the design of the controls at a precise instant; the SOC 2 Type II is the only reliable document for due diligence since it attests to the continuous operational effectiveness over time.",
+  },
+  SupplyChainAnalysis: {
+    name: "Supply Chain Analysis",
+    definition: "The detailed analysis of every step of the hardware and software supply chain to identify tampering or backdoors.",
+    details: "It includes verifying the integrity of electronic chips (hardware tampering) and the adoption of an SBOM (Software Bill of Materials) to accurately map all the open-source libraries included in the software packages used, preventing nested vulnerabilities.",
+    examTip: "In Supply Chain attacks, an attacker compromises a minor or trusted supplier to introduce malicious code into the products used by the target company (e.g. attacks on NPM libraries or software updates).",
+  },
+  Questionnaires: {
+    name: "Questionnaires",
+    definition: "Standardized questionnaires sent to external suppliers to collect self-certified information about their security posture.",
+    details: "The most widespread self-assessment questionnaires include the SIG (Standardized Information Gathering) and the CAIQ (Consensus Assessments Initiative Questionnaire). They help quickly map the supplier's compliance with internal policies or standards.",
+    examTip: "Questionnaires represent a self-certification completed by the supplier itself; therefore, for correct Due Diligence, they must be complemented by independent third-party audit reports (SOC 2).",
+  },
+  SLA: {
+    name: "SLA",
+    definition: "Service Level Agreement: the formal agreement that establishes the minimum performance metrics guaranteed by a supplier.",
+    details: "It defines quantifiable technical parameters such as service availability (99.9% uptime), minimum network bandwidth, maximum fault-resolution times (e.g. restoration within 2 hours) and financial penalties in case of non-fulfillment.",
+    examTip: "The SLA focuses exclusively on the measurable performance, availability and response times guaranteed by the service provider.",
+  },
+  NDA: {
+    name: "NDA",
+    definition: "Non-Disclosure Agreement: the legally binding confidentiality agreement to protect the sensitive information exchanged.",
+    details: "It is signed before sharing industrial data, trade secrets, architectural details or source codes with external partners and suppliers during the pre-sales or integration phases, prohibiting disclosure to unauthorized third parties.",
+    examTip: "The NDA is the primary legal tool for protecting intellectual property and the confidentiality of corporate information in the early negotiation phases.",
+  },
+  MOU: {
+    name: "MOU",
+    definition: "Memorandum of Understanding: a preliminary, non-binding memorandum that describes the common intentions and cooperation objectives.",
+    details: "It is used between organizations to establish an agreement in principle and formalize the general purposes before proceeding to draft more complex or costly binding commercial contracts.",
+    examTip: "If two parties want to record a preliminary partnership without exchanges of money or stringent legal obligations, the MOU represents the optimal solution.",
+  },
+  MOA: {
+    name: "MOA",
+    definition: "Memorandum of Agreement: a formal cooperation agreement that establishes agreed-upon operational terms between the organizations.",
+    details: "Compared to the MOU, the MOA defines more precise operational and cooperation obligations, while still being able to remain outside a formal and rigid high-legal-value commercial contract.",
+    examTip: "The MOA describes in detail 'how' the organizations will cooperate to achieve the objectives defined by the common understanding.",
+  },
+  BPA: {
+    name: "BPA",
+    definition: "Business Partnership Agreement: the legal agreement that governs the operational and financial terms of a commercial partnership.",
+    details: "It regulates the division of financial profits and losses, the level of capital invested by each partner, the decision-making power, the legal responsibilities of the partners and the exit or liquidation procedures in case of dissolution of the company.",
+    examTip: "The BPA is specifically focused on commercial partnerships between for-profit entities and governs the financial dynamics of the partners.",
+  },
+  MSA: {
+    name: "MSA",
+    definition: "Master Services Agreement: the general framework contract that establishes the legal conditions for all future transactions between the parties.",
+    details: "It establishes the basic rules (payment methods, dispute resolution, intellectual property, limitation of liability) valid in the long term, simplifying and speeding up the approval of individual subsequent operational projects that will refer to this general contract.",
+    examTip: "The MSA defines the overall legal rules of the commercial relationship, leaving the details of the individual operational projects to the subsequent Statements of Work (SOW).",
+  },
+  SOW: {
+    name: "SOW",
+    definition: "Statement of Work: the detailed operational document that specifies the deliverables, milestones and deadlines of a project.",
+    details: "It rigorously defines 'who does what', which physical or digital products must be delivered, the technical requirements of the materials, the time deadlines (milestones) and the formal acceptance criteria for the payments of the work performed by the supplier.",
+    examTip: "While the SLA defines the quality and continuous availability of a service, the SOW defines the requirements, operational tasks and concrete deliverables of a specific project.",
+  },
   },
 };
 
