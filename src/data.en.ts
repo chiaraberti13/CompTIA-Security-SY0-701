@@ -10094,5 +10094,149 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **B) Neutral**.\n\n* **Why it's correct:** A **neutral** orientation aims for a balanced approach, carefully weighing the associated risks and benefits without falling into excessive caution nor a high risk tolerance.\n* **Analysis of the distractors:**\n  * **A) Risk-Averse** and **D) Conservative** tend to minimize risk at all costs, often giving up growth opportunities in order to avoid dangers.\n  * **C) Expansionary** accepts a very high and aggressive level of risk in order to achieve rapid expansion and growth rates."
   },
+  89: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "An infrastructure maintenance manager is evaluating the reliability of some critical network devices to decide preventive hardware replacement cycles.",
+    question: "Which concept represents an important reliability metric in maintenance management and indicates the average time that elapses between the failures of a system?",
+    options: [
+      "A) MTTR (Mean Time to Repair)",
+      "B) Risk assessment",
+      "C) MTBF (Mean Time Between Failures)",
+      "D) FMEA (Failure Mode and Effects Analysis)"
+    ],
+    explanation: "The correct answer is **C) MTBF (Mean Time Between Failures)**.\n\n* **Why it's correct:** The **MTBF (Mean Time Between Failures)** estimates the average time interval during which a system or component functions correctly before incurring a failure, acting as a key indicator of hardware reliability.\n* **Analysis of the distractors:**\n  * **A) MTTR (Mean Time to Repair)** expresses the average time required to repair or restore a failed component.\n  * **B) Risk assessment** is the entire process of identifying and evaluating general risks, not a specific time metric.\n  * **D) FMEA** is a proactive methodology used to analyze the possible failure modes and their effects, not a quantitative metric of the time between failures."
+  },
+  90: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "At Dion Training, a technology company, the security team is conducting a review of security measures to improve the protection of its physical facilities. They want to identify the essential governance component to ensure that access to buildings and sensitive areas is adequately restricted.",
+    question: "Which of the following options represents a fundamental element of corporate governance for defining and applying physical access restrictions to buildings and protected areas?",
+    options: [
+      "A) Physical security standards",
+      "B) AUP (Acceptable Use Policy)",
+      "C) Change management procedures",
+      "D) Information security policies"
+    ],
+    explanation: "The correct answer is **A) Physical security standards**.\n\n* **Why it's correct:** **Physical security standards** define the requirements and technical specifications on how to protect buildings and sensitive areas from unauthorized access (e.g. use of badges, turnstiles, closed-circuit cameras and security guards).\n* **Analysis of the distractors:**\n  * **B) AUP (Acceptable Use Policy)** defines the permitted and prohibited behaviors in employees' use of corporate IT resources.\n  * **C) Change management** governs the controlled procedures for making modifications to the IT infrastructure or software.\n  * **D) Information security policies** are macro-level policies that address information security in general (including logical security, encryption, etc.), whereas physical standards specifically articulate the rules for physical access."
+  },
+  91: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "During a privacy compliance audit under European regulations (GDPR), a company evaluates the fundamental rights of users (data subjects) regarding the processing of their personal data.",
+    question: "What does the \"right to be forgotten\" refer to in privacy compliance?",
+    options: [
+      "A) The right of data subjects to request the deletion of their personal data",
+      "B) The right of data controllers to delete data at any time",
+      "C) The right of data processors to access personal data",
+      "D) The right of organizations to retain or delete data at their discretion"
+    ],
+    explanation: "The correct answer is **A) The right of data subjects to request the deletion of their personal data**.\n\n* **Why it's correct:** In privacy compliance (as provided for by the GDPR), the **right to be forgotten** guarantees physical persons the right to obtain from the data controller the deletion of their personal data without undue delay, in the presence of certain conditions (e.g. if the data is no longer necessary in relation to the purposes for which it was collected).\n* **Analysis of the distractors:**\n  * **B)** Controllers cannot act arbitrarily, but must comply with precise legal retention rules.\n  * **C)** Processors handle data only on behalf of controllers, and access has nothing to do with the right to be forgotten.\n  * **D)** Organizations do not have an absolute discretionary right of retention, but must align rigorously with regulatory requirements and users' legitimate requests."
+  },
+  92: {
+    topic: "Risk Management & Analysis",
+    scenario: "An organization is willing to accept higher risks to pursue rapid growth and is investing heavily in innovative technologies, despite potential security vulnerabilities.",
+    question: "Which type of risk appetite does this organization manifest?",
+    options: [
+      "A) Conservative",
+      "B) Expansionary",
+      "C) Cautious",
+      "D) Neutral"
+    ],
+    explanation: "The correct answer is **B) Expansionary**.\n\n* **Why it's correct:** An expansionary orientation is characterized by the willingness to take on significant or above-average risks in order to seize opportunities for strong growth, innovation and competitive advantage in the market.\n* **Analysis of the distractors:**\n  * **A) Conservative** and **C) Cautious** tend to minimize risk, preferring stability and control.\n  * **D) Neutral** seeks a uniform balance between costs and benefits without leaning toward the active acceptance of high levels of risk."
+  },
+  93: {
+    topic: "Risk Management & Analysis",
+    scenario: "Dion Training Solutions has traditionally focused on products with predictable returns and markets with stable regulatory environments, preferring to avoid unpredictable initiatives.",
+    question: "How can this institution's risk appetite BEST be described?",
+    options: [
+      "A) Conservative",
+      "B) Expansionary",
+      "C) Neutral",
+      "D) Risk tolerance"
+    ],
+    explanation: "The correct answer is **A) Conservative**.\n\n* **Why it's correct:** The approach of focusing on predictable returns and stable markets, explicitly avoiding uncertain or speculative contexts, indicates a conservative risk appetite, which prioritizes capital preservation and stability over aggressive growth.\n* **Analysis of the distractors:**\n  * **B) Expansionary** accepts strong risks for high returns.\n  * **C) Neutral** uniformly balances risk aversion and risk appetite.\n  * **D) Risk tolerance** is a related concept that expresses the quantitative threshold or acceptable deviation from objectives, not a qualitative type of risk appetite."
+  },
+  94: {
+    topic: "Risk Management & Analysis",
+    scenario: "A security analyst is monitoring user access patterns within the corporate network to detect behavioral anomalies.",
+    question: "Which of the following activities would raise the GREATEST concern for the analyst?",
+    options: [
+      "A) An employee who usually accesses the network from 9:00 AM to 5:00 PM starts connecting frequently at 3:00 AM.",
+      "B) The receipt of emails from Human Resources asking employees to fill out job satisfaction surveys.",
+      "C) An employee taking a longer lunch break than usual.",
+      "D) The discovery of an unknown USB drive connected to the back of an office workstation."
+    ],
+    explanation: "The correct answer is **A) An employee who usually accesses the network from 9:00 AM to 5:00 PM starts connecting frequently at 3:00 AM.**\n\n* **Why it's correct:** A sudden and repeated deviation from normal time-based access patterns (logins outside standard working hours) represents a typical indicator of a behavioral anomaly. It can signal compromised credentials, an attack in progress or an insider threat.\n* **Analysis of the distractors:**\n  * **B)** Receiving internal surveys via email is a normal corporate activity, unless there are clear phishing indicators not described in the scenario.\n  * **C)** A prolonged lunch break is a personnel management issue, not a cybersecurity or system event.\n  * **D)** Although the presence of an unknown USB drive is a violation of physical and device security policies, the question specifically concerns the monitoring of logical **user access patterns**, not the physical security of hardware ports."
+  },
+  95: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "In the context of data governance and compliance with data privacy regulations (such as the GDPR), the control and processing roles are defined very rigorously.",
+    question: "Which of the following statements BEST describes the role of the Data Processor in data governance?",
+    options: [
+      "A) It evaluates and manages the risks related to data security and regulatory compliance.",
+      "B) It processes personal data on behalf of the Data Controller and ensures the implementation of security measures.",
+      "C) It establishes the strategic direction and policies for managing the data of the entire organization.",
+      "D) It is directly responsible for classifying data and defining access permissions."
+    ],
+    explanation: "The correct answer is **B) It processes personal data on behalf of the Data Controller and ensures the implementation of security measures.**\n\n* **Why it's correct:** The **Data Processor** has the task of processing and handling personal data by rigorously following the instructions provided by the **Data Controller**, and must also ensure the adoption of adequate technical and organizational security measures to protect the managed data.\n* **Analysis of the distractors:**\n  * **A)** Evaluating and managing risks is a typical function of security and compliance committees or of the risk manager.\n  * **C)** and **D)** Defining strategic direction, classifying data and establishing access permissions are direct responsibilities of the **Data Owner** or the governance committee."
+  },
+  96: {
+    topic: "Agreements & Contracts",
+    scenario: "Two organizations intend to start a formal collaboration to define the preliminary terms of a partnership and establish how to cooperate on specific projects or initiatives.",
+    question: "Which type of agreement defines the terms of a partnership between two organizations and how they will collaborate on specific projects or initiatives?",
+    options: [
+      "A) SLA (Service Level Agreement)",
+      "B) MSA (Master Service Agreement)",
+      "C) MOU (Memorandum of Understanding)",
+      "D) BPA (Business Partnership Agreement)"
+    ],
+    explanation: "The correct answer is **C) MOU (Memorandum of Understanding)**.\n\n* **Why it's correct:** The **Memorandum of Understanding (MOU)** is a preliminary formal agreement that defines the mutual intentions and principles of cooperation between two or more entities to collaborate on specific projects, acting as a basis for future legally binding contracts.\n* **Analysis of the distractors:**\n  * **A) SLA** defines the performance metrics for the delivery of a continuous technical service.\n  * **B) MSA** is a complete framework contract that establishes the general terms governing all future commercial transactions and detailed operational contracts.\n  * **D) BPA** is a binding commercial agreement for business partners who cooperate for profit, distributing profits, losses and legal responsibilities."
+  },
+  97: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A system administrator must select a symmetric-key encryption standard to ensure the confidentiality and security of data both at rest and in transit.",
+    question: "Which of the following encryption standards is used primarily to protect data at rest and in transit through symmetric-key encryption?",
+    options: [
+      "A) AES (Advanced Encryption Standard)",
+      "B) HMAC (Hash-Based Message Authentication Code)",
+      "C) RSA (Rivest-Shamir-Adleman)",
+      "D) SHA (Secure Hash Algorithm)"
+    ],
+    explanation: "The correct answer is **A) AES (Advanced Encryption Standard)**.\n\n* **Why it's correct:** **AES (Advanced Encryption Standard)** is the standard symmetric encryption algorithm widely adopted globally to ensure the confidentiality of data at rest and in transit thanks to its high efficiency and computational robustness.\n* **Analysis of the distractors:**\n  * **B) HMAC** is a hash-based method for verifying the integrity and authenticity of messages, not for encrypting them.\n  * **C) RSA** is an asymmetric (dual-key) algorithm used primarily for the secure exchange of keys and for digital signatures, not for the bulk encryption of data at rest.\n  * **D) SHA** is a family of one-way hashing functions intended exclusively to ensure data integrity through the calculation of digital fingerprints, without any encryption/decryption function."
+  },
+  98: {
+    topic: "Social Engineering",
+    scenario: "At Kelly Innovations LLC, David has recently noticed some unusual patterns in his team's workflow. Jamario, a usually diligent employee, has suddenly started accessing files unrelated to his department and was caught uploading large amounts of data to an external cloud service. Enrique mistakenly clicked on a suspicious email link, but reported it immediately. Susan noticed that her computer was much slower than usual, even though she had not made any changes or updates.",
+    question: "Given these situations, which of the following employees has manifested anomalous, risky and unexpected behavior that could indicate a potential security threat?",
+    options: [
+      "A) Jamario",
+      "B) David",
+      "C) Enrique",
+      "D) Susan"
+    ],
+    explanation: "The correct answer is **A) Jamario**.\n\n* **Why it's correct:** Jamario intentionally searched for files unrelated to his duties and actively exfiltrated large volumes of data to an external cloud without any business justification. This behavior is both risky and unusual, constituting the classic insider threat or account compromise scenario.\n* **Analysis of the distractors:**\n  * **B) David** is the supervisor who observes the anomalies, without performing any improper action.\n  * **C) Enrique** made an unintentional mistake (clicking on a link) but acted correctly by reporting it immediately, demonstrating adherence to policies and absence of malicious intent.\n  * **D) Susan** experiences technical slowdowns that could result from malware, but has not personally performed any anomalous or risky action."
+  },
+  99: {
+    topic: "Agreements & Contracts",
+    scenario: "Abdul has suggested that his company perform a supply chain analysis for all corporate suppliers. This activity will be costly and time-consuming.",
+    question: "Why is it important for the company to conduct a supply chain analysis despite the costs and time required?",
+    options: [
+      "A) To determine the supplier's customer satisfaction ratings in order to choose only the best business partners.",
+      "B) To evaluate the supplier's financial stability so that the supply chain does not break down due to a bankruptcy or closure.",
+      "C) To identify potential security risks associated with the supplier's supply chain.",
+      "D) To evaluate the supplier's compliance with legal regulations, so that the commissioning company itself remains compliant."
+    ],
+    explanation: "The correct answer is **C) To identify potential security risks associated with the supplier's supply chain.**\n\n* **Why it's correct:** The supply chain analysis aims to identify security vulnerabilities or threats introduced by third parties (e.g. hardware backdoors, infected software, poor cyber hygiene of partners) that could propagate within the commissioning organization.\n* **Analysis of the distractors:**\n  * **A)** Evaluates commercial quality but offers no information about the cybersecurity posture.\n  * **B)** and **D)** Financial stability and legal compliance are important assessments of general corporate due diligence, but do not cover the technical risks and security vulnerabilities introduced into the supply chain."
+  },
+  100: {
+    topic: "Agreements & Contracts",
+    scenario: "An organization hires an external supplier to manage its data storage needs. To ensure confidentiality and establish clear expectations about responsibilities, they sign a document that describes the security controls, availability requirements and confidentiality clauses.",
+    question: "Which type of agreement is represented by this document?",
+    options: [
+      "A) Business Partnership Agreement (BPA)",
+      "B) Data Use Agreement (DUA)",
+      "C) Service Level Agreement (SLA)",
+      "D) Memorandum of Understanding (MOU)"
+    ],
+    explanation: "The correct answer is **C) Service Level Agreement (SLA)**.\n\n* **Why it's correct:** A **Service Level Agreement (SLA)** establishes the service expectations between the customer and the third-party service provider, including precise metrics on performance (such as server availability/uptime), applicable security standards and data confidentiality obligations.\n* **Analysis of the distractors:**\n  * **A) BPA** governs the profits and legal responsibilities of a commercial partnership between two entities.\n  * **B) DUA** defines the permitted conditions of use for a specific dataset transferred for research or analysis purposes, without covering the general levels of infrastructure provision.\n  * **D) MOU** is a preliminary and non-legally-binding statement of intent."
+  },
   },
 };
