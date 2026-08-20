@@ -3015,6 +3015,60 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "The Exposure Factor (EF) is a fundamental metric in quantitative risk management. It is expressed as a percentage value from 0.0 (0% damage) to 1.0 (100% damage, total destruction of the asset). It is used directly in the calculation of the Single Loss Expectancy (SLE = AV * EF), where AV represents the overall value of the asset.",
     examTip: "The EF always expresses the estimated fraction of loss as a percentage: if a fire damages a server compromising half of its value, the associated EF is 50% (0.50).",
   },
+  ProbabilityConcept: {
+    name: "Probability",
+    definition: "The mathematical measure of the likelihood or statistical frequency with which a given risk event can occur within a given time interval.",
+    details: "In qualitative and quantitative risk management, probability estimates the possibility that a vulnerability is actually exploited by a threat. It can be derived from historical data, market trends and incident statistics, or expressed in percentages or score bands (e.g. from 1 to 5).",
+    examTip: "Probability differs from impact: while the former indicates how plausible the occurrence of the incident is, the latter measures the severity of the resulting damage.",
+  },
+  LikelihoodConcept: {
+    name: "Likelihood",
+    definition: "The qualitative likelihood of a risk event, expressed in descriptive terms or on the basis of subjective scales (e.g. High, Medium, Low) rather than through precise mathematical calculations.",
+    details: "While 'Probability' typically refers to a probabilistic or statistical calculation based on precise sampling, 'Likelihood' describes the general plausibility that an attack occurs based on the presence of compensating controls, the attacker's motivation and the ease of exploitation.",
+    examTip: "In qualitative risk analyses (Qualitative Risk Assessment), the term Likelihood is preferred to prioritize risks within an impact/likelihood matrix.",
+  },
+  RiskAnalysisConcept: {
+    name: "Risk analysis",
+    definition: "The systematic process aimed at identifying and evaluating risk factors to estimate the probability of occurrence and the severity of the impact of potential incidents.",
+    details: "Risk Analysis is divided into:\n* **Qualitative Risk Analysis:** Uses expert opinions and scenarios to estimate the impact and likelihood on non-numeric scales.\n* **Quantitative Risk Analysis:** Uses financial metrics and mathematical formulas (e.g. SLE, ARO, ALE, AV) to associate a real monetary value with the risk exposure.",
+    examTip: "Risk Analysis is the central phase of the Risk Assessment, providing the analytical data indispensable for establishing which risk-response strategy (mitigation, transfer, acceptance, avoidance) is economically and operationally most suitable.",
+  },
+  ResidualRiskAnalysisConcept: {
+    name: "Residual Risk Analysis",
+    definition: "The evaluation and analysis of the level of risk that remains borne by the organization after the implementation of all the planned security controls and countermeasures.",
+    details: "Calculating the residual risk is fundamental to determining whether the active defenses are sufficient or whether further treatment is needed. It is conceptually expressed as: Residual Risk = Inherent Risk (total initial) - Security Controls. Once calculated, corporate management must decide whether to accept it (falling within the Risk Appetite) or to start further mitigation plans.",
+    examTip: "On the exam, remember that no system is 100% secure; the residual risk can never be completely zeroed and must be formally accepted by management.",
+  },
+  QualitativeRiskAssessmentConcept: {
+    name: "Qualitative Risk Assessment",
+    definition: "A risk-evaluation method based on descriptive and subjective scales (e.g. High, Medium, Low or numeric ranges from 1 to 5) to estimate and prioritize the probability and impact of incidents.",
+    details: "The qualitative assessment is based on expert judgment, scenarios, brainstorming and risk matrices. It does not require complex financial formulas or precise monetary data, which makes it extremely fast, intuitive and cheap to perform to establish an initial prioritization of security investments.",
+    examTip: "The Qualitative Risk Assessment is distinguished by the use of qualitative and descriptive judgments and is the ideal tool when accurate historical data or financial metrics are lacking to perform a quantitative calculation.",
+  },
+  QuantitativeRiskAssessmentConcept: {
+    name: "Quantitative Risk Assessment",
+    definition: "A risk-evaluation method that uses historical data, statistical metrics and real financial values to calculate with mathematical precision the organization's economic exposure to threats.",
+    details: "The quantitative assessment assigns real monetary values and precise percentages to each element of the risk. It is based on three fundamental exam parameters and mathematical formulas:\n\n1. **SLE (Single Loss Expectancy):** Estimated loss for a single occurrence of an incident. It is calculated by multiplying the Asset Value (AV) by the Exposure Factor (EF):\n   * **Formula:** $\\text{SLE} = \\text{AV} \\times \\text{EF}$\n\n2. **ARO (Annualized Rate of Occurrence):** The estimated number of times the threat occurs over the course of a year.\n   * *Example:* If a failure occurs once every 10 years, the ARO is 0.1.\n\n3. **ALE (Annualized Loss Expectancy):** The estimated economic loss on an annual basis. It is calculated by multiplying the single-event loss by its annual frequency:\n   * **Formula:** $\\text{ALE} = \\text{SLE} \\times \\text{ARO}$\n\nThis process allows objectively determining the return on investment (ROI) of the security countermeasures, since the cost of the control should not exceed the ALE itself.",
+    examTip: "On the exam, any question that mentions monetary figures, damage percentages (EF) or requires the calculation of SLE or ALE (e.g. multiplying a $15,000 failure by an ARO of 0.1 to obtain the ALE of $1,500) refers to the Quantitative approach.",
+  },
+  ThreatVectorAnalysisConcept: {
+    name: "Threat Vector Analysis",
+    definition: "The systematic analysis of threat vectors, that is the channels, methods and technical and operational paths used by a threat agent to infiltrate a network or compromise a system.",
+    details: "Threat Vector Analysis maps the potential entry points of an attack (e.g. phishing emails, ports open to the Internet, infected USB drives, unpatched software vulnerabilities or disloyal employees). Identifying and analyzing these vectors allows designing targeted controls and hardening the organization's overall attack surface.",
+    examTip: "While the vulnerability is the intrinsic weakness, the threat vector represents the actual path or means used by the attacker to reach and exploit that weakness.",
+  },
+  EnvironmentalVariablesRes: {
+    name: "Environmental Variables",
+    definition: "Environmental Variables: The external, geographic, physical or environmental factors outside the organization's control that influence and determine the probability or severity of a risk.",
+    details: "**Environmental Variables** are crucial components in risk-assessment calculations:\n* **Geographic and Climatic Factors:** Proximity to floodable rivers, seismic faults, hurricane-prone areas or extreme temperatures that impose natural risks (earthquakes, floods, overheating failures).\n* **Socio-Political Factors:** The level of local crime, the geopolitical stability of the data center's region, or proximity to sensitive infrastructure that increases the probability of physical attacks, strikes or power-supply interruptions.\n* **Infrastructural Factors:** The stability of the local public power grid, the availability of redundant Internet connectivity channels or the presence of public emergency services ready to intervene.",
+    examTip: "On the exam, remember that environmental variables are external factors that the organization cannot directly prevent, but which it must mandatorily analyze in the Risk Assessment to size the physical and environmental compensating controls (e.g. UPS generators or redundant air conditioners).",
+  },
+  OrganizationalImpactRes: {
+    name: "Organizational Impact",
+    definition: "Organizational Impact: The overall measure of the negative consequences (operational, financial, legal, reputational and security) that an organization suffers following the materialization of a risk or the breach of its systems.",
+    details: "**Organizational Impact** goes well beyond the simple direct financial cost of restoration:\n* **Financial Impact:** Immediate loss of revenue due to service interruption, legal and IT consulting costs for the cleanup, or compensation to impacted customers.\n* **Operational Impact (Business Interruption):** The inability of employees to work and deliver essential services (e.g. the factory production line stopped due to a ransomware attack).\n* **Reputational Impact:** The damage to the brand image, the loss of trust of customers and investors, and the possible flight of customers to competitors.\n* **Legal and Compliance Impact:** Severe fines imposed by supervisory authorities (e.g. GDPR violations), class-action lawsuits by harmed users or the temporary suspension of operating commercial licenses.",
+    examTip: "Organizational Impact measures the global damage suffered by the company; estimating it accurately allows management to assign an objective priority to the different risks and allocate budgets accordingly.",
+  },
   },
 };
 
