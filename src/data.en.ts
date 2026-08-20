@@ -10382,5 +10382,149 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **A) Financial interests**.\n\n* **Why it's correct:** A conflict of interest based on **financial interests** manifests when a vendor (or evaluator) has the opportunity to obtain a direct or indirect economic gain (e.g. through commissions) by recommending certain products or services, compromising impartiality and alignment with the organization's real needs.\n* **Analysis of the distractors:**\n  * **B) Competitive relationships** refer to the vendor's ties with other competing companies that could influence its objectivity, without implying a direct financial commission.\n  * **C) Insider information** involves the improper use of confidential or proprietary data for one's own advantage.\n  * **D) Personal relationships** concern influences deriving from family or friendship ties, which influence decisions but are not specifically based on direct financial incentives linked to the recommended product."
   },
+  113: {
+    topic: "Agreements & Contracts",
+    scenario: "Globex Corporation intends to start a long-term commercial relationship with an external supplier for the provision of IT services. The company's objective is to define the general terms and conditions that will apply to all future contracts and specific agreements with the same supplier, without having to renegotiate the basic legal clauses each time.",
+    question: "Which type of agreement is preferable to define to meet this need?",
+    options: [
+      "A) SOW (Statement of Work)",
+      "B) MSA (Master Services Agreement)",
+      "C) MOU (Memorandum of Understanding)",
+      "D) SLA (Service Level Agreement)"
+    ],
+    explanation: "The correct answer is **B) MSA (Master Services Agreement)**.\n\n* **Why it's correct:** An **MSA (Master Services Agreement)** is a framework contract designed specifically to establish the general terms, legal clauses and basic conditions that will govern all future transactions and relationships between the parties. This simplifies and speeds up the drawing up of future specific operational agreements.\n* **Analysis of the distractors:**\n  * **A) The SOW (Statement of Work)** describes in detail the operational activities, deliverables and timelines of a single specific project.\n  * **C) The MOU (Memorandum of Understanding)** is a preliminary agreement, usually non-binding, that expresses the intention to collaborate but does not act as a definitive legal contract for future transactions.\n  * **D) The SLA (Service Level Agreement)** exclusively defines the technical performance metrics and expected availability levels for the service."
+  },
+  114: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A healthcare-sector organization must produce periodic compliance reports intended for external regulatory bodies and the public of its shareholders in order to demonstrate alignment with current data security regulations.",
+    question: "Which of the following options BEST describes the primary objective of external compliance reporting?",
+    options: [
+      "A) To report compliance status to the public and stakeholders",
+      "B) To conduct internal audits for compliance verification purposes",
+      "C) To request explicit consent from data subjects for compliance purposes",
+      "D) To share compliance information exclusively with the organization's management"
+    ],
+    explanation: "The correct answer is **A) To report compliance status to the public and stakeholders**.\n\n* **Why it's correct:** The main objective of **external compliance reporting** is to provide external transparency, demonstrating the company's compliance to regulatory authorities, customers, investors (stakeholders) and the general public in order to build trust and fulfill legal obligations.\n* **Analysis of the distractors:**\n  * **B) Conducting audits** is an operational activity to collect data, not the final objective of the external report itself.\n  * **C) Requesting consent** (consent/acknowledgement) concerns users' data processing flows (privacy), not institutional compliance reporting.\n  * **D) Exclusive sharing with management** characterizes internal reporting, not external compliance reporting."
+  },
+  115: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "During the planning of a major upgrade of the corporate database infrastructure, the network team emphasizes the importance of performing a preliminary test (trial run or dry run) on a reduced scale of the most significant changes before their definitive implementation in production.",
+    question: "Which of the following practices highlights the fundamental importance of preemptively testing the main changes before their full application?",
+    options: [
+      "A) Network segmentation policy",
+      "B) Change management practices",
+      "C) Incident response protocol",
+      "D) Business continuity planning"
+    ],
+    explanation: "The correct answer is **B) Change management practices**.\n\n* **Why it's correct:** **Change Management practices** impose rigorous control over system changes. Performing a 'trial run' in an isolated or non-production environment before the full rollout is a fundamental change management best practice to evaluate the impact, identify bugs and ensure that a safe recovery procedure (backout plan) exists.\n* **Analysis of the distractors:**\n  * **A) Network segmentation** is a technical security control to limit the propagation of attacks, it does not govern the change lifecycle.\n  * **C) The incident response protocol** intervenes after a breach or disruption has occurred to contain it.\n  * **D) Business continuity planning (BCP)** focuses on keeping business functions operational during a disaster, not on the methodical management of ordinary patches or software upgrades."
+  },
+  116: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "Following a serious data breach caused by the failure to implement the minimum encryption requirements provided for by the GDPR regulation, a supervisory authority imposes on an organization the payment of a monetary penalty.",
+    question: "Which of the following terms defines a monetary penalty imposed due to non-compliance with regulations or the violation of rules or agreements?",
+    options: [
+      "A) Fee",
+      "B) Fine",
+      "C) Deductible",
+      "D) Sanction"
+    ],
+    explanation: "The correct answer is **B) Fine**.\n\n* **Why it's correct:** A **fine** is a specific financial penalty applied by a government, regulatory body or court to punish an infraction or non-compliance with laws and regulations. It has a punitive and deterrent purpose.\n* **Analysis of the distractors:**\n  * **A) A fee** is a payment or charge due for an authorized service or license, it does not have a punitive nature.\n  * **C) The deductible** is the portion of damage that remains the responsibility of the insured in an insurance policy contract.\n  * **D) The sanction** is a broader term that includes commercial restrictions, operational blocks or generic coercive measures, whereas the specific monetary penalty is called a 'fine'."
+  },
+  117: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "A software house wants to adopt a structured methodology that divides the entire software development and maintenance lifecycle into distinct phases, placing a strong emphasis on the systematic integration of security controls into each of these stages.",
+    question: "Which of the following methodologies divides software development into discrete phases while integrating security throughout its path?",
+    options: [
+      "A) Scrum methodology",
+      "B) SDLC (Software Development Life Cycle)",
+      "C) CI/CD (Continuous Integration / Continuous Delivery)",
+      "D) RAD (Rapid Application Development)"
+    ],
+    explanation: "The correct answer is **B) SDLC (Software Development Life Cycle)**.\n\n* **Why it's correct:** The **SDLC (Software Development Life Cycle)** is the methodological framework that divides software development into clear sequential phases (requirements, design, implementation, testing, deployment, maintenance). When implemented with security criteria, it is called Secure SDLC, which ensures security at every phase of the lifecycle.\n* **Analysis of the distractors:**\n  * **A) Scrum** is a specific agile framework centered on team collaboration and iterative sprint cycles, but does not in itself represent the entire formal development lifecycle.\n  * **C) CI/CD** is an automation practice focused on the continuous integration and release of code, not a general methodology for dividing into executive phases.\n  * **D) RAD** is a rapid development model based on fast prototyping, which often neglects or reduces formal planning and security in favor of speed."
+  },
+  118: {
+    topic: "Third-Party Risk & Assessments",
+    scenario: "Trent has been assigned the task of periodically and continuously verifying that his company's external suppliers comply with the security levels agreed within their respective already-signed commercial contracts.",
+    question: "Which of the following activities BEST describes the new operational duties assigned to Trent?",
+    options: [
+      "A) Vendor assessment",
+      "B) Vendor monitoring",
+      "C) Compliance reporting",
+      "D) Vendor selection"
+    ],
+    explanation: "The correct answer is **B) Vendor monitoring**.\n\n* **Why it's correct:** **Vendor monitoring** is the continuous activity aimed at regularly evaluating the performance and security posture of a supplier *after* the contractual relationship has been established, to ensure that it continues to meet the agreed requirements.\n* **Analysis of the distractors:**\n  * **A) Vendor assessment** is usually the initial or periodic formal audit performed to evaluate a supplier before the contract or at preset intervals (e.g. annually), not a continuous daily monitoring.\n  * **C) Compliance reporting** concerns the drafting of compliance reports for external bodies.\n  * **D) Vendor selection** is the initial process of selecting and choosing the ideal supplier among various candidates."
+  },
+  119: {
+    topic: "Governance, Boards & Committees",
+    scenario: "Needs' Bigger Boats, a fishing gear company, is examining its data governance framework to clarify the roles and responsibilities of the personnel tasked with data management. Among the key figures identified is the Data Owner.",
+    question: "Which of the following accurately describes the primary responsibility of the Data Owner?",
+    options: [
+      "A) Makes decisions about how data is used, accessed and protected",
+      "B) Materially manages the logical access controls and network authorizations",
+      "C) Technically processes and manipulates data on behalf of the Data Controller",
+      "D) Ensures the daily technical integrity and confidentiality of the stored data"
+    ],
+    explanation: "The correct answer is **A) Makes decisions about how data is used, accessed and protected**.\n\n* **Why it's correct:** The **Data Owner** has ultimate responsibility over the data, including the classification of information, the definition of access policies and the determination of who has the right to use that data and for what business purposes.\n* **Analysis of the distractors:**\n  * **B) Materially managing access controls** and **D) ensuring daily confidentiality** are typical tasks of the **Data Custodian** (or Data Steward), who technically implements the directives decided by the Data Owner.\n  * **C) Processing data on behalf of the Controller** defines the role of the **Data Processor** in the context of privacy regulations such as the GDPR."
+  },
+  120: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "A company is drafting its security documentation set starting from the main policy (Information Security Policy), with the intention of establishing a solid foundation for the protection of corporate resources.",
+    question: "What is the primary purpose of an information security policy?",
+    options: [
+      "A) To explain what employees can do with information after they leave the company",
+      "B) To define the specific rules for the acceptable use of IT resources",
+      "C) To establish guidelines and principles for safeguarding data",
+      "D) To outline the operational technical steps for incident response"
+    ],
+    explanation: "The correct answer is **C) To establish guidelines and principles for safeguarding data**.\n\n* **Why it's correct:** The fundamental purpose of an **Information Security Policy** is to define at a high level the strategic security objectives, management responsibilities and the cardinal principles for protecting the confidentiality, integrity and availability (CIA Triad) of corporate information.\n* **Analysis of the distractors:**\n  * **A)** Falls within the exit contractual clauses or post-employment NDA.\n  * **B) Defining the acceptable use of IT resources** is the specific purpose of the **Acceptable Use Policy (AUP)**.\n  * **D) The operational technical steps for incidents** are described in the playbooks or standard operating procedures (SOP) of Incident Response, not in the general policy."
+  },
+  121: {
+    topic: "Risk Management & Analysis",
+    scenario: "An organization's security team is conducting a structured activity to detect and catalog potential threats such as malware, malicious internal actors, misconfigurations or inadequate policies, in order to map the risk exposure.",
+    question: "Which term BEST describes the systematic process of detecting and documenting the potential risks that could affect the organization?",
+    options: [
+      "A) Risk identification",
+      "B) Vulnerability assessment",
+      "C) Policy review",
+      "D) Threat intelligence"
+    ],
+    explanation: "The correct answer is **A) Risk identification**.\n\n* **Why it's correct:** **Risk identification** is the first fundamental phase of risk management, aimed at discovering, recognizing and formally documenting (in the Risk Register) all the threats and vulnerabilities that could negatively affect the organization's assets.\n* **Analysis of the distractors:**\n  * **B) Vulnerability assessment** is a technical process to find specific security bugs in computer systems, but does not cover all operational or policy risks.\n  * **C) Policy review** is the periodic review of security policies.\n  * **D) Threat intelligence** provides external and analytical data on emerging global threats, supporting identification but without constituting the organization's global internal risk cataloging process."
+  },
+  122: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A security analyst is conducting an in-depth due diligence phase during the process of selecting a new third-party software services provider.",
+    question: "What is the main purpose of performing due diligence in a vendor selection process?",
+    options: [
+      "A) To ensure that the chosen vendor is the best choice among the list of possible vendors",
+      "B) To assess the vendor's ability to provide the goods or services when they have promised",
+      "C) To compare multiple vendors' suppliers to ensure they are all diligent in analyzing their own supply chains",
+      "D) To ensure that the vendor's security practices align with the organization's requirements and standards"
+    ],
+    explanation: "The correct answer is **D) To ensure that the vendor's security practices align with the organization's requirements and standards**.\n\n* **Due Diligence applied to Vendor Risk Management (Third-Party Risk Management):**\n  * Conducting **Due Diligence** on a third-party vendor before signing an agreement means carrying out a formal security investigation to validate its claims. The objective is not to trust blindly, but to gather objective evidence (e.g. SOC 2 Type II reports, ISO 27001 certificates, code audits, CAIQ questionnaires) to verify that its security posture meets the internal standards of the acquiring organization.\n  * **The subsequent Due Care:** Once the contract is signed, the action of constantly monitoring the vendor's performance, reviewing access logs and checking subsequent annual reports to ensure there is no degradation of security represents the exercise of continuous **Due Care**.\n\n* **Summary of the differences (CompTIA CASP+):**\n  * **Due Diligence (Think/Investigate/Plan):** It is the initial investigative effort before acting (e.g. verifying the vendor's security credentials).\n  * **Due Care (Act/Apply/Do):** It is the operational and continuous effort of executing controls and exercising prudence day after day to avoid negligence (e.g. monitoring the vendor, revoking access for terminated employees, installing patches).\n\n* **Analysis of the distractors:**\n  * **A, B and C)** Concern evaluations of a purely commercial, financial, logistical or generic supply chain optimization nature. Although useful for the business, they do not represent the main purpose of Due Diligence in the cybersecurity domain, which specifically aims to align security and compliance practices to protect data and prevent breaches."
+  },
+  123: {
+    topic: "Governance, Boards & Committees",
+    scenario: "Florence is the CEO of a structured company. She has the ultimate authority and the final say on all strategic and operational decisions made within the organization, including decisions related to business, IT, accounting, security and other corporate divisions.",
+    question: "Which type of governance characterizes the organization led by Florence?",
+    options: [
+      "A) Board governance",
+      "B) Centralized governance",
+      "C) Decentralized governance",
+      "D) Committee governance"
+    ],
+    explanation: "The correct answer is **B) Centralized governance**.\n\n* **Why it's correct:** **Centralized governance** occurs when the decision-making authority is concentrated at the top of the organization (e.g. in the hands of the CEO or a small top-level management group), from which decisions spread downward hierarchically.\n* **Analysis of the distractors:**\n  * **A) Board governance** refers to the strategic control and monitoring carried out by the board of directors over the entire corporate operation, it does not describe the direct operational concentration of decisions in a single figure.\n  * **C) Decentralized governance** distributes decision-making power among various business units, branches or autonomous departments.\n  * **D) Committee governance** relies on cross-functional groups of collective decision-making (e.g. Steering Committee) to approve strategies."
+  },
+  124: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "At Dion Training, the IT team is working on improving its business continuity plan (BCP). To do this, they need to calculate and document the average time required to repair a system or restore its functionality following an unexpected disruption.",
+    question: "Which of the following metrics does the Dion Training team intend to determine?",
+    options: [
+      "A) MTTR (Mean Time to Repair)",
+      "B) MTBF (Mean Time Between Failures)",
+      "C) RPO (Recovery Point Objective)",
+      "D) RTO (Recovery Time Objective)"
+    ],
+    explanation: "The correct answer is **A) MTTR (Mean Time to Repair)**.\n\n* **Why it's correct:** The **MTTR (Mean Time to Repair)** measures the average time needed to repair and restore a defective component or system after a failure or service interruption.\n* **Analysis of the distractors:**\n  * **B) The MTBF** measures the reliability of a system, i.e. the average time that elapses between two consecutive failures.\n  * **C) The RPO** defines the maximum tolerable amount of data that can be lost following an incident (expressed in time).\n  * **D) The RTO** is the strategic objective of the maximum time within which an interrupted service must be restored to avoid unacceptable consequences, whereas the MTTR measures the actual average time of technical repair."
+  },
   },
 };
