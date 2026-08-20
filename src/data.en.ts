@@ -2861,6 +2861,32 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "Successful access attempts (ALLOW) from geographically incompatible locations or at atypical hours indicate an account abuse or the compromise of user credentials.",
   },
   },
+  5: {
+  Governance: {
+    name: "Governance",
+    definition: "The strategic direction framework that establishes rules, roles and responsibilities to align security with business objectives.",
+    details: "Security Governance establishes the strategic direction, ensures the achievement of objectives, manages risks and verifies the responsible use of resources. It requires the definition of a clear hierarchy of responsibility (e.g. from the CISO to the Security Committee) and of performance metrics to measure the effectiveness of the security program.",
+    examTip: "Governance is always a Top-Down process. Any security initiative or policy requires the formal support of Senior Management to be effective and legally legitimized.",
+  },
+  Boards: {
+    name: "Boards",
+    definition: "The Board of Directors has the overall strategic responsibility for risk management and the protection of the company.",
+    details: "The Board has the fiduciary and legal duty (Due Care) to protect the company's information assets and the shareholders. It defines the organization's overall Risk Appetite, approves the security budget at a macroscopic level and periodically receives reports from the CISO on the evolution of threats.",
+    examTip: "In CompTIA questions, remember that the Board does not implement operational controls, but defines the strategic tolerance guidelines and approves high-level operational funding.",
+  },
+  Committees: {
+    name: "Committees",
+    definition: "Cross-functional groups (such as the Steering Committee) composed of representatives from different corporate areas to coordinate security initiatives.",
+    details: "Committees (e.g. the Security Steering Committee) bring together members from IT, Legal, Human Resources, Finance, Operations and Security. Their purpose is to avoid decisions made in technological silos, analyzing the impact of new security policies on productivity and the overall business, and aligning the different corporate departments.",
+    examTip: "If an exam question asks how to ensure business alignment and cross-functional collaboration for a new security initiative or program, the 'Steering Committee' is the key answer.",
+  },
+  DataRolesGovernance: {
+    name: "Data Roles & Governance",
+    definition: "Roles and responsibilities defined within an organization (Data Owner, Custodian, Controller, Processor, DPO) to ensure the correct management, protection and compliance of data.",
+    details: "Data governance describes the decision-making and operational roles for the secure management of information assets:\n\n* **Data Owner:** Has the ultimate strategic and legal responsibility for a specific data set (e.g. the HR Director for the employee archive). They establish its classification (e.g. confidential, public), define the access policies and answer for corporate compliance.\n* **Data Custodian / Steward:** A technical and operational figure (e.g. Database Administrator - DBA) tasked with implementing and keeping the security measures active. They materially configure the access controls (ACLs), manage the servers, perform backups, apply encryption and ensure the technological availability of the assets, following the Data Owner's directives.\n* **Data Controller:** The entity or organization that establishes the purposes and means of processing the personal data of customers/data subjects (e.g. the bank itself, the hospital, the e-commerce). It has the overall legal responsibility under the GDPR.\n* **Data Processor:** The external entity or business partner that materially processes and handles the data on behalf of and according to the strict instructions of the Data Controller (e.g. a cloud provider or an external newsletter service), without being able to determine its own purposes of use.\n* **Data Protection Officer (DPO):** An independent oversight and consulting role required by the GDPR to supervise the data-protection strategy, ensure compliance with regulations and act as the point of contact with the Supervisory Authority.",
+    examTip: "On the exam, distinguish clearly:\n1. **Data Owner vs Custodian:** The owner makes the strategic and business decisions (e.g. classifies the data), while the custodian implements the technical and operational controls (e.g. backup, permissions, encryption).\n2. **Data Controller vs Processor:** The Controller establishes 'why' and 'how' to process the customers' data (Owner), while the Processor materially performs the computation/processing on the Controller's mandate (e.g. a cloud provider).",
+  },
+  },
 };
 
 /* ------------------------------------------------------------------ *
