@@ -2886,6 +2886,78 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Data governance describes the decision-making and operational roles for the secure management of information assets:\n\n* **Data Owner:** Has the ultimate strategic and legal responsibility for a specific data set (e.g. the HR Director for the employee archive). They establish its classification (e.g. confidential, public), define the access policies and answer for corporate compliance.\n* **Data Custodian / Steward:** A technical and operational figure (e.g. Database Administrator - DBA) tasked with implementing and keeping the security measures active. They materially configure the access controls (ACLs), manage the servers, perform backups, apply encryption and ensure the technological availability of the assets, following the Data Owner's directives.\n* **Data Controller:** The entity or organization that establishes the purposes and means of processing the personal data of customers/data subjects (e.g. the bank itself, the hospital, the e-commerce). It has the overall legal responsibility under the GDPR.\n* **Data Processor:** The external entity or business partner that materially processes and handles the data on behalf of and according to the strict instructions of the Data Controller (e.g. a cloud provider or an external newsletter service), without being able to determine its own purposes of use.\n* **Data Protection Officer (DPO):** An independent oversight and consulting role required by the GDPR to supervise the data-protection strategy, ensure compliance with regulations and act as the point of contact with the Supervisory Authority.",
     examTip: "On the exam, distinguish clearly:\n1. **Data Owner vs Custodian:** The owner makes the strategic and business decisions (e.g. classifies the data), while the custodian implements the technical and operational controls (e.g. backup, permissions, encryption).\n2. **Data Controller vs Processor:** The Controller establishes 'why' and 'how' to process the customers' data (Owner), while the Processor materially performs the computation/processing on the Controller's mandate (e.g. a cloud provider).",
   },
+  AUP: {
+    name: "AUP",
+    definition: "Acceptable Use Policy: the document that describes the permitted behaviors and usage limits of corporate IT systems.",
+    details: "The AUP defines what employees can and cannot do with company-provided laptops, phones, corporate email and network connections (e.g. limited use for personal purposes, prohibition on downloading illegal files or pirated software, prohibition on connecting personal USB drives). It is signed by each resource during onboarding.",
+    examTip: "The AUP provides a formal legal foundation for the remediation and possible dismissal of negligent or malicious employees.",
+  },
+  SecurityPolicies: {
+    name: "Security Policies",
+    definition: "The formal documents approved by management that establish the corporate philosophy and mandatory requirements to protect data.",
+    details: "Policies define the objectives and the 'what' (e.g. 'All sensitive data must be encrypted in transit'). Standards specify the technologies (e.g. 'Mandatory use of TLS 1.3'), while procedures (SOPs) operationally describe the 'how' step by step. Guidelines, on the other hand, are flexible and non-mandatory recommendations.",
+    examTip: "Security policies are high-level directives that require the signature of senior management to assume mandatory value within the organization.",
+  },
+  IncidentResponsePolicy: {
+    name: "Incident Response Policy",
+    definition: "The formal policy that defines how the company identifies, isolates, mitigates and learns from cyber attacks.",
+    details: "It establishes clear responsibilities during a breach, defining who formally declares the incident state, the mandatory communication chain (e.g. when to notify the Legal, PR or external authorities) and the phases of the incident lifecycle (Preparation, Detection, Containment, Eradication, Recovery, Post-Incident).",
+    examTip: "The Incident Response Policy must be complemented by regular test plans (such as Tabletop Exercises) to validate the communication lines in simulated high-stress scenarios.",
+  },
+  BCP: {
+    name: "BCP",
+    definition: "Business Continuity Plan: a plan aimed at keeping critical business functions operational during and after a disaster.",
+    details: "The BCP focuses on resilience at the corporate and human level (e.g. remote work, alternative physical work sites, shift reorganization, backup supply chain) to ensure that core processes never completely stop.",
+    examTip: "The BCP activates immediately when the disaster occurs to allow people to keep working, focusing on the general business processes.",
+  },
+  DRP: {
+    name: "DRP",
+    definition: "Disaster Recovery Plan: the technical plan to restore the IT infrastructure, servers and applications following a stoppage.",
+    details: "The DRP is a component of the BCP that describes the precise steps to recover the servers from backup, activate the systems in the cloud or at secondary sites (Hot, Warm, Cold site) and restore network connectivity, respecting the defined limits of RTO (Recovery Time Objective) and RPO (Recovery Point Objective).",
+    examTip: "While the BCP is oriented toward people and the overall business, the DRP is purely focused on the technology infrastructure and data restoration.",
+  },
+  RTORes: {
+    name: "RTO",
+    definition: "Recovery Time Objective: the maximum planned and acceptable time to restore a system or business process interrupted after a disaster.",
+    details: "The **RTO** represents the maximum time objective allowed to bring the entire business service back online following a disaster. It determines the choice of recovery infrastructure (e.g. Hot, Warm or Cold Site). For example, an RTO of 2 hours requires active replicas and ready hardware, while an RTO of 48 hours allows the slow purchase and configuration of the servers.",
+    examTip: "The RTO focuses its attention on the 'Time' and 'Downtime' factor: it answers the question 'How quickly must we get back online?'.",
+  },
+  RPORes: {
+    name: "RPO",
+    definition: "Recovery Point Objective: the maximum tolerable amount of data loss, measured in time terms, following a service interruption.",
+    details: "The **RPO** establishes the maximum tolerable age of the data recoverable from backup (that is, how much information the company is willing to lose before suffering irreparable damage). This value directly drives the **backup frequency**: if the RPO is 4 hours, it is mandatory to perform a backup at least every 4 hours.",
+    examTip: "The RPO focuses its attention on the 'Data' and 'Backup' factor: it answers the question 'How much data can we afford to lose?'.",
+  },
+  SDLC: {
+    name: "SDLC",
+    definition: "Secure Software Development Life Cycle: the integration of security controls and tests in every phase of software development.",
+    details: "It provides for the adoption of security practices from the beginning (Shift-Left). Key phases: requirements definition, threat modeling during design, static (SAST) and dynamic (DAST) code analysis during the testing phase, and pre-release security reviews.",
+    examTip: "Introducing security in the early phases of development (Secure SDLC) costs infinitely less than fixing vulnerabilities and bugs once the software is already in production.",
+  },
+  ChangeManagement: {
+    name: "Change Management",
+    definition: "A structured process to request, test, approve, document and implement changes to the IT infrastructure.",
+    details: "It prevents uncoordinated changes that could cause vulnerabilities or costly service interruptions. It requires a formal change request, the approval of the Change Advisory Board (CAB), thorough testing in staging and the creation of a mandatory recovery plan (Backout Plan) to undo the change in case of problems.",
+    examTip: "Any change, including emergency patches (Emergency Changes), must have a documented Backout Plan before application in production.",
+  },
+  TechnicalDebtConcept: {
+    name: "Technical debt",
+    definition: "Technical Debt: The future cost arising from the choice to adopt quick, temporary or poor-quality solutions in software development or systems engineering, instead of using structured, secure long-term approaches.",
+    details: "Technical debt accumulates when critical steps of the Secure SDLC are skipped to meet imminent deadlines. Typical examples include omitting automatic security tests, failing to apply patches, using deprecated external libraries or the absence of documentation. Although it allows a faster initial release, over time it makes the code vulnerable, unstable and increasingly costly and difficult to update (requiring continuous compensating controls or costly complete refactoring).",
+    examTip: "Accumulated technical debt not only slows down future development, but exponentially increases the attack surface since it introduces latent structural vulnerabilities that hackers can exploit before the organization manages to fix them.",
+  },
+  ExceptionRes: {
+    name: "Exception",
+    definition: "Exception: A formal, temporary, explicitly authorized and documented deviation from a given corporate security policy or standard.",
+    details: "**Exceptions** are granted in the presence of justified operational, business or technical constraints:\n* **Approval Process:** They require the completion of a formal request describing the reason for the deviation, the impacted asset, the level of risk introduced and the expiration date of the exception.\n* **Compensating Controls:** They must almost always be accompanied by alternative security measures (e.g. if a Windows server cannot temporarily support a complex password policy, it is isolated in a protected VLAN).\n* **Expiration and Review:** They are never permanent. They have a limited duration (e.g. 6 months) and must be re-evaluated and reviewed regularly to induce IT to fix the original situation.",
+    examTip: "A security exception is a formal, time-limited derogation, granted only after a risk assessment and the mandatory adoption of adequate compensating controls.",
+  },
+  ExemptionRes: {
+    name: "Exemption",
+    definition: "Exemption: A formal, long-term or permanent release or waiver from the obligation to comply with a specific security policy, granted at the corporate executive level for exceptional, justified cases in which compliance is technically impossible.",
+    details: "While an exception is temporary and aimed at a future remediation, an **Exemption** recognizes the structural impossibility of complying:\n* **Authorization Level:** It requires the signature of the highest-level executive management (e.g. CIO, CISO or CEO), since it involves the permanent acceptance of a potentially high business risk (Residual Risk).\n* **Typical Example:** A multi-million-euro industrial control machine or a life-saving medical system that runs an obsolete, non-updatable operating system whose legacy protocols do not support the company's modern cryptographic policies.\n* **Traceability:** All exemptions must be recorded in a central exemptions register and subjected to periodic annual audits to certify that the conditions of impossibility persist and that the perimeter compensating controls are active.",
+    examTip: "The Exemption differs from the Exception in its permanent or long-term nature, and exempts a system from compliance due to insurmountable technical or business barriers, formalizing management's lifetime acceptance of the residual risk.",
+  },
   },
 };
 
