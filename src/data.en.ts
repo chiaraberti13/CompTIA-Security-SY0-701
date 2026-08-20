@@ -10238,5 +10238,149 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **C) Service Level Agreement (SLA)**.\n\n* **Why it's correct:** A **Service Level Agreement (SLA)** establishes the service expectations between the customer and the third-party service provider, including precise metrics on performance (such as server availability/uptime), applicable security standards and data confidentiality obligations.\n* **Analysis of the distractors:**\n  * **A) BPA** governs the profits and legal responsibilities of a commercial partnership between two entities.\n  * **B) DUA** defines the permitted conditions of use for a specific dataset transferred for research or analysis purposes, without covering the general levels of infrastructure provision.\n  * **D) MOU** is a preliminary and non-legally-binding statement of intent."
   },
+  101: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A company's internal compliance team periodically drafts detailed reports on the level of adherence to current regulations and corporate policies.",
+    question: "What is the primary purpose of internal compliance reporting?",
+    options: [
+      "A) To request additional information from the government agencies responsible for oversight.",
+      "B) To provide updates on the compliance status to the organization's management.",
+      "C) To communicate the compliance status to the external public.",
+      "D) To demonstrate to third-party and external auditors that the company complies with its internal processes."
+    ],
+    explanation: "The correct answer is **B) To provide updates on the compliance status to the organization's management.**\n\n* **Why it's correct:** The fundamental purpose of internal reporting is to inform management about the organization's current compliance posture, highlighting latent risks or gaps to be remedied, thus supporting an internal and informed decision-making process.\n* **Analysis of the distractors:**\n  * **A)** It does not serve to make requests to external compliance agencies.\n  * **C)** Internal reporting by definition is not intended for external public disclosure.\n  * **D)** Demonstrating compliance to third-party and external auditors is the objective of **external compliance reporting**, not internal reporting which serves for confidential internal communications."
+  },
+  102: {
+    topic: "Governance, Boards & Committees",
+    scenario: "The management of a large publicly traded company decides to establish an internal audit committee to ensure transparency, correctness of reporting and adequacy of internal control systems.",
+    question: "What is the primary purpose of the audit committee in an organization?",
+    options: [
+      "A) To confirm the CEO's intuitions regarding areas of security weakness",
+      "B) To provide formal approval to audits completed personally by the CEO",
+      "C) To oversee the organization's internal controls and financial reporting",
+      "D) To conduct the external audit of security controls on behalf of regulatory bodies"
+    ],
+    explanation: "The correct answer is **C) To oversee the organization's internal controls and financial reporting**.\n\n* **Why it's correct:** The audit committee is responsible for overseeing and evaluating an organization's internal controls, financial reporting and compliance processes. This includes evaluating the effectiveness of security controls and regulatory compliance. Audit committees are independent entities within the organization, tasked with evaluating governance from an objective and impartial point of view.\n* **Analysis of the distractors:**\n  * **A and B)** The decisions and conclusions of the audit committee must be reached independently, without being influenced by or dependent on the directives of the CEO or other management figures.\n  * **D)** External audit is conducted by external and third-party entities, whereas the audit committee is an internal governance body of the organization."
+  },
+  103: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A credit institution and a large hospital must periodically adapt their technological infrastructures to comply with the strict rules imposed by government bodies dedicated to the oversight of specific sensitive sectors.",
+    question: "Which of the following terms refers to the entities that establish and impose security standards, regulations and guidelines in specific sectors such as finance and healthcare?",
+    options: [
+      "A) Regulatory agencies",
+      "B) Data protection authorities",
+      "C) Intelligence agencies",
+      "D) Law enforcement agencies"
+    ],
+    explanation: "The correct answer is **A) Regulatory agencies**.\n\n* **Why it's correct:** **Regulatory agencies** (such as the SEC for finance or various ministerial bodies for healthcare) have the legal authority to issue and enforce mandatory rules, standards and guidelines that organizations in specific sectors must adhere to in order to ensure security and compliance.\n* **Analysis of the distractors:**\n  * **B) Data protection authorities** (such as the Privacy Guarantor) enforce the personal data laws of all citizens, but do not broadly define the multi-sector operational security standards for entire industrial domains.\n  * **C) Intelligence agencies** collect and analyze national security information, but do not define industrial regulations.\n  * **D) Law enforcement agencies** investigate crimes and enforce criminal laws, but do not establish the technical and preventive compliance standards of markets."
+  },
+  104: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A US-based multinational company offers its cloud services across various continents. The legal team warns that the company must comply with the specific requirements imposed by the governments of the individual nations where customers reside regarding the collection and retention of personal data.",
+    question: "Which of the following concepts does the situation refer to, in which specific laws and regulations established by a country's government determine how the personal data of its citizens is collected, retained and processed?",
+    options: [
+      "A) Consent management",
+      "B) General Data Protection Regulation (GDPR)",
+      "C) Data encryption",
+      "D) National legal implications"
+    ],
+    explanation: "The correct answer is **D) National legal implications**.\n\n* **Why it's correct:** **National legal implications** comprise the set of laws and regulations issued at the state/national level that outline the mandatory requirements and jurisdictional boundaries for privacy protection and data sovereignty within that country.\n* **Analysis of the distractors:**\n  * **A) Consent management** is only a technical/administrative process for recording user preferences, not the sovereign legislative source.\n  * **B) The GDPR** is a specific and very important example of a European Union regulation, but the question describes the general concept of government laws at the national level (which can include the CCPA in the US, the LGPD in Brazil, etc.).\n  * **C) Data encryption** is a technological protection measure, not a regulatory or legal framework."
+  },
+  105: {
+    topic: "Identity & Access Management (IAM)",
+    scenario: "A medium-sized enterprise wants to restructure the management of permissions on shared folders and corporate databases. Instead of manually configuring access for each individual employee, the system administrator decides to group permissions based on department duties (e.g. 'Administration', 'Development', 'Human Resources').",
+    question: "What is a fundamental principle underlying role-based access control (RBAC) that helps improve the effectiveness of a security policy?",
+    options: [
+      "A) Assigning permissions to job functions (duties) rather than to individual users",
+      "B) Granting temporary permissions that expire automatically after a preset period",
+      "C) Allowing all users access to all resources, unless there is an explicit prohibition",
+      "D) Setting user permissions based exclusively on their seniority of service in the company"
+    ],
+    explanation: "The correct answer is **A) Assigning permissions to job functions (duties) rather than to individual users**.\n\n* **Why it's correct:** Role-based access control (**RBAC**) is based on the principle of associating permissions with specific professional profiles or corporate roles (e.g. accountant, engineer) and subsequently assigning users to those roles. This greatly simplifies access management, reduces human errors and ensures correct application of the principle of least privilege.\n* **Analysis of the distractors:**\n  * **B)** Temporary expiration is part of Just-In-Time (JIT) or ad-hoc controls, it is not the structural foundation of RBAC.\n  * **C)** Represents a 'permissive by default' approach that violates the basics of modern security.\n  * **D)** Seniority of service does not necessarily correspond to the real operational needs and job functions of an employee."
+  },
+  106: {
+    topic: "Risk Management & Assessment",
+    scenario: "The management of an organization constantly monitors the trend in the turnover rate of critical IT employees and the number of phishing attempts blocked monthly, using them as preventive signals to anticipate a possible increase in the risk of cyber incidents.",
+    question: "Which of the following terms refers to a fundamental predictive metric that organizations monitor to predict potential risks and their impact on operations?",
+    options: [
+      "A) Risk parameters",
+      "B) Risk metrics",
+      "C) Key risk indicators (KRI)",
+      "D) Risk threshold"
+    ],
+    explanation: "The correct answer is **C) Key risk indicators (KRI)**.\n\n* **Why it's correct:** **Key Risk Indicators (KRI)** are predictive metrics (leading indicators) used as early-warning systems to signal variations in exposure to a risk. They enable management to take proactive mitigation actions before the risk materializes into an actual incident.\n* **Analysis of the distractors:**\n  * **A) Risk parameters** are static variables used in formal evaluation calculations.\n  * **B) Risk metrics** measure current exposure or losses, but do not intrinsically have a predictive or preventive early-warning nature.\n  * **D) Risk threshold** represents the maximum level of tolerable risk that the company is willing to accept (linked to risk appetite), not a preventive monitoring metric."
+  },
+  107: {
+    topic: "Risk Management & Assessment",
+    scenario: "Jeremy, the CEO of Hooli, wants to accurately evaluate the financial impact of specific risks related to the corporate IT infrastructure. He has ordered his team to list the possible incidents, estimate the exact probability of their occurrence and quantify the economic, operational and resource consequences in monetary terms in order to assign each event an objective numerical score.",
+    question: "Which of the following risk assessment methods has Jeremy ordered his team to use?",
+    options: [
+      "A) Single Loss Expectancy (SLE)",
+      "B) Qualitative risk analysis",
+      "C) Annualized Loss Expectancy (ALE)",
+      "D) Quantitative risk analysis"
+    ],
+    explanation: "The correct answer is **D) Quantitative risk analysis**.\n\n* **Why it's correct:** **Quantitative risk analysis** is based on the use of real numerical and financial data to measure the probability and economic impact of a risk. It allows objective values expressed in currency (e.g. Euros) to be calculated to support decisions based on the cost-benefit of controls.\n* **Analysis of the distractors:**\n  * **A) The SLE** is only a specific component of the analysis (the cost of a single incident, calculated as Asset Value * Exposure Factor), not the entire methodological process.\n  * **B) Qualitative analysis** uses subjective evaluations and descriptive labels such as 'High', 'Medium' or 'Low' without resorting to monetary figures and rigorous mathematical formulas.\n  * **C) The ALE** is a specific metric resulting from quantitative analysis (SLE * ARO, annual rate of occurrence) to estimate the annual cost of risk, not the global evaluation method described."
+  },
+  108: {
+    topic: "Risk Management & Assessment",
+    scenario: "Following the discovery of a widely exploited critical zero-day vulnerability in the corporate web server software, the CISO requests an immediate extraordinary risk assessment to determine the potential impact of an immediate attack before the next scheduled annual session.",
+    question: "Which of the following terms describes a risk assessment conducted as needed, often in response to new and emerging threats or significant changes within the organization?",
+    options: [
+      "A) Continuous",
+      "B) Ad hoc",
+      "C) Recurring",
+      "D) One-time"
+    ],
+    explanation: "The correct answer is **B) Ad hoc**.\n\n* **Why it's correct:** **Ad hoc assessments** are performed on an extraordinary or temporary basis in response to specific triggering events (such as new immediate threats, discoveries of critical flaws or major structural/technological changes in the organization), offering flexibility and responsiveness in risk management.\n* **Analysis of the distractors:**\n  * **A) Continuous assessment** is based on real-time monitoring and telemetry streams, forming part of an uninterrupted standard operating procedure.\n  * **C) Recurring assessments** occur at regular preset intervals (e.g. every six months) and serve to maintain the security posture, but do not arise from the immediate need to respond to an unexpected incident.\n  * **D) A one-time assessment** usually triggers at the start of a project to capture a single snapshot of the state of risks, but is not driven by the need to react to new urgent threats."
+  },
+  109: {
+    topic: "Business Continuity & Disaster Recovery",
+    scenario: "During the drafting of the Disaster Recovery plan for the e-commerce transactional database, management establishes that, in the event of a disaster, the IT services and the web portal must be restored and back online within no more than 4 hours to avoid unsustainable losses.",
+    question: "Which of the following terms specifically represents the established time limit (target duration) for restoring the operability of IT services and business processes following a destructive event?",
+    options: [
+      "A) RTO (Recovery Time Objective)",
+      "B) RPO (Recovery Point Objective)",
+      "C) BCP (Business Continuity Plan)",
+      "D) MTTR (Mean Time to Repair)"
+    ],
+    explanation: "The correct answer is **A) RTO (Recovery Time Objective)**.\n\n* **Why it's correct:** The **RTO (Recovery Time Objective)** is the maximum planned time within which an interrupted application, system or business process must be fully restored and operational again after a disaster.\n* **Analysis of the distractors:**\n  * **B) The RPO (Recovery Point Objective)** refers to the maximum acceptable age of the data recoverable from the backup (i.e. the maximum amount of data, expressed in time, that the company is willing to lose).\n  * **C) The BCP** is the overall business continuity plan that includes multiple strategies and processes, not a single specific time metric.\n  * **D) The MTTR (Mean Time to Repair)** is the average time needed to physically repair a failed hardware component or fix a software bug, without encompassing the restoration of the entire business ecosystem."
+  },
+  110: {
+    topic: "Business Continuity & Disaster Recovery",
+    scenario: "An organization wants to formally define the high-level responsibilities and guidelines to ensure that vital business functions remain operational or are quickly resumed in the event of natural disasters, prolonged blackouts or pandemics.",
+    question: "Which corporate policy is designed to provide the strategic guidelines for managing unexpected interruptions in order to keep critical business operations active?",
+    options: [
+      "A) Data retention policy",
+      "B) Business continuity policy",
+      "C) Incident response policy",
+      "D) Acceptable use policy"
+    ],
+    explanation: "The correct answer is **B) Business continuity policy**.\n\n* **Why it's correct:** The **Business Continuity Policy** establishes the general objectives, governance and strategic guidelines needed to ensure that the organization's vital functions continue to operate or are restored promptly during and after a large-scale interruption.\n* **Analysis of the distractors:**\n  * **A) The Data retention policy** defines how long to retain the various types of corporate records for legal or regulatory purposes.\n  * **C) The Incident response policy** focuses on the procedures for containing, investigating and resolving specific cyber attacks or security breaches of a technological nature.\n  * **D) The Acceptable use policy (AUP)** defines the rules of conduct and permitted use of corporate devices and network by employees."
+  },
+  111: {
+    topic: "Personnel Security & Onboarding",
+    scenario: "The Human Resources department and the IT Security team collaborate on defining the onboarding flow for new employees. The goal is to ensure a rapid start of work activities without compromising the security of corporate systems.",
+    question: "Which of the following actions does NOT constitute a correct and appropriate practice by the IT or HR departments to ensure secure access during the onboarding of a new employee?",
+    options: [
+      "A) Presenting the organization's security protocols and policies to the employee",
+      "B) Providing the employee with the physical/logical resources and tools needed to perform their job",
+      "C) Automatically assigning all possible privileges to the user for an initial trial period",
+      "D) Securely transmitting the initial access credentials to the employee to allow them access"
+    ],
+    explanation: "The correct answer is **C) Automatically assigning all possible privileges to the user for an initial trial period**.\n\n* **Why it's correct:** Indiscriminately assigning all available permissions ('all possible privileges') to a user, even just temporarily for a trial period, seriously violates the security principle of Least Privilege and the Zero Trust approach, needlessly exposing the company to enormous security risks and insider threats.\n* **Analysis of the distractors:**\n  * **A, B and D)** These are all standard and essential practices for secure and efficient onboarding: policy training (A) ensures awareness, controlled provisioning of necessary devices (B) enables operability through secure channels, and the secure exchange of initial passwords (D) prevents interception of login data."
+  },
+  112: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "During the vendor assessment process, the possibility emerges that a given vendor could earn commissions on the sale of specific recommended products. This situation risks negatively influencing its impartiality and the recommendations provided to the organization.",
+    question: "Which of the following types of conflict of interest occurs in this scenario?",
+    options: [
+      "A) Financial interests",
+      "B) Competitive relationships",
+      "C) Insider information",
+      "D) Personal relationships"
+    ],
+    explanation: "The correct answer is **A) Financial interests**.\n\n* **Why it's correct:** A conflict of interest based on **financial interests** manifests when a vendor (or evaluator) has the opportunity to obtain a direct or indirect economic gain (e.g. through commissions) by recommending certain products or services, compromising impartiality and alignment with the organization's real needs.\n* **Analysis of the distractors:**\n  * **B) Competitive relationships** refer to the vendor's ties with other competing companies that could influence its objectivity, without implying a direct financial commission.\n  * **C) Insider information** involves the improper use of confidential or proprietary data for one's own advantage.\n  * **D) Personal relationships** concern influences deriving from family or friendship ties, which influence decisions but are not specifically based on direct financial incentives linked to the recommended product."
+  },
   },
 };
