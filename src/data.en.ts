@@ -10526,5 +10526,147 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **A) MTTR (Mean Time to Repair)**.\n\n* **Why it's correct:** The **MTTR (Mean Time to Repair)** measures the average time needed to repair and restore a defective component or system after a failure or service interruption.\n* **Analysis of the distractors:**\n  * **B) The MTBF** measures the reliability of a system, i.e. the average time that elapses between two consecutive failures.\n  * **C) The RPO** defines the maximum tolerable amount of data that can be lost following an incident (expressed in time).\n  * **D) The RTO** is the strategic objective of the maximum time within which an interrupted service must be restored to avoid unacceptable consequences, whereas the MTTR measures the actual average time of technical repair."
   },
+  125: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "The IT team at Abstract Simplicity, a technology training company, is reviewing its organizational policies to improve the security of user credentials. Their goal is to define strict and mandatory guidelines for the creation, complexity, length, expiration and rotation of passwords.",
+    question: "Which specific security standard or document should the team consult and implement for this purpose?",
+    options: [
+      "A) Encryption standard",
+      "B) Physical security standard",
+      "C) Access control standard",
+      "D) Password standard"
+    ],
+    explanation: "The correct answer is **D) Password standard**.\n\n* **Why it's correct:** A **Password standard** explicitly defines the mandatory technical rules for managing the password lifecycle within the organization (minimum length, required special characters, rotation frequency and reuse prohibition).\n* **Analysis of the distractors:**\n  * **A) Encryption standards** define the algorithms (e.g. AES-256) to protect data at rest or in transit.\n  * **B) Physical security standards** protect tangible assets and data center areas.\n  * **C) Access control standards** define the general authorization (RBAC, ABAC) and authentication rules for logical access, but do not focus specifically on the granular details of password complexity."
+  },
+  126: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "A junior security analyst asks for clarification regarding the usefulness and purpose of a 'playbook' in the context of the company's cybersecurity operations.",
+    question: "Which of the following options BEST describes a playbook in the cybersecurity domain?",
+    options: [
+      "A) A documentation of all cyberattacks that an organization has faced over the years",
+      "B) A data-driven standard operating procedure (SOP) for responding to specific cyberthreats",
+      "C) A detailed manual guide on installing and setting up SIEM systems",
+      "D) An up-to-date listing of all junior security analysts and their assigned tasks"
+    ],
+    explanation: "The correct answer is **B) A data-driven standard operating procedure (SOP) for responding to specific cyberthreats**.\n\n* **Why it's correct:** A security **playbook** (or runbook) is a detailed, step-by-step procedural guide that instructs SOC analysts on how to respond to and contain a specific type of attack or threat (e.g. phishing, malware, ransomware, SQL injection), ensuring a consistent and standardized response.\n* **Analysis of the distractors:**\n  * **A) Historical documentation** is an incident log.\n  * **C) The SIEM installation guide** is a technical installation/configuration manual.\n  * **D) The list of analysts** and tasks is a resource allocation matrix or a SOC team organizational chart."
+  },
+  127: {
+    topic: "Agreements & Contracts",
+    scenario: "Two commercial entities decide to enter into a business partnership agreement (BPA) to collaborate on a common project with profit sharing.",
+    question: "Which of the following aspects is NOT typically governed within a Business Partnership Agreement (BPA)?",
+    options: [
+      "A) Exit strategies from the partnership",
+      "B) Responsibilities for software updates",
+      "C) Ownership of intellectual property of the deliverables",
+      "D) Profit-sharing and loss-sharing arrangements"
+    ],
+    explanation: "The correct answer is **B) Responsibilities for software updates**.\n\n* **Why it's correct:** A **BPA (Business Partnership Agreement)** is a legal and financial contract that governs the relationship between business partners (profits, losses, investments, intellectual property and dissolution procedures). Operational and technical aspects such as responsibilities for software updates usually fall within the technical support agreements, SLAs or maintenance contracts, not within the BPA.\n* **Analysis of the distractors:**\n  * **A, C and D)** Are all key and typical elements of a BPA to define the rights, financial duties and conclusion of the partnership between the partners."
+  },
+  128: {
+    topic: "Governance, Boards & Committees",
+    scenario: "At Eagle Eyes, a data management company, a restructuring of the data governance policies is underway. Abdul is appointed Data Custodian for the corporate database infrastructure.",
+    question: "What will be Abdul's primary responsibility in his role as Data Custodian?",
+    options: [
+      "A) To ensure the overall integrity and legal confidentiality of the data",
+      "B) To process and manipulate data on direct instruction from the Controller",
+      "C) To manage and control technical access to the data",
+      "D) To formally establish the ownership and classification level of the data"
+    ],
+    explanation: "The correct answer is **C) To manage and control technical access to the data**.\n\n* **Why it's correct:** The **Data Custodian** (or Data Steward) has the technical and operational responsibility to implement and keep active the security measures, backup, encryption and to configure the logical access controls and authorizations established by the Data Owner.\n* **Analysis of the distractors:**\n  * **A) Ensuring integrity and confidentiality** at the legal and general governance level falls under the compliance responsibilities of the company or the Data Owner.\n  * **B) Processing and manipulating data** is the operational role of the **Data Processor**.\n  * **D) Formally establishing ownership** and classification is the exclusive prerogative of the **Data Owner**."
+  },
+  129: {
+    topic: "Risk Management & Analysis",
+    scenario: "An organization hires an external cybersecurity-specialized company with the mandate to simulate a real cyber attack against its corporate network, with formal authorization to identify and actively attempt to exploit the discovered vulnerabilities before malicious actors can do so.",
+    question: "Which specific security activity BEST describes this scenario?",
+    options: [
+      "A) Security Awareness Training",
+      "B) Compliance Auditing",
+      "C) Penetration Testing",
+      "D) Vulnerability Scanning"
+    ],
+    explanation: "The correct answer is **C) Penetration Testing**.\n\n* **Why it's correct:** **Penetration Testing (Pen Test)** is an authorized simulation of a real cyber attack aimed not only at detecting vulnerabilities (as a scan would), but at actively attempting to exploit them to determine the effectiveness of security controls and the real impact of a potential breach.\n* **Analysis of the distractors:**\n  * **A) Awareness training** educates employees on good security practices.\n  * **B) Compliance auditing** verifies formal compliance with regulatory standards.\n  * **D) Vulnerability scanning** passively detects the presence of known bugs in systems without attempting to exploit them or simulate complex active attacks."
+  },
+  130: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A company is implementing encryption standards to protect sensitive data. The security team must define and document the formal cryptographic Key Management Procedures.",
+    question: "Which of the following activities is NOT typically part of the standard cryptographic Key Management Procedures?",
+    options: [
+      "A) Generation and secure distribution of keys",
+      "B) Secure storage and periodic rotation of keys",
+      "C) Regularly updating the application software to support new encryption methods",
+      "D) Procedures for the revocation and destruction of compromised keys"
+    ],
+    explanation: "The correct answer is **C) Regularly updating the application software to support new encryption methods**.\n\n* **Why it's correct:** **Key Management** focuses exclusively on the entire lifecycle of cryptographic keys (generation, distribution, storage, rotation, revocation and destruction). Updating application software to support new cryptographic protocols is a generic software maintenance or Vulnerability/Patch Management activity, not a Key Management procedure.\n* **Analysis of the distractors:**\n  * **A, B and D)** Are all fundamental and mandatory steps of the cryptographic key management lifecycle."
+  },
+  131: {
+    topic: "Architecture Models & Shared Responsibility",
+    scenario: "A company is planning to migrate a batch image processing service to the cloud. The team wants a solution in which it does not have to worry about patching operating systems, managing middleware, updating the application runtime, nor managing the scalability of the infrastructure when the workload suddenly varies from zero to thousands of images processed per second.",
+    question: "Which cloud service model offers the execution environment with the least infrastructure management responsibility for the customer?",
+    options: [
+      "A) Infrastructure as a Service (IaaS)",
+      "B) Platform as a Service (PaaS)",
+      "C) Function as a Service (FaaS) / Serverless",
+      "D) Software as a Service (SaaS)"
+    ],
+    explanation: "The correct answer is **C) Function as a Service (FaaS) / Serverless**.\n\n* **Why it's correct:** In the **FaaS (Function as a Service / Serverless)** model, the entire infrastructure (including physical servers, operating systems, middleware, runtime and automatic scaling even down to zero) is fully managed by the cloud provider. The customer has only and exclusively the responsibility to provide the function's source code and configure the necessary triggers and IAM permissions. Compared to PaaS, in FaaS even server and scaling management disappears, minimizing the user's infrastructure responsibility for executing custom code.\n* **Analysis of the distractors:**\n  * **A) IaaS** requires the customer to manage and patch the operating system and virtual infrastructure.\n  * **B) PaaS** relieves the customer of OS patching, but still requires configuring the server instance/runtime environment and managing the scaling of application instances (e.g. minimum number of containers/instances).\n  * **D) SaaS** provides a complete ready-to-use application (e.g. email or CRM), but does not allow the customer to execute custom code or computing functions such as those needed to process custom batch images."
+  },
+  132: {
+    topic: "Security Assessment / Penetration Testing",
+    question: "Which of the following options BEST describes the phase of a penetration test in which information is gathered without interacting directly with the target system?",
+    options: [
+      "A) Active reconnaissance",
+      "B) Defensive",
+      "C) Known environment",
+      "D) Passive reconnaissance"
+    ],
+    explanation: "The correct answer is **D) Passive reconnaissance**.\n\n* **Why it's correct:** Passive reconnaissance consists of gathering information about a target without interacting directly with its systems or networks. This phase involves obtaining data from publicly available sources, such as WHOIS databases, social media and websites, without alerting the target to a possible imminent attack.\n* **Analysis of the distractors:**\n  * **A) Active reconnaissance** involves direct interaction with the system (e.g. port scanning), which can be detected by the target.\n  * **B) The term 'defensive'** typically refers to Blue Team strategies and activities, focused on protection and monitoring, not on a penetration testing phase.\n  * **C) The known environment** concerns the level of prior knowledge provided to the tester regarding the infrastructure, not the data collection method employed."
+  },
+  133: {
+    topic: "Security Assessment / Penetration Testing",
+    question: "Which of the following types of penetration test provides the tester with complete knowledge of the target environment, including architecture, design and source code, to identify hidden vulnerabilities?",
+    options: [
+      "A) Passive",
+      "B) Grey box",
+      "C) White box",
+      "D) Black box"
+    ],
+    explanation: "The correct answer is **C) White box**.\n\n* **Why it's correct:** In a White Box test, the tester possesses complete knowledge of the target environment, including architecture, design and source code. This allows an in-depth analysis of the system to find vulnerabilities that could remain hidden with other types of tests.\n* **Analysis of the distractors:**\n  * **B) The Grey box** provides the tester with only partial knowledge of the system, offering a middle ground between the perspective of an insider and that of an external attacker.\n  * **D) The Black box** is performed without any prior knowledge of the target environment; the tester behaves like an external attacker without internal information.\n  * **A) A passive assessment** involves observing and analyzing system operations without active involvement, and is more oriented toward understanding system behaviors than identifying specific vulnerabilities through complete access to the code.\n\n*Question ID: 6522fbbd4f214736e0add604*"
+  },
+  134: {
+    topic: "Social Engineering",
+    scenario: "At Kelly Innovations LLC, Sasha receives an unexpected call from someone claiming to belong to the IT department. The caller asks her to confirm her username and password for a supposed system update. Unsure, Sasha hesitates and asks the interlocutor to provide an identification document or a callback number.",
+    question: "Which of the following terms describes the social engineering technique to which Sasha was exposed?",
+    options: [
+      "A) Vulnerability Assessment",
+      "B) Smishing",
+      "C) Vishing",
+      "D) Pharming"
+    ],
+    explanation: "The correct answer is **C) Vishing**.\n\n* **Why it's correct:** Vishing (voice phishing) is a form of social engineering in which the attacker uses the phone to induce people to provide personal information, such as passwords or credit card numbers. In Sasha's case, the caller pretending to be from the IT department and requesting username and password by phone is a classic example of vishing.\n* **Analysis of the distractors:**\n  * **B) Smishing** refers to phishing attacks conducted via SMS text messages, not via voice calls.\n  * **D) Pharming** involves redirecting users from legitimate websites to fraudulent sites, manipulating the DNS system or exploiting browser vulnerabilities.\n  * **A) A Vulnerability Assessment** is a method to evaluate the security posture of a system, not a technique for manipulating people."
+  },
+  135: {
+    topic: "Risk Management & Analysis",
+    scenario: "Hair and There, an online hairdressing supplies store, has conducted a complete risk assessment and identified potential vulnerabilities in its network infrastructure. The company recognizes that another global pandemic would seriously damage the business and represents a considerable risk. After careful analysis, they determine that they cannot control whether another pandemic will occur. They therefore adopt measures to reduce the types of damage a pandemic would cause, hoping it will not happen.",
+    question: "Which risk management strategy is the company employing?",
+    options: [
+      "A) Mitigate",
+      "B) Avoid",
+      "C) Accept",
+      "D) Transfer"
+    ],
+    explanation: "The correct answer is **A) Mitigate**.\n\n* **Why it's correct:** Mitigating risk means implementing measures or controls to reduce the potential impact or probability that the risk event will occur. In the scenario, the company adopts concrete measures to reduce the damage caused by a pandemic, demonstrating a mitigation approach.\n* **Analysis of the distractors:**\n  * **C) Accepting the risk** would mean that the organization recognizes the risk without taking any specific action to mitigate it, whereas in the scenario concrete measures are adopted.\n  * **D) Transferring the risk** involves shifting the financial burden of potential losses to third parties, such as an insurance company; there is no mention of this in the scenario.\n  * **B) Avoiding the risk** involves the total elimination of the risk by abstaining from the risky activity; if the company were avoiding the risk, it would probably close the business, since avoiding implies not undertaking the risky activity at all."
+  },
+  136: {
+    topic: "Risk Management & Assessment",
+    scenario: "An organization is evaluating its IT infrastructure to determine the probability of data breaches and the impact those breaches would have on its operations. Sarah has been tasked with estimating the financial consequences and the probability of these potential security incidents.",
+    question: "Which type of risk assessment is Sarah conducting?",
+    options: [
+      "A) Residual Risk Analysis",
+      "B) Quantitative Risk Assessment",
+      "C) Threat Modeling",
+      "D) Qualitative Risk Assessment"
+    ],
+    explanation: "The correct answer is **B) Quantitative Risk Assessment**.\n\n* **Why it's correct:** Sarah is conducting a quantitative risk assessment, since she is estimating the financial impacts and the probability, which involves assigning precise numerical values to the identified risks.\n* **Analysis of the distractors:**\n  * **D) Qualitative risk assessment** focuses instead on descriptive measures, categorizing risks without attributing precise financial values.\n  * **A) Residual risk analysis** concerns the evaluation of the risk that remains after the application of security controls.\n  * **C) Threat Modeling** focuses on identifying potential attack paths rather than on the numerical quantification of risks."
+  },
   },
 };
