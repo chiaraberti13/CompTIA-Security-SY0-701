@@ -9806,5 +9806,149 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **B) Grey box**.\n\n* **Why it's correct:** A **Grey Box** test simulates an internal user with limited privileges or an external user who managed to obtain partial information (e.g. a standard user's credentials or preliminary network maps). It represents an ideal middle ground, combining the strengths of the Black Box approach and critically examining the internal accesses.\n* **Analysis of the distractors:**\n  * **A) Black box** presumes that the tester has no prior knowledge of the target infrastructure, acting as a blind external hacker.\n  * **C) White box** provides the tester with complete access to source code, high-level architectural documentation and administrative accounts, allowing an exhaustive analysis.\n  * **D) Boundary testing** is a software-testing methodology focused on the program's behavior at the limits of the allowed input/output ranges, not a category of infrastructure penetration test.\n\n*Question ID: 6522fc452f6ac4dfe2eaa39d*",
   },
+  65: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A technology company collects and processes sensitive data to offer personalized services, and must define the governance and compliance roles required by current privacy regulations (e.g. GDPR).",
+    question: "In the context of data privacy compliance, which of the following options BEST describes the role of the Data Controller?",
+    options: [
+      "A) The external auditor responsible for privacy compliance and adherence controls.",
+      "B) The physical individual whose personal data is being processed and handled.",
+      "C) The entity or person responsible for determining the purposes and means of data processing.",
+      "D) The technical organization tasked with the physical storage and retention of the data."
+    ],
+    explanation: "The correct answer is **C) The entity or person responsible for determining the purposes and means of data processing**.\n\n* **Why it's correct:** The **Data Controller** is the party that decides for what reason (purpose) and in what way (means) the personal data of data subjects is collected and processed.\n* **Analysis of the distractors:**\n  * **A)** Describes the role of an external auditor or compliance officer.\n  * **B)** Refers to the **Data Subject**, i.e. the physical person who owns the personal data.\n  * **D)** Corresponds mainly to a **Data Custodian** or a **Data Processor** delegated to the technical aspects of physical storage and security."
+  },
+  66: {
+    topic: "Governance, Boards & Committees",
+    scenario: "An organization formally defines its hierarchies of responsibility for aligning security plans with overall financial and operational objectives.",
+    question: "Who defines an organization's strategic direction and policies and holds the ultimate decision-making authority, often relying on the support of specialized groups for critical information?",
+    options: [
+      "A) Policy Councils",
+      "B) Operational Management",
+      "C) Strategic Committees",
+      "D) Governance Board"
+    ],
+    explanation: "The correct answer is **D) Governance Board**.\n\n* **Why it's correct:** The **Governance Board** (or Board of Directors) has the supreme decision-making authority and defines the general strategic objectives, the risk appetite and high-level corporate policies, acting as the ultimate decision-maker for the organization.\n* **Analysis of the distractors:**\n  * **A) Policy Councils** may assist or influence the development of internal policies, but do not hold ultimate governance authority.\n  * **B) Operational Management** deals with the execution and daily management of business processes, not top-level strategic formulation.\n  * **C) Strategic Committees** support the board of directors by providing data and analysis, but do not hold autonomous final decision-making authority."
+  },
+  67: {
+    topic: "Governance, Boards & Committees",
+    scenario: "A company's board of directors requires external support and technical evaluations in order to decide on complex matters that require a very high level of professional depth.",
+    question: "Which of the following entities is responsible for providing detailed analyses and recommendations to the governance board to enable informed decisions, particularly in areas that require specialized knowledge?",
+    options: [
+      "A) Management Groups",
+      "B) Executive Teams",
+      "C) Committees",
+      "D) Advisory Councils"
+    ],
+    explanation: "The correct answer is **C) Committees**.\n\n* **Why it's correct:** **Committees**, such as the Audit Committee or the Security Steering Committee, are composed of subject-matter experts to analyze specific issues in detail (e.g. financial audits, regulatory compliance, cyber risks) and propose concrete recommendations to the board of directors.\n* **Analysis of the distractors:**\n  * **A) Management Groups** and **B) Executive Teams** are focused on managerial execution or the ordinary executive leadership of the company, rather than on the detailed analysis that supports governance alone.\n  * **D) Advisory Councils** offer general high-level external opinions, but do not conduct the structured deep-dives and internal controls typical of formal committees."
+  },
+  68: {
+    topic: "Risk Management & Analysis",
+    scenario: "A company's server has an estimated Single Loss Expectancy (SLE) of $15,000 due to an operational failure. The estimated Annual Rate of Occurrence (ARO) for this type of failure is 0.1 times per year.",
+    question: "What is the estimated Annual Loss Expectancy (ALE) for this risk scenario?",
+    options: [
+      "A) $150",
+      "B) $1,500",
+      "C) $15,000",
+      "D) $150,000"
+    ],
+    explanation: "The correct answer is **B) $1,500**.\n\n* **Why it's correct (OBJ: 5.2):** The ALE (Annualized Loss Expectancy) is calculated by multiplying the SLE (Single Loss Expectancy) by the ARO (Annualized Rate of Occurrence). With an SLE of $15,000 and an ARO of 0.1, the ALE equals **$1,500** ($15,000 * 0.1 = $1,500). This value represents the estimated annual financial loss the organization expects to incur due to these operational failures.\n* **Analysis of the distractors:**\n  * **A) $150** is incorrect because it results from a mathematical error (e.g. mistakenly multiplying by 0.01).\n  * **C) $15,000** is incorrect because it represents the cost of a single loss (SLE), not the annualized loss weighted on a yearly basis (ARO = 0.1).\n  * **D) $150,000** is incorrect because it results from an erroneous multiplication (e.g. multiplying by 10 instead of by 0.1).\n\n* **Small Focused Example:** If a company has a server that fails on average once every 10 years (ARO = 0.1) and each failure costs $15,000 (SLE), the planned annual cost (ALE) is $1,500. Consequently, it makes no economic sense to invest more than $1,500 per year to implement a security control to eliminate this risk.\n\n*Question ID: 654977b94823b276876bb39f*"
+  },
+  69: {
+    topic: "Business Continuity & Resilience Metrics",
+    scenario: "To measure reliability and plan maintenance cycles of IT systems, security engineering teams monitor various time metrics associated with failures.",
+    question: "Which metric defines the average operational uptime of a system or hardware component between the occurrence of two consecutive failures?",
+    options: [
+      "A) MTTR (Mean Time to Repair)",
+      "B) Operating time",
+      "C) Failure rate",
+      "D) MTBF (Mean Time Between Failures)"
+    ],
+    explanation: "The correct answer is **D) MTBF (Mean Time Between Failures)**.\n\n* **Why it's correct:** The **MTBF** represents the estimated average period during which a device functions without interruption before presenting a defect or failure. It is a key indicator of hardware reliability.\n* **Analysis of the distractors:**\n  * **A) MTTR (Mean Time to Repair)** measures the speed of response, indicating the average time needed to repair and restore proper functioning of a component after it has broken.\n  * **B) Operating time** merely indicates the total hours during which the machine has remained powered on, without relating it to failures.\n  * **C) Failure rate** expresses the statistical frequency with which failures occur in a given time interval, not the time interval between them.\n\n*Question ID: 65496fc423b3cc31a82e92d1*"
+  },
+  70: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "An organization defines disaster recovery parameters to ensure that backup copies of its critical systems are performed with the correct time frequency.",
+    question: "In Disaster Recovery Planning (DRP), which term defines the maximum tolerable period of time during which data could be lost due to a serious incident before it destructively impacts the business?",
+    options: [
+      "A) RPO (Recovery Point Objective)",
+      "B) SLA (Service Level Agreement)",
+      "C) RTO (Recovery Time Objective)",
+      "D) MTBF (Mean Time Between Failures)"
+    ],
+    explanation: "The correct answer is **A) RPO (Recovery Point Objective)**.\n\n* **Why it's correct:** The **RPO (Recovery Point Objective)** establishes the maximum acceptable amount of data (expressed in time, e.g. hours or days) that the organization is willing to lose before suffering irreparable damage. It determines how frequently to perform backups.\n* **Analysis of the distractors:**\n  * **B) SLA** defines the service performance metrics agreed upon with a provider.\n  * **C) RTO (Recovery Time Objective)** indicates the maximum time allowed to restore the interrupted service and make it operational again (maximum downtime).\n  * **D) MTBF** represents the average operational uptime of hardware between two consecutive failures."
+  },
+  71: {
+    topic: "Governance, Boards & Committees",
+    scenario: "The internal control committee of a large multinational meets periodically to analyze the security posture, third-party risk management and legal compliance of the entire company.",
+    question: "Which of the following options BEST describes the primary role of an Audit Committee in the context of cybersecurity?",
+    options: [
+      "A) Directly manage the corporate IT operational teams to resolve every single security incident.",
+      "B) Engage in complex insurance policy negotiations with cyber coverage providers.",
+      "C) Oversee information security risks and ensure regulatory and control compliance.",
+      "D) Manage the practical execution and physical implementation of cyber defense measures."
+    ],
+    explanation: "The correct answer is **C) Oversee information security risks and ensure regulatory and control compliance**.\n\n* **Why it's correct:** The **Audit Committee** provides independent strategic oversight of corporate risk management, monitoring the effectiveness of internal controls and ensuring that the organization complies with current regulations and legal requirements.\n* **Analysis of the distractors:**\n  * **A)** and **D)** are operational responsibilities of the daily management of IT departments, the CISO and system administrators, not of an independent governance control committee.\n  * **B)** Negotiating cyber insurance policies is a task delegated to operational risk management or the finance/procurement office."
+  },
+  72: {
+    topic: "Risk Management & Analysis",
+    scenario: "David is analyzing a recent risk report and categorizes the risks based on their probability (likelihood) and potential impact, without assigning specific financial values. This approach helps his team prioritize which risks to address first, but does not offer detailed monetary estimates.",
+    question: "Which method is David using?",
+    options: [
+      "A) Residual Risk Analysis",
+      "B) Qualitative Risk Assessment",
+      "C) Quantitative Risk Assessment",
+      "D) Threat Vector Analysis"
+    ],
+    explanation: "The correct answer is **B) Qualitative Risk Assessment**.\n\n* **Why it's correct:** Qualitative Risk Assessment orders and prioritizes risks based on their probability/likelihood and estimated impact using descriptive scales (e.g. High, Medium, Low) without entering specific financial or precise quantitative values.\n* **Analysis of the distractors:**\n  * **A) Residual Risk Analysis** evaluates the risk remaining after the application of security controls.\n  * **C) Quantitative Risk Assessment** requires entering precise monetary data and numerical calculations (e.g. SLE, ARO, ALE) that are entirely absent in the scenario.\n  * **D) Threat Vector Analysis** focuses on the technical vectors and paths used by a threat to strike a system, not on the general prioritization of organizational risks."
+  },
+  73: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A malicious user intends to gather sensitive information about a corporate infrastructure by interacting directly with its computer systems, however risking triggering alarms or leaving visible traces of their intrusion activity.",
+    question: "Which of the following terms refers to the methodology in which an attacker interacts directly with the target systems to gather information?",
+    options: [
+      "A) Active reconnaissance",
+      "B) OSINT (Open-Source Intelligence)",
+      "C) Network enumeration",
+      "D) Passive reconnaissance"
+    ],
+    explanation: "The correct answer is **A) Active reconnaissance**.\n\n* **Why it's correct:** Active reconnaissance involves direct interaction with the victim's systems (e.g. port scanning, banner grabbing, ping sweeps), inevitably leaving traces in system logs, firewalls or IDS/IPS, and risking alerting the defense team.\n* **Analysis of the distractors:**\n  * **B) OSINT (Open-source intelligence)** is a passive collection technique based on publicly accessible sources and databases on the internet.\n  * **C) Network enumeration** is a specific activity that is part of active scanning, but the scenario asks for the general term that indicates direct interaction for data collection.\n  * **D) Passive reconnaissance** gathers information without ever interacting with or directly touching the target's infrastructure (e.g. consulting public DNS records), reducing to zero the risk of alerting the victim."
+  },
+  74: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "A European organization is updating its information management systems to align them strictly with the regulatory requirements of the European Union's GDPR regarding the processing of users' personal data.",
+    question: "Which fundamental principle does the European Union's General Data Protection Regulation (GDPR) uphold regarding the collection and processing of personal data?",
+    options: [
+      "A) Continuous monitoring",
+      "B) Data retention",
+      "C) Data encryption",
+      "D) Informed consent"
+    ],
+    explanation: "The correct answer is **D) Informed consent**.\n\n* **Why it's correct:** The GDPR establishes that personal data may be collected and processed only after the data subject has provided their informed and explicit consent, formulated in clear, transparent and easily accessible language.\n* **Analysis of the distractors:**\n  * **A) Continuous monitoring** is an essential operational security practice but is not the legal pillar of the GDPR on the legitimacy of data collection.\n  * **B) Data retention** concerns defining the retention periods of logs or records, which is a technical part of compliance but not the fundamental enabling principle.\n  * **C) Data encryption** is a technical security recommendation for protection (e.g. pseudonymization) but does not constitute the legal basis for data acquisition."
+  },
+  75: {
+    topic: "Risk Management & Analysis",
+    scenario: "A risk manager must configure the quantitative risk calculation parameters to estimate how many security incidents of the same type are expected to occur over the course of a calendar year.",
+    question: "Which of the following options BEST defines the term that represents the expected number of times a risk event will occur over a one-year period?",
+    options: [
+      "A) SLE (Single Loss Expectancy)",
+      "B) EF (Exposure Factor)",
+      "C) ALE (Annual Loss Expectancy)",
+      "D) ARO (Annual Rate of Occurrence)"
+    ],
+    explanation: "The correct answer is **D) ARO (Annual Rate of Occurrence)**.\n\n* **Why it's correct:** The **ARO (Annual Rate of Occurrence)** quantifies the estimated frequency with which a given risk event will occur in a year (e.g. if it is expected to happen once every 10 years, the ARO is 0.1; if it happens 2 times a year, the ARO is 2).\n* **Analysis of the distractors:**\n  * **A) SLE** calculates the financial cost or estimated loss for a single occurrence of an incident.\n  * **B) EF** represents the percentage of damage or loss suffered by a given asset in the event of an incident.\n  * **C) ALE** is the total expected annual loss, resulting from multiplying SLE by ARO (ALE = SLE * ARO)."
+  },
+  76: {
+    topic: "Risk Management & Analysis",
+    scenario: "In a financial organization, the governance team must select a structured risk analysis method that associates precise numerical values, monetary metrics and cost indicators with the detected probabilities and impacts.",
+    question: "Which risk analysis method involves assigning numerical values based on financial data, such as costs or potential losses?",
+    options: [
+      "A) Qualitative risk analysis",
+      "B) Quantitative risk analysis",
+      "C) Annualized loss expectancy",
+      "D) Risk Matrix"
+    ],
+    explanation: "The correct answer is **B) Quantitative risk analysis**.\n\n* **Why it's correct:** Quantitative risk analysis assigns precise monetary values and concrete numerical data to all elements of risk, enabling accurate cost-benefit analyses (ROI) of the security controls to be implemented.\n* **Analysis of the distractors:**\n  * **A) Qualitative risk analysis** is based on subjective judgments and expert opinions expressed through descriptive and qualitative scales (e.g. High, Medium, Low).\n  * **C) Annualized loss expectancy (ALE)** is a specific calculation indicator resulting from quantitative analysis, not the entire analysis methodology.\n  * **D) Risk Matrix** is a graphical-descriptive tool usually used in qualitative analysis to map probability and impact."
+  },
   },
 };
