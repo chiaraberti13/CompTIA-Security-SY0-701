@@ -10806,5 +10806,166 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **B) Impact**.\n\n* **Why it's correct:** Impact refers to the consequences that a risk event has on an organization, affecting various areas such as operations, finance and reputation.\n* **Analysis of the distractors:**\n  * **C) 'Damage proportion'** could be used informally to describe a concept similar to the EF, but is not the standard term used in risk assessment.\n  * **A) The exposure factor (EF)** is the fraction of an asset's value at risk in the event of a security incident.\n  * **D) The ARO** quantifies the expected frequency of a risk occurring over a one-year time span."
   },
+  149: {
+    topic: "Social Engineering",
+    scenario: "Rico Financials has implemented a security awareness program. In a recent lesson, employees learned about the risks associated with malicious employees and similar threats.",
+    question: "What is the objective of this lesson?",
+    options: [
+      "A) Phishing",
+      "B) Reporting and monitoring",
+      "C) Anomalous behavior recognition",
+      "D) Insider threat"
+    ],
+    explanation: "The correct answer is **D) Insider threat**.\n\n* **Why it's correct:** Insider threat awareness involves educating employees about the risks posed by people inside the organization who could intentionally or unintentionally harm the company. This practice helps employees identify signs of potential malicious behavior within their own ranks.\n* **Analysis of the distractors:**\n  * **A) Phishing campaigns** are designed to test employees' ability to recognize and respond to phishing attempts, but do not focus specifically on insider threats.\n  * **C) Anomalous behavior recognition** concerns recognizing unusual actions that may indicate security threats, but does not focus specifically on educating employees about insider threats.\n  * **B) Reporting and monitoring** are crucial security awareness practices, but focus mainly on the general security posture and incident detection, not specifically on insider threats such as malicious employees."
+  },
+  150: {
+    topic: "Security Policies & Lifecycle",
+    question: "Which standard defines the methods and protocols used to control the algorithms that handle data in transit?",
+    options: [
+      "A) Physical security standard",
+      "B) Encryption standard",
+      "C) Access control standard",
+      "D) Password standard"
+    ],
+    explanation: "The correct answer is **B) Encryption standard**.\n\n* **Why it's correct:** The encryption standard defines the methods and protocols for encrypting sensitive data in order to protect it from unauthorized access. Encryption transforms data into an unreadable format using cryptographic algorithms, decipherable only with the appropriate key. These standards are used to protect data in transit.\n* **Analysis of the distractors:**\n  * **C) The access control standard** defines the rules and procedures for managing user access to systems, applications and data.\n  * **D) The password standard** outlines the requirements and best practices for creating and managing passwords.\n  * **A) The physical security standard** outlines the measures to protect physical assets, facilities and equipment from unauthorized access, theft and damage."
+  },
+  151: {
+    topic: "Compliance Monitoring",
+    scenario: "Horizon Security, a cybersecurity training company, has suffered a data breach due to a vendor's negligence. This breach resulted in a significant loss of sensitive customer information.",
+    question: "Which type of consequence is Horizon most likely to face immediately?",
+    options: [
+      "A) Reputational damage",
+      "B) Sanctions",
+      "C) Loss of license",
+      "D) Fines"
+    ],
+    explanation: "The correct answer is **A) Reputational damage**.\n\n* **Why it's correct:** Reputational damage refers to the potential harm or negative impact on Horizon's reputation due to the failure to comply with data protection regulations. Following the breach, customers might think that Horizon does not know enough about cybersecurity to protect its clients and/or prevent a breach, damaging its reputation in the cybersecurity training sector.\n* **Analysis of the distractors:**\n  * **C) Loss of license** could be a consequence of non-compliance in certain sectors. However, in this scenario, Horizon did not commit the negligence directly, so it is not likely to lose any licenses it may hold.\n  * **B) Sanctions** are also potential penalties for non-compliance, but are typically more severe and can include operational restrictions or limitations. However, in this scenario, Horizon did not commit the negligence.\n  * **D) Fines** are penalties imposed by regulatory authorities for non-compliance with data protection regulations. However, in this scenario, Horizon did not commit the negligence."
+  },
+  152: {
+    topic: "Social Engineering",
+    question: "Which security awareness practice involves conducting simulated email attacks to educate employees to recognize and respond to phishing attempts?",
+    options: [
+      "A) User guidance and training",
+      "B) Phishing campaigns",
+      "C) Anomalous behavior recognition",
+      "D) Reporting and monitoring"
+    ],
+    explanation: "The correct answer is **B) Phishing campaigns**.\n\n* **Why it's correct:** This security awareness practice involves conducting simulated email attacks, often called phishing simulations, to educate employees to recognize and respond to phishing attempts. In these simulated attacks, employees receive fake phishing emails designed to mimic real phishing attempts. The objective is to test employees' ability to identify phishing emails, avoid falling for the deception and report suspicious messages.\n* **Analysis of the distractors:**\n  * **A) User guidance and training** in the context of security awareness refers to the process of providing employees with information, policies and best practices related to cybersecurity, through policy manuals, training sessions and situational awareness exercises.\n  * **C) Anomalous behavior recognition** is a security awareness practice focused on educating employees to recognize unusual or unexpected behaviors that could indicate a security threat.\n  * **D) Reporting and monitoring** are key aspects of security awareness practices. They involve encouraging employees to report suspicious activities, potential security incidents or phishing attempts. Monitoring is carried out to evaluate the effectiveness of security awareness initiatives and identify potential weaknesses or areas for improvement."
+  },
+  153: {
+    topic: "Third-Party Risk & Assessments",
+    question: "Which of the following activities involves an authorized test of third-party security, actively engaging the vendor's system?",
+    options: [
+      "A) Vendor assessment",
+      "B) Penetration testing",
+      "C) Vendor monitoring",
+      "D) Supply chain analysis"
+    ],
+    explanation: "The correct answer is **B) Penetration testing**.\n\n* **Why it's correct:** Penetration testing is the practice of conducting authorized simulated attacks on a vendor's network or systems, to identify potential security weaknesses and vulnerabilities through direct and active engagement.\n* **Analysis of the distractors:**\n  * **D) Supply chain analysis** involves examining the security of the companies and suppliers upstream of a vendor; it normally does not include active engagement of the vendor's own system.\n  * **A) Vendor assessment** involves evaluating various aspects of a vendor's capabilities, including security measures, to determine whether they meet the organization's requirements; it is usually conducted with methods other than an actual penetration test.\n  * **C) Vendor monitoring** involves the ongoing tracking and evaluation of a vendor's performance and compliance with agreed security standards; it does not imply active engagement of the third-party system."
+  },
+  154: {
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    scenario: "Connor has just obtained a promotion to the role of Data Processor.",
+    question: "For which task will Connor be the sole responsible party in his new position?",
+    options: [
+      "A) To manage and control access to data",
+      "B) To ensure physical security of data storage devices",
+      "C) To analyze data on behalf of the data controller",
+      "D) To establish data ownership and control over access to the data"
+    ],
+    explanation: "The correct answer is **C) To analyze data on behalf of the data controller**.\n\n* **Why it's correct:** The primary responsibility of a data processor is to process and manipulate data on behalf of the data controller. The data processor acts under the direction and authority of the data controller and performs specific data processing activities according to its instructions.\n* **Analysis of the distractors:**\n  * **B) Although ensuring physical security is important**, it is typically a shared responsibility between the data controller and the data processor to protect storage devices and data assets; however it is not the data processor's main responsibility in the context of processing activities.\n  * **D) Data ownership and control** usually fall under the competence of the data controller, who is responsible for determining the purpose and means of data processing.\n  * **A) Access control** is usually a shared responsibility between the data controller and the data processor. Although the data processor may implement access controls based on the data controller's requirements, the ultimate responsibility for access control lies with the data controller."
+  },
+  155: {
+    topic: "Social Engineering",
+    question: "To improve security awareness, which of the following statements BEST describes how employees might recognize a phishing attempt?",
+    options: [
+      "A) By opening only emails from trusted senders and people they know.",
+      "B) By clicking on links in suspicious emails to verify their authenticity and identify the attacker.",
+      "C) By verifying the sender's email address and looking for signs of deception.",
+      "D) By responding immediately to any email that requests sensitive information."
+    ],
+    explanation: "The correct answer is **C) By verifying the sender's email address and looking for signs of deception**.\n\n* **Why it's correct:** Employees should carefully examine the sender's email address for any spelling errors or unusual characters that could indicate a phishing attempt. They should also look for signs of deception, such as urgent requests for personal information, generic greetings or unusual email content.\n* **Analysis of the distractors:**\n  * **B) Clicking on links in suspicious emails** is risky and can lead to malware infections or other security problems. Instead of clicking directly on links, employees should hover over the link to see the actual URL and verify whether it matches the intended destination.\n  * **A) Opening only emails from trusted senders** is not a recommended practice for recognizing phishing attempts. Phishing emails often impersonate trusted senders, so blindly opening all emails from known sources can lead to falling victim to phishing attacks.\n  * **D) Employees should never respond to emails** that request sensitive information without verifying the legitimacy of the request through other means, such as contacting the sender directly through a known and reliable communication channel."
+  },
+  156: {
+    topic: "Security Assessment / Penetration Testing",
+    question: "Which of the following options BEST describes the primary objective of an integrated penetration test?",
+    options: [
+      "A) To focus only on external network vulnerabilities.",
+      "B) To evaluate the success of an organization's security training.",
+      "C) To evaluate exclusively software-level vulnerabilities.",
+      "D) To evaluate vulnerabilities across the physical, software and network layers."
+    ],
+    explanation: "The correct answer is **D) To evaluate vulnerabilities across the physical, software and network layers**.\n\n* **Why it's correct:** Integrated tests provide a complete evaluation, covering different security domains, from physical infrastructure to software applications and network configurations, ensuring a multi-faceted approach to discovering potential vulnerabilities.\n* **Analysis of the distractors:**\n  * **C) Evaluating exclusively software-level vulnerabilities** highlights only one domain, neglecting the complete nature of integrated tests.\n  * **A) Focusing only on external network vulnerabilities** represents a narrower perspective, similar to external penetration tests.\n  * **B) Evaluating the success of security training** is not the central objective of integrated penetration tests."
+  },
+  157: {
+    topic: "Social Engineering",
+    scenario: "The Johnson Group, a forensic laboratory, has implemented a complete security awareness program to educate its employees on cybersecurity best practices. As part of this program, they planned and created simulated phishing emails. They have now entered the execution phase of the program.",
+    question: "What will the Johnson Group do in the execution phase?",
+    options: [
+      "A) Analyze data and results from phishing campaigns",
+      "B) Educate employees about best practices for avoiding phishing",
+      "C) Send out simulated phishing emails to employees",
+      "D) Develop security policies and handbooks"
+    ],
+    explanation: "The correct answer is **C) Send out simulated phishing emails to employees**.\n\n* **Why it's correct:** During the execution phase, the Johnson Group's cybersecurity team will send the simulated phishing emails to employees as part of their planned phishing campaigns. This practice aims to raise employees' awareness of potential phishing attempts and help them recognize and respond appropriately to such threats.\n* **Analysis of the distractors:**\n  * **B) Training on password management** is an essential component of the security awareness program, but falls within the user guidance and training phase. In the execution phase, the focus is on implementing the planned activities, such as phishing campaigns, rather than on specific training topics.\n  * **A) After executing the phishing campaigns**, the cybersecurity team will analyze the data and results to evaluate the effectiveness of the program. They will examine how employees responded to the simulated phishing emails and use this information to identify areas for improvement and further training.\n  * **D) Developing security policies and handbooks** was part of the previous phase of the security awareness program. It involved creating materials to educate employees on security policies and procedures."
+  },
+  158: {
+    topic: "Risk Management & Analysis",
+    scenario: "At Naval Gazing, the risk management team is working to quantify the potential financial impact of specific risks the organization might face. They started by identifying the key risks. They then determine the expected financial loss over the next five years for each of the risks.",
+    question: "Which element of risk management are they addressing?",
+    options: [
+      "A) Risk assessment",
+      "B) Risk analysis",
+      "C) Risk register",
+      "D) Risk identification"
+    ],
+    explanation: "The correct answer is **B) Risk analysis**.\n\n* **Why it's correct:** Risk analysis is a crucial part of the risk management process in which the financial impact of specific risks is determined through quantitative and qualitative methods. It includes calculating the expected financial loss for a particular risk over a given period.\n* **Analysis of the distractors:**\n  * **A) Risk assessment** involves evaluating and prioritizing the identified risks based on their potential impact and probability of occurrence.\n  * **D) Risk identification** is the initial step in the risk management process, in which potential risks are identified and documented within the organization's environment.\n  * **C) The risk register** is a complete record of all identified risks, together with their potential impact and mitigation strategies."
+  },
+  159: {
+    topic: "Risk Management & Analysis",
+    scenario: "A company operates in a regulated sector and chooses to minimize risks to comply with strict standards, focusing more on maintaining stable operations than on pursuing rapid expansion.",
+    question: "Which risk appetite BEST describes this approach?",
+    options: [
+      "A) Conservative",
+      "B) Neutral",
+      "C) Aggressive",
+      "D) Expansionary"
+    ],
+    explanation: "The correct answer is **A) Conservative**.\n\n* **Why it's correct:** The company's approach aligns with a conservative risk appetite, since it prioritizes stability and compliance over expansion. An expansionary appetite would seek high-risk growth opportunities, which contradicts the company's cautious attitude.\n* **Analysis of the distractors:**\n  * **D) An expansionary appetite** would seek high-risk growth opportunities, which contradicts the company's cautious attitude.\n  * **B) A neutral appetite** would balance growth and stability.\n  * **C) An aggressive appetite** would also tend toward high-risk, high-return strategies, unlike the company's conservative focus."
+  },
+  160: {
+    topic: "Risk Management & Assessment",
+    question: "Which of the following terms refers to a complete risk assessment within an organization that occurs at a specific moment, often to evaluate the impact of implementing a new system or to obtain an independent view of operational maturity?",
+    options: [
+      "A) One-time",
+      "B) Ad hoc",
+      "C) Risk identification",
+      "D) Continuous"
+    ],
+    explanation: "The correct answer is **A) One-time**.\n\n* **Why it's correct:** One-time assessments are in-depth evaluations conducted at a specific point, designed to establish a baseline or evaluate the state of risk at a given moment.\n* **Analysis of the distractors:**\n  * **C) Risk identification** involves the process of recognizing potential risks, but does not concern the complete assessment at a particular point in time.\n  * **B) Ad hoc risk assessments** are conducted as needed and are not necessarily complete or planned to evaluate the introduction of new systems or for an independent review.\n  * **D) Continuous assessments** are ongoing and provide real-time risk analysis, unlike one-time assessments which are static and occur only once."
+  },
+  161: {
+    topic: "Social Engineering",
+    scenario: "Aisha receives an email that appears to come from her bank, asking her to verify her account information by clicking on a link. The email uses urgent language, such as 'Account suspension in progress!', and invites her to enter sensitive data.",
+    question: "Which type of social engineering attack is Aisha probably facing?",
+    options: [
+      "A) Spear Phishing",
+      "B) Whaling",
+      "C) Phishing",
+      "D) Vishing"
+    ],
+    explanation: "The correct answer is **C) Phishing**.\n\n* **Why it's correct:** Aisha is probably facing a phishing attack. Phishing attacks use broad, non-specific messages and rely on urgency, such as 'Account suspension in progress!', to manipulate users into clicking on links and entering sensitive information. The attacker's objective is to gather personal data by creating a sense of panic.\n* **Analysis of the distractors:**\n  * **A) Unlike spear phishing**, which targets specific individuals, phishing generally casts a wider net.\n  * **B) Whaling** focuses on high-profile targets.\n  * **D) Vishing** involves scams based on voice calls."
+  },
+  162: {
+    topic: "Personnel Security & Onboarding",
+    question: "Which of the following options is NOT an appropriate activity for the IT or HR department in order to ensure secure access during the onboarding of a new employee?",
+    options: [
+      "A) Introducing the employee to company protocols and policies",
+      "B) Providing the employee with resources that will be needed to complete the job",
+      "C) Automatically assigning all possible privileges to the user for a trial period",
+      "D) Secure transmission of credentials to the employee so access is granted"
+    ],
+    explanation: "The correct answer is **C) Automatically assigning all possible privileges to the user for a trial period**.\n\n* **Why it's correct:** Automatically assigning all possible privileges to a user, even just for a trial period, can expose the organization to unnecessary risks. Privileges should be assigned based on role-related need and the principle of least privilege.\n* **Analysis of the distractors:**\n  * **D) The secure transmission of credentials to the employee** refers to the secure creation and sending of an initial password or the issuance of a smart card in a protected manner, ensuring that the user has secure access to the necessary systems.\n  * **B) Providing the employee with the resources needed to complete the job** concerns provisioning computers or mobile devices for the user, or authorizing the use of personal devices (BYOD), ensuring that the user has the necessary tools while maintaining security standards.\n  * **A) Training is fundamental** to ensure that new employees are aware of security protocols and policies, making sure they understand and follow the security guidelines."
+  },
   },
 };
