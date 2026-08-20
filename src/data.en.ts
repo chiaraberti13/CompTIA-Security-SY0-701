@@ -3207,6 +3207,60 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "It rigorously defines 'who does what', which physical or digital products must be delivered, the technical requirements of the materials, the time deadlines (milestones) and the formal acceptance criteria for the payments of the work performed by the supplier.",
     examTip: "While the SLA defines the quality and continuous availability of a service, the SOW defines the requirements, operational tasks and concrete deliverables of a specific project.",
   },
+  InternalAudit: {
+    name: "Internal Audit",
+    definition: "The formal evaluation of internal controls performed independently by company employees or appointed consultants.",
+    details: "It serves to analyze whether the real procedures correspond to the written security policies (Gap Analysis) and to identify vulnerabilities or organizational inefficiencies before they are detected by external inspectors, without risk of direct penalties.",
+    examTip: "The internal audit is a fundamental tool of proactive continuous improvement and self-assessment to prepare for formal certification audits.",
+  },
+  ExternalAudit: {
+    name: "External Audit",
+    definition: "An evaluation conducted by a third-party, independent audit firm or certifying body.",
+    details: "The primary goal is to verify actual adherence to international standards to issue formal, public certifications (e.g. SOC 2 Type II, ISO 27001), indispensable for demonstrating the organization's security posture to customers and partners.",
+    examTip: "External audits offer the maximum reliability for stakeholders since they are conducted by independent third parties with official accreditation.",
+  },
+  RegulatoryAudit: {
+    name: "Regulatory Audit",
+    definition: "A formal audit imposed and performed directly by government inspectors or public regulatory authorities.",
+    details: "It verifies strict adherence to the mandatory national and international laws of the sector (e.g. an inspection by the Data Protection Authority for the GDPR). In case of non-compliance, it can issue severe fines, suspend activities or revoke commercial licenses.",
+    examTip: "The Regulatory Audit differs from the others in its stringent legal obligatoriness and the direct monetary and administrative penalties issued by public authorities.",
+  },
+  PenetrationTest: {
+    name: "Penetration Test",
+    definition: "An authorized simulated attack against the organization's IT infrastructure to discover and actively exploit vulnerabilities.",
+    details: "Conducted by security professionals (Ethical Hackers) simulating the tactics, techniques and procedures (TTP) of real attackers. The goal is to actively bypass the defensive controls to verify field resilience and produce a detailed remediation report.",
+    examTip: "Unlike a simple Vulnerability Scan (which merely scans and finds theoretical vulnerabilities), the Penetration Test actively attempts to exploit them to measure the real impact.",
+  },
+  PeriodicReviewConcept: {
+    name: "Periodic review",
+    definition: "The systematic analysis and evaluation of policies, controls, accounts and configurations performed at regular, planned time intervals to ensure their validity and continuous compliance.",
+    details: "Typical examples of **Periodic Review** include:\n* **Access Review:** The review of user permissions performed quarterly or annually to identify and eliminate 'privilege creep' and remove accounts of departed employees.\n* **Policy Review:** The annual update of corporate security policies to adapt them to new regulations or organizational changes.\n* **Risk Review:** The periodic update of the risk register.",
+    examTip: "The periodic review is a discrete or time-scheduled process (e.g. every six months or once a year) aimed at validating the correct effectiveness of the current controls.",
+  },
+  ContinuousAssessmentConcept: {
+    name: "Continuous assessment",
+    definition: "The constant, real-time monitoring of the compliance, configuration and security posture of IT systems, aimed at instantly identifying any deviations or new threats.",
+    details: "**Continuous Assessment** overcomes the limits of traditional 'point-in-time' audits by integrating advanced automation. It uses tools that scan cloud configurations in real time (CSPM), continuously monitor compliance against frameworks (CIS, NIST) and feed dynamic dashboards with real-time feeds.",
+    examTip: "Unlike the periodic review (static and at discrete intervals), Continuous Assessment operates in real time, providing constant visibility for dynamic, high-change-velocity environments.",
+  },
+  AuditConceptRes: {
+    name: "Audit",
+    definition: "Audit: A systematic, independent, planned and documented process to obtain objective evidence and evaluate it impartially in order to establish to what extent the established security criteria and controls are satisfied and efficient.",
+    details: "The **Audit** is characterized by formal and methodological rigor:\n* **Objective Evidence:** The auditor collects tangible evidence (real server configurations, log records, signatures on policy documents, staff interviews) to ascertain compliance, without relying on simple oral declarations.\n* **Independence:** Whoever performs the audit must not have direct responsibilities in the management or implementation of the inspected systems to ensure maximum neutrality.\n* **Main Purpose:** To provide management and external stakeholders (e.g. customers or certifying bodies) with reasonable, fact-based assurance about the real state of the organization's security.",
+    examTip: "On the exam, remember that the Audit requires objective evidence and auditor independence to scientifically validate the effectiveness of the controls, distinguishing itself from simple internal operational monitoring.",
+  },
+  VerificationRes: {
+    name: "Verification",
+    definition: "Verification: The evaluation process aimed at determining whether a system, software or security control complies with the technical specifications, formal requirements and predefined design policies (it answers the question: 'Did we build the system correctly?').",
+    details: "**Verification** focuses on formal and structural compliance:\n* **Difference from Validation:** While *Validation* ascertains whether the control meets the real operational and security needs of the business (it answers: 'Did we build the right control to block the threat?'), *Verification* ensures that the control was implemented and configured exactly according to the design details (e.g. checking that the firewall has the active rule on the specific port).\n* **Common Activities:** Static inspection of the routing tables, hash-code compliance checking, formal review of the configuration documents against an approved baseline.",
+    examTip: "Verification ascertains the compliance of a control or system against a technical specification or written requirement, while Validation demonstrates its real field effectiveness in mitigating the threat.",
+  },
+  ReportingRes: {
+    name: "Reporting",
+    definition: "Reporting: The concluding phase of an audit, penetration test or security scan, in which the results, discovered vulnerabilities, risk levels and remediation recommendations for the various corporate stakeholders are compiled, analyzed and presented in a structured document.",
+    details: "Effective **Reporting** requires adapting the language to the target audience:\n* **Executive Summary:** A non-technical section, written in terms of business risk, financial impact and regulatory compliance, intended for management to support strategic decisions and budget allocations.\n* **Technical Report:** An extremely detailed section intended for system administrators and developers, containing the technical description of the flaws, the related IoCs, the exploitation proofs of concept (PoC) and the precise step-by-step instructions for remediation and rescanning.\n* **Prioritization:** Vulnerabilities must be clearly classified by severity (e.g. through the CVSS scale from Critical to Info) to allow efficient remediation planning.",
+    examTip: "The final report (Reporting) is the main deliverable of any security audit or test; it must always include both an Executive Summary for the board, focused on business risks, and a detailed technical body for the IT team focused on the patches.",
+  },
   },
 };
 
