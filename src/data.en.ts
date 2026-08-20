@@ -10668,5 +10668,143 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **B) Quantitative Risk Assessment**.\n\n* **Why it's correct:** Sarah is conducting a quantitative risk assessment, since she is estimating the financial impacts and the probability, which involves assigning precise numerical values to the identified risks.\n* **Analysis of the distractors:**\n  * **D) Qualitative risk assessment** focuses instead on descriptive measures, categorizing risks without attributing precise financial values.\n  * **A) Residual risk analysis** concerns the evaluation of the risk that remains after the application of security controls.\n  * **C) Threat Modeling** focuses on identifying potential attack paths rather than on the numerical quantification of risks."
   },
+  137: {
+    topic: "Security Policies & Lifecycle",
+    question: "Which of the following security features, an integral part of incident response, tracks activities and is used as evidence during incidents to demonstrate that all regulations have been respected?",
+    options: [
+      "A) Incident logs",
+      "B) Event monitoring",
+      "C) Operational history",
+      "D) Audit trails"
+    ],
+    explanation: "The correct answer is **D) Audit trails**.\n\n* **Why it's correct:** Audit trails are detailed records that sequentially track activities within a system, providing fundamental data to detect, examine and understand the nature of security breaches and demonstrate regulatory compliance.\n* **Analysis of the distractors:**\n  * **A) Incident logs** are related but typically refer to records of already-identified incidents, rather than the broader spectrum of activities covered by audit trails.\n  * **B) Event monitoring** is a real-time process of tracking system events, which may use audit trails but is not synonymous with their complete recording function.\n  * **C) Operational history** refers to the recording of all operations within a system, but lacks the specific security context implicit in audit trails."
+  },
+  138: {
+    topic: "Risk Management & Analysis",
+    question: "What is the first step of the risk management process, which consists of determining which potential threats and vulnerabilities exist within an organization's environment?",
+    options: [
+      "A) Risk analysis",
+      "B) Risk identification",
+      "C) Risk register",
+      "D) Risk mitigation"
+    ],
+    explanation: "The correct answer is **B) Risk identification**.\n\n* **Why it's correct:** Risk identification is the first step of the risk management process and involves identifying potential threats and vulnerabilities that could pose a risk to an organization's assets or operations.\n* **Analysis of the distractors:**\n  * **C) The risk register** is a tool used in the risk management process to document and track identified risks, but it does not represent the first step of the process.\n  * **A) Risk analysis** is the subsequent phase, which involves evaluating the identified risks and their potential impact on the organization.\n  * **D) Risk mitigation** cannot be carried out before the risks have been identified and analyzed."
+  },
+  139: {
+    topic: "Personnel Security & Onboarding",
+    question: "Which of the following procedures is fundamental during the offboarding process to ensure the security of organizational assets and data?",
+    options: [
+      "A) Providing departing employees with a list of all internal systems to include in their resume.",
+      "B) Allowing the departing employee to determine which corporate assets they wish to keep.",
+      "C) Having the employee escorted off the company premises by a security guard.",
+      "D) Disabling user accounts."
+    ],
+    explanation: "The correct answer is **D) Disabling user accounts**.\n\n* **Why it's correct:** Disabling the user account and related privileges ensures that departing employees no longer have access to corporate systems, and that the company maintains control over the necessary files.\n* **Analysis of the distractors:**\n  * **B) Allowing the departing employee to decide which corporate assets to keep** can pose a significant security risk and a loss of assets.\n  * **C) Having the employee escorted by a security guard** can be useful in some cases, but does not represent a fundamental part of the offboarding process from a data security standpoint.\n  * **A) Providing departing employees with a list of internal systems** could constitute a security risk if that information ended up in the wrong hands. Correct offboarding procedures prioritize the protection of internal systems and information."
+  },
+  140: {
+    topic: "Security Policies & Lifecycle",
+    scenario: "Jamario, an IT specialist at Dion Training, is tasked with ensuring that employees working from home can securely access the corporate network. He recommends the use of VPNs, multi-factor authentication and encrypted communications for all remote connections.",
+    question: "Which type of work environment is Jamario addressing?",
+    options: [
+      "A) Centralized",
+      "B) Collaborative",
+      "C) Remote",
+      "D) Decentralized"
+    ],
+    explanation: "The correct answer is **C) Remote**.\n\n* **Why it's correct:** A remote work environment is one in which employees work from remote locations, usually from home, requiring specific security measures to ensure secure access to corporate resources.\n* **Analysis of the distractors:**\n  * **B) A collaborative environment** is set up prioritizing collaboration among teams, often with open spaces and shared project areas, but is not focused on the geographic location of the workers.\n  * **A) A centralized work environment** is a traditional configuration in which all employees work from a single physical location.\n  * **D) A decentralized work environment** is a system in which various departments or teams work from separate and independent locations, but not necessarily from home."
+  },
+  141: {
+    topic: "Social Engineering",
+    scenario: "Jamario, a cybersecurity specialist at Kelly Innovations LLC, wants to evaluate how employees react to social engineering attempts. He sends simulated emails to all employees to see who responds to them.",
+    question: "Which of the following terms BEST describes Jamario's initiative?",
+    options: [
+      "A) Spear phishing",
+      "B) Whaling",
+      "C) Vishing",
+      "D) Phishing campaign"
+    ],
+    explanation: "The correct answer is **D) Phishing campaign**.\n\n* **Why it's correct:** A phishing campaign is a structured attempt, often used as a training or evaluation tool within organizations, to simulate real phishing threats and measure how individuals respond.\n* **Analysis of the distractors:**\n  * **A) Spear phishing** is a targeted phishing attempt, directed at specific individuals or companies. In this case, Jamario sent the email to all employees.\n  * **B) Whaling** consists of high-level phishing attacks targeting senior executives and other high-profile targets. In this case, Jamario sent the email to all employees.\n  * **C) Vishing (voice phishing)** is an attack that occurs via phone, often by attackers posing as trusted entities. In this case, Jamario sent emails."
+  },
+  142: {
+    topic: "Risk Management & Analysis",
+    question: "Which of the following terms refers to the predefined level of risk that an organization is willing to accept before taking action?",
+    options: [
+      "A) Risk limit",
+      "B) Risk level",
+      "C) Risk threshold",
+      "D) Risk tolerance"
+    ],
+    explanation: "The correct answer is **C) Risk threshold**.\n\n* **Why it's correct:** The risk threshold is the acceptable risk limit that an organization establishes and which, once exceeded, triggers a response to bring the risk back to an acceptable level.\n* **Analysis of the distractors:**\n  * **A) Risk limit** is not a term commonly used within risk management to define a predefined level of acceptable risk.\n  * **D) Risk tolerance** refers more broadly to the willingness of an organization or an individual to take on risk, not to the specific predefined level that triggers an action.\n  * **B) Risk level** refers to the severity or high/low ranking of the risk, not to the predefined level of acceptance."
+  },
+  143: {
+    topic: "Risk Management & Assessment",
+    scenario: "River, a project manager at a technology company, is tasked with keeping track of all potential risks related to a new software implementation. He uses a structured document that lists the identified risks, their potential impact, probability and mitigation strategies.",
+    question: "Which document is River using to manage these risks?",
+    options: [
+      "A) Business Continuity Plan",
+      "B) Incident Response Plan",
+      "C) Playbook",
+      "D) Risk Register"
+    ],
+    explanation: "The correct answer is **D) Risk Register**.\n\n* **Why it's correct:** A risk register is used to identify, document and track potential risks, including their probability, impact and mitigation strategies. It enables proactive management of risks in projects or operations.\n* **Analysis of the distractors:**\n  * **A) A Business Continuity Plan** focuses on maintaining essential business operations during an interruption, not on the detailed tracking of individual risks.\n  * **B) An Incident Response Plan** focuses on managing security incidents that have already occurred.\n  * **C) A Playbook** focuses on specific response actions to particular threats, not on the structured tracking of the risks of an entire project."
+  },
+  144: {
+    topic: "Third-Party Risk & Assessments",
+    question: "Which type of assessment should you perform to examine the security measures and vulnerabilities of a company that provides goods or services?",
+    options: [
+      "A) Statement of Work",
+      "B) Vendor monitoring",
+      "C) Vendor selection",
+      "D) Vendor assessment"
+    ],
+    explanation: "The correct answer is **D) Vendor assessment**.\n\n* **Why it's correct:** A vendor assessment involves examining the security measures and vulnerabilities of a vendor's systems and infrastructure, to ensure that they meet the organization's security requirements.\n* **Analysis of the distractors:**\n  * **A) A Statement of Work (SOW)** defines the expectations regarding the work to be completed by a third party, but normally does not include an assessment of the vendor's own vulnerabilities and security measures.\n  * **C) Vendor selection** is the process of choosing a vendor based on various criteria, but does not focus specifically on evaluating security measures and vulnerabilities.\n  * **B) Vendor monitoring** involves the ongoing evaluation and supervision of a vendor's performance, including its security practices, throughout the duration of the commercial relationship, but is not specifically focused on the initial assessment of security measures and vulnerabilities."
+  },
+  145: {
+    topic: "Social Engineering",
+    scenario: "Susan, an employee at Dion Training, receives an email from an apparently familiar sender. The email asks her to click on a link to reset her password due to 'unusual activity'. She finds it strange since she did not request any password reset.",
+    question: "Which of the following actions should Susan take?",
+    options: [
+      "A) Forward the email to colleagues to check whether they received a similar one.",
+      "B) Report the email to the IT department.",
+      "C) Click on the link to verify its authenticity.",
+      "D) Ignore and delete the email."
+    ],
+    explanation: "The correct answer is **B) Report the email to the IT department**.\n\n* **Why it's correct:** Susan has identified the potential threat and promptly alerted the relevant personnel within her organization. Although ignoring the email may prevent immediate harm, reporting it helps the organization identify and address potential security threats.\n* **Analysis of the distractors:**\n  * **A) Sharing the email further** can expose more people to potential threats.\n  * **C) Clicking on the link to verify its authenticity** could expose her to malware or phishing sites and is not a recommended action.\n  * **D) Ignoring and deleting the email** prevents immediate harm but does not help the organization identify and address the potential threat, unlike reporting."
+  },
+  146: {
+    topic: "Risk Management & Analysis",
+    scenario: "A cybersecurity expert categorizes the possibility of a data breach as 'high' due to recent similar incidents in the sector.",
+    question: "Which risk assessment term is the expert using?",
+    options: [
+      "A) EF",
+      "B) Risk rating",
+      "C) Confidence level",
+      "D) Likelihood"
+    ],
+    explanation: "The correct answer is **D) Likelihood**.\n\n* **Why it's correct:** Likelihood is used in qualitative risk analysis to subjectively describe how probable a risk event is, often expressed with terms such as 'low', 'medium' or 'high'.\n* **Analysis of the distractors:**\n  * **C) A confidence level** could influence the use of the term 'high' in different contexts, but does not specifically refer to the qualitative measure of risk probability.\n  * **B) A risk rating** incorporates both probability and impact to provide an overall score to the risk, but is not the term used to express solely the probability of occurrence.\n  * **A) The exposure factor (EF)** is the fraction of an asset's value at risk in the event of a security incident."
+  },
+  147: {
+    topic: "Compliance Monitoring",
+    scenario: "A financial services company is required to regularly submit documentation demonstrating adherence to regulatory security standards. This documentation includes audit results, risk assessments and evidence of data protection measures.",
+    question: "What is this process called?",
+    options: [
+      "A) Compliance Reporting",
+      "B) Incident Response",
+      "C) Risk Management",
+      "D) Configuration Management"
+    ],
+    explanation: "The correct answer is **A) Compliance Reporting**.\n\n* **Why it's correct:** Compliance reporting involves submitting documentation that demonstrates an organization's adherence to regulatory or industry standards. This process ensures that the required security practices are followed and that the organization remains in good standing with regulatory bodies.\n* **Analysis of the distractors:**\n  * **C) Risk management** encompasses the entire process of identifying, analyzing and treating risks, not just the documentary submission of compliance.\n  * **B) Incident response** concerns the management of security incidents that have already occurred.\n  * **D) Configuration management** concerns the control of changes to IT systems, not the reporting of regulatory compliance."
+  },
+  148: {
+    topic: "Risk Management & Analysis",
+    question: "Which of the following is the standard term used in risk management to describe the effect of a risk event on an organization, particularly in terms of operational, financial and reputational damage?",
+    options: [
+      "A) EF",
+      "B) Impact",
+      "C) Damage proportion",
+      "D) ARO"
+    ],
+    explanation: "The correct answer is **B) Impact**.\n\n* **Why it's correct:** Impact refers to the consequences that a risk event has on an organization, affecting various areas such as operations, finance and reputation.\n* **Analysis of the distractors:**\n  * **C) 'Damage proportion'** could be used informally to describe a concept similar to the EF, but is not the standard term used in risk assessment.\n  * **A) The exposure factor (EF)** is the fraction of an asset's value at risk in the event of a security incident.\n  * **D) The ARO** quantifies the expected frequency of a risk occurring over a one-year time span."
+  },
   },
 };
