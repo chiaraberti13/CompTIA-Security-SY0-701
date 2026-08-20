@@ -2958,6 +2958,63 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "While an exception is temporary and aimed at a future remediation, an **Exemption** recognizes the structural impossibility of complying:\n* **Authorization Level:** It requires the signature of the highest-level executive management (e.g. CIO, CISO or CEO), since it involves the permanent acceptance of a potentially high business risk (Residual Risk).\n* **Typical Example:** A multi-million-euro industrial control machine or a life-saving medical system that runs an obsolete, non-updatable operating system whose legacy protocols do not support the company's modern cryptographic policies.\n* **Traceability:** All exemptions must be recorded in a central exemptions register and subjected to periodic annual audits to certify that the conditions of impossibility persist and that the perimeter compensating controls are active.",
     examTip: "The Exemption differs from the Exception in its permanent or long-term nature, and exempts a system from compliance due to insurmountable technical or business barriers, formalizing management's lifetime acceptance of the residual risk.",
   },
+  RiskAssessment: {
+    name: "Risk Assessment",
+    definition: "The overall evaluation that identifies threats, estimates vulnerabilities and calculates the risk level of the assets.",
+    details: "It can be qualitative (based on probability and impact expressed on scales like High/Medium/Low) or quantitative (assigning precise financial values). It helps the organization decide which controls to implement based on a scientific prioritization of risks.",
+    examTip: "The Risk Assessment is the mandatory starting point for defining the security strategy and demonstrating corporate Due Diligence.",
+  },
+  RiskRegister: {
+    name: "Risk Register",
+    definition: "The central, dynamic document that lists all the identified risks, their priority and the mitigation plans.",
+    details: "Each row of the risk register includes the description of the threat, the probability, the impact, the risk owner, the current controls installed, the residual risk and the future corrective actions planned. It is constantly updated in response to audits or structural changes.",
+    examTip: "The Risk Register is not a static document drafted once for legal compliance, but an operational governance tool in continuous evolution.",
+  },
+  RiskAppetite: {
+    name: "Risk Appetite",
+    definition: "The amount and type of risk that an organization is willing to take on to pursue its strategic objectives.",
+    details: "It is established at the Board of Directors level and indicates the business's macroscopic tolerance (e.g. 'The company accepts high market risks for technological innovation, but has zero appetite for regulatory risks or legal penalties').",
+    examTip: "The Risk Appetite guides the formulation of the overall security policies and defines the macroscopic direction of the defensive investments.",
+  },
+  RiskTolerance: {
+    name: "Risk Tolerance",
+    definition: "The specific, operational deviation allowed relative to the general level established by the Risk Appetite.",
+    details: "It represents the practical and measurable threshold applied to individual projects, assets or departments. For example: 'The tolerance for the interruption of the billing system is 0 hours, while for the corporate blog an interruption of up to 48 hours is tolerated'.",
+    examTip: "While the Risk Appetite is a strategic and qualitative concept formulated by the Board, the Risk Tolerance is tactical, operational and translated into precise quantitative metrics.",
+  },
+  SLE: {
+    name: "SLE",
+    definition: "Single Loss Expectancy: the estimated monetary cost arising from a single risk event.",
+    details: "It is calculated by multiplying the asset value by the exposure factor (the estimated percentage of damage).",
+    keyFormulas: [
+      "SLE = AV * EF",
+      "AV (Asset Value): The total financial replacement value of the asset.",
+      "EF (Exposure Factor): Percentage of damage the asset suffers in case of an incident (e.g. 0.30 for 30% damage).",
+    ],
+    examTip: "If a datacenter is worth $1,000,000 (AV) and a partial flood would destroy 25% of the infrastructure (EF = 0.25), the SLE is $250,000.",
+  },
+  ALE: {
+    name: "ALE",
+    definition: "Annualized Loss Expectancy: the expected, annualized financial cost arising from a specific risk.",
+    details: "It is used to justify investments in security controls. A security control should ideally never cost more than the ALE it aims to mitigate.",
+    keyFormulas: [
+      "ALE = SLE * ARO",
+      "ARO (Annualized Rate of Occurrence): Estimated number of times the event occurs in a year.",
+    ],
+    examTip: "If an event causes a single loss (SLE) of $50,000 and occurs on average once every 10 years (ARO = 0.1), the ALE is $5,000. If a protective firewall costs $7,000 per year, the mitigation is not financially worthwhile.",
+  },
+  ARO: {
+    name: "ARO",
+    definition: "Annualized Rate of Occurrence: the frequency with which a negative event is estimated to occur in a year.",
+    details: "It is estimated based on historical series, geographic data or industry statistical reports. It can take integer values greater than 1 (e.g. 4 times a year) or decimals (e.g. 0.05 if it occurs once every 20 years).",
+    examTip: "For the exam, always convert the provided historical times to an annual basis: 'once every 4 years' translates to an ARO of 0.25; 'twice a year' to an ARO of 2.",
+  },
+  ExposureFactorEF: {
+    name: "Exposure factor EF",
+    definition: "The percentage of damage or loss that an asset suffers following the materialization of a specific threat.",
+    details: "The Exposure Factor (EF) is a fundamental metric in quantitative risk management. It is expressed as a percentage value from 0.0 (0% damage) to 1.0 (100% damage, total destruction of the asset). It is used directly in the calculation of the Single Loss Expectancy (SLE = AV * EF), where AV represents the overall value of the asset.",
+    examTip: "The EF always expresses the estimated fraction of loss as a percentage: if a fire damages a server compromising half of its value, the associated EF is 50% (0.50).",
+  },
   },
 };
 
