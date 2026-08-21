@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220" role="img" aria-label="CompTIA Security+ SY0-701 Training Studio">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="0.55" stop-color="#0f2138"/>
+      <stop offset="1" stop-color="#0a2f2a"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e2e8f0"/>
+      <stop offset="1" stop-color="#a5f3d0"/>
+    </linearGradient>
+    <style>
+      .t { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="800" height="220" rx="16" fill="url(#bg)"/>
+
+  <!-- subtle grid dots -->
+  <g fill="#1e3a5f" opacity="0.35">
+    <circle cx="620" cy="40" r="2"/><circle cx="660" cy="40" r="2"/><circle cx="700" cy="40" r="2"/><circle cx="740" cy="40" r="2"/>
+    <circle cx="620" cy="80" r="2"/><circle cx="660" cy="80" r="2"/><circle cx="700" cy="80" r="2"/><circle cx="740" cy="80" r="2"/>
+    <circle cx="620" cy="120" r="2"/><circle cx="660" cy="120" r="2"/><circle cx="700" cy="120" r="2"/><circle cx="740" cy="120" r="2"/>
+    <circle cx="620" cy="160" r="2"/><circle cx="660" cy="160" r="2"/><circle cx="700" cy="160" r="2"/><circle cx="740" cy="160" r="2"/>
+  </g>
+
+  <!-- shield -->
+  <g transform="translate(60,52)">
+    <path d="M58 4 L108 22 V64 C108 96 86 116 58 128 C30 116 8 96 8 64 V22 Z"
+          fill="url(#shield)" opacity="0.16"/>
+    <path d="M58 4 L108 22 V64 C108 96 86 116 58 128 C30 116 8 96 8 64 V22 Z"
+          fill="none" stroke="url(#shield)" stroke-width="3.5"/>
+    <path d="M34 62 L52 82 L84 42" fill="none" stroke="url(#shield)" stroke-width="8"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- text -->
+  <text x="210" y="86" class="t" font-size="40" font-weight="800" fill="url(#title)">CompTIA Security+</text>
+  <text x="210" y="128" class="t" font-size="30" font-weight="700" fill="#38bdf8">SY0-701 Training Studio</text>
+  <text x="212" y="160" class="t" font-size="16" font-weight="500" fill="#94a3b8">Interactive study modules · Exam simulator · AI Cybersecurity Trainer</text>
+
+  <!-- bilingual chip -->
+  <g transform="translate(210,178)">
+    <rect x="0" y="0" width="150" height="26" rx="13" fill="#0b1220" stroke="#334155" stroke-width="1"/>
+    <text x="75" y="17" class="t" font-size="13" font-weight="600" fill="#cbd5e1" text-anchor="middle">🇬🇧 English · 🇮🇹 Italiano</text>
+  </g>
+</svg>

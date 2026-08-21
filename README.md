@@ -1,615 +1,257 @@
-# 🛡️ CompTIA Security+ SY0-701 Training Studio & AI Simulator
+# 🛡️ CompTIA Security+ SY0-701 Training Studio
 
-> **Language Selection / Selezione Lingua:**
-> - 🇬🇧 [English Version](#-english-version)
-> - 🇮🇹 [Versione Italiana](#-versione-italiana)
+<p align="center">
+  <a href="README.md">🇬🇧 English</a> | <a href="README-IT.md">🇮🇹 Italiano</a>
+</p>
 
----
+<p align="center">
+  <img src="assets/banner.svg" alt="CompTIA Security+ SY0-701 Training Studio" width="800">
+</p>
 
-<a id="english-version"></a>
-# 🇬🇧 English Version
+A full-stack, **fully bilingual** (English / Italian) study application for the
+**CompTIA Security+ SY0-701** exam. Interactive checklists for all 5 official domains, a
+searchable SY0-701 glossary, a scenario-based exam simulator, and an integrated **AI
+Cybersecurity Trainer** powered by Google Gemini — self-hosted, your API key never leaves
+your own server.
 
-A full-stack web application designed for intensive preparation for the **CompTIA Security+ SY0-701** certification exam. It includes an interactive checklist for all 5 official domains, a complete SY0-701 Glossary with search and category filters, an Exam Simulator, and an integrated **AI Assistant** powered by Google Gemini acting as a Senior Cybersecurity Trainer.
+<p align="center">
+  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/stargazers"><img src="https://img.shields.io/github/stars/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=blue" alt="GitHub stars"></a>
+  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/network/members"><img src="https://img.shields.io/github/forks/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=blue" alt="GitHub forks"></a>
+  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues"><img src="https://img.shields.io/github/issues/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=orange" alt="Open issues"></a>
+  <img src="https://img.shields.io/badge/domains-5-blue?style=for-the-badge" alt="5 domains">
+  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-blueviolet?style=for-the-badge" alt="English and Italian">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=green" alt="License"></a>
+</p>
 
----
-
-## 📋 Table of Contents (English)
-1. [Main Features](#features-en)
-2. [System Prerequisites](#prerequisites-en)
-3. [Obtaining a Google Gemini API Key](#api-key-en)
-4. [Environment Variables Configuration](#env-en)
-5. [Installation Guide by Operating System](#installation-en)
-   - [Linux (Ubuntu, Debian, Fedora, Arch)](#linux-en)
-   - [macOS (Intel & Apple Silicon)](#macos-en)
-   - [Windows (PowerShell, CMD, WSL2)](#windows-en)
-6. [Available Scripts and Commands](#scripts-en)
-7. [Application Architecture](#architecture-en)
-8. [Troubleshooting](#troubleshooting-en)
-
----
-
-<a id="features-en"></a>
-## ✨ Main Features
-
-- **Interactive SY0-701 Checklist**: Track your learning progress across all 5 CompTIA domains (General Security Concepts, Threats/Vulnerabilities, Architecture, Operations, Management).
-- **Comprehensive SY0-701 Glossary**: Searchable glossary with acronyms, core concepts, security controls, threats, and metrics/formulas with domain and category filtering.
-- **AI Senior Cybersecurity Trainer**: Powered by **Google Gemini API** (`gemini-3.5-flash` model) to deliver step-by-step explanations, scenario analysis, and exam-focused insights.
-- **High-Stakes Exam Simulator**: Scenario-based exam questions with comprehensive rationale and distractor analysis.
-- **AI Remediation Question Generator**: Dynamically generates targeted remediation questions focused on your weakest topics after completing exam practice sets.
+<p align="center">
+  <b>If you find this trainer useful, consider supporting the project:</b><br><br>
+  <a href="https://www.paypal.me/chiaraberti13"><img src="https://img.shields.io/badge/PayPal-Donate-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal Donate"></a>
+</p>
 
 ---
 
-<a id="prerequisites-en"></a>
-## ⚡ System Prerequisites
+## Quick Navigation
 
-Before starting the installation, ensure your system meets the following requirements:
+- **[What this is](#what-this-is)** — The idea behind the trainer and how it's put together.
+- **[Features](#features)** — Checklists, glossary, exam simulator, AI trainer.
+- **[Prerequisites](#prerequisites)** — What you need installed before you start.
+- **[Gemini API key](#gemini-api-key)** — How to get the free key the AI features use.
+- **[Environment variables](#environment-variables)** — The `.env` file the app reads.
+- **[Installation](#installation)** — Step-by-step for Linux, macOS and Windows.
+- **[Scripts](#scripts)** — The npm commands and what each one does.
+- **[Architecture](#architecture)** — Where the code lives in the repo.
+- **[Troubleshooting](#troubleshooting)** — Fixes for the two errors you're most likely to hit.
+- **[Licence](#licence)** — MIT for the code; CompTIA marks belong to their owners.
 
-- **Node.js**: Version `18.x` or higher (recommended LTS `20.x` or `22.x`).
-- **npm**: Version `9.x` or higher (comes bundled with Node.js).
-- **Git**: Required to clone the project repository.
-
----
-
-<a id="api-key-en"></a>
-## 🔑 Obtaining a Google Gemini API Key
-
-The AI assistant and adaptive question features utilize the official `@google/genai` SDK and require a free **GEMINI_API_KEY**:
-
-1. Visit **Google AI Studio**: [https://aistudio.google.com/](https://aistudio.google.com/)
-2. Log in using your Google account.
-3. Click on **"Get API key"** in the navigation menu.
-4. Click **"Create API key"** (select an existing or new Google Cloud project).
-5. Copy the generated alphanumeric string (e.g. `AIzaSy...`). You will place it in your `.env` configuration file.
+> [!TIP]
+> **Found a mistake in a question or translation, or have a feature idea?** Open an [issue](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingual, self-hosted and privacy-first is the only real requirement.
 
 ---
 
-<a id="env-en"></a>
-## ⚙️ Environment Variables Configuration
+## What this is
 
-In the root directory of the project, locate `.env.example`. Create a new file named `.env` in the same folder by copying its contents:
+A single self-hosted web app for preparing the **CompTIA Security+ SY0-701** exam. It runs
+entirely on your own machine or server: the React frontend is served by a small Express
+backend that also acts as a proxy to the Google Gemini API, so your API key stays
+server-side and is never shipped to the browser.
 
-### `.env` File Template:
+Everything in the app is **bilingual**. Italian is the source of truth (`src/data.ts`) and
+English is a keyed overlay (`src/data.en.ts`) that falls back to Italian for anything not
+yet translated, wired together by `src/localizedData.ts` — all five domains' subtopics and
+quiz questions are fully available in both languages.
+
+The philosophy, shared with the rest of these repositories:
+
+- **Self-hosted** — no third-party account for the app itself; clone it and run it.
+- **Privacy-first** — your Gemini key lives in a local `.env` and is used only by your own
+  server; nothing about your study data leaves your machine.
+- **Free and open-source**, under the MIT licence.
+
+## Features
+
+- **Interactive SY0-701 checklist** — track your progress across all 5 official domains
+  (General Security Concepts; Threats, Vulnerabilities & Mitigations; Security
+  Architecture; Security Operations; Security Program Management & Oversight).
+- **Comprehensive SY0-701 glossary** — instant search with filters by domain and category
+  (acronyms, controls, attacks, metrics/formulas, governance), an A–Z index and bookmarks.
+- **AI Senior Cybersecurity Trainer** — backed by the **Google Gemini API** for
+  step-by-step explanations, concept comparisons and exam-metric clarifications
+  (ALE, SLE, ARO, RTO, RPO, and more).
+- **High-stakes exam simulator** — scenario-based, Analysis/Application-level questions
+  with detailed rationale and distractor analysis.
+- **AI remediation generator** — after a practice set, the AI dynamically generates
+  targeted questions on the topics where you were weakest.
+- **Full English / Italian localisation** — every subtopic and quiz question in both
+  languages, switchable in-app.
+
+## Prerequisites
+
+- **Node.js** `18.x` or higher (LTS `20.x` / `22.x` recommended).
+- **npm** `9.x` or higher (bundled with Node.js).
+- **Git** — to clone the repository.
+
+## Gemini API key
+
+The AI trainer and the remediation generator use the official `@google/genai` SDK and need
+a free **`GEMINI_API_KEY`**:
+
+1. Go to **Google AI Studio**: <https://aistudio.google.com/>
+2. Sign in with your Google account.
+3. Click **"Get API key"**.
+4. Click **"Create API key"** (pick an existing or new Google Cloud project).
+5. Copy the generated string (e.g. `AIzaSy...`) — it goes into your `.env` file.
+
+## Environment variables
+
+Copy `.env.example` to a new file called `.env` in the project root:
 
 ```env
-# Required API Key for Google Gemini AI Assistant & Remediation Engine
+# Required — Google Gemini AI trainer & remediation engine
 GEMINI_API_KEY="Paste_Your_Gemini_API_Key_Here"
 
-# (Optional) Application base URL
+# Optional — application base URL
 APP_URL="http://localhost:3000"
 ```
 
-> **Security Warning**: Never commit your `.env` file to public repositories. It contains sensitive API credentials.
+> [!WARNING]
+> Never commit your `.env` to a public repository — it holds a private API credential.
 
----
+## Installation
 
-<a id="installation-en"></a>
-## 🚀 Installation Guide by Operating System
-
-<a id="linux-en"></a>
 ### 🐧 Linux (Ubuntu, Debian, Fedora, Arch)
 
-#### 1. Install System Prerequisites
-- **Ubuntu / Debian**:
-  ```bash
-  sudo apt update
-  sudo apt install -y curl git
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt install -y nodejs
-  ```
-- **Fedora / RHEL**:
-  ```bash
-  sudo dnf install -y git nodejs
-  ```
-- **Arch Linux**:
-  ```bash
-  sudo pacman -S git nodejs npm
-  ```
-
-#### 2. Verify Versions
 ```bash
-node -v   # Must show v18.x.x or higher
-npm -v    # Must show v9.x.x or higher
-```
+# 1. Install prerequisites
+# Ubuntu / Debian:
+sudo apt update && sudo apt install -y curl git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+# Fedora / RHEL:   sudo dnf install -y git nodejs
+# Arch:            sudo pacman -S git nodejs npm
 
-#### 3. Clone and Install
-```bash
-# Clone the repository and enter directory
-git clone <REPOSITORY_URL>
-cd <PROJECT_FOLDER_NAME>
+# 2. Verify
+node -v   # v18.x.x or higher
+npm -v    # v9.x.x or higher
 
-# Install npm dependencies
+# 3. Clone, install, configure
+git clone https://github.com/chiaraberti13/CompTIA-Security-SY0-701.git
+cd CompTIA-Security-SY0-701
 npm install
-
-# Create .env configuration file
 cp .env.example .env
+nano .env          # paste your GEMINI_API_KEY
+
+# 4. Run
+npm run dev        # development, hot reload → http://localhost:3000
+# or
+npm run build && npm start   # production
 ```
 
-#### 4. Configure `.env`
-Open `.env` in a text editor (e.g. `nano .env`) and add your Gemini API Key:
-```env
-GEMINI_API_KEY="AIzaSyYourActualKeyHere"
-```
+### 🍎 macOS (Intel & Apple Silicon)
 
-#### 5. Launch Application
-- **Development Mode** (Hot Reload enabled):
-  ```bash
-  npm run dev
-  ```
-  Open your browser at `http://localhost:3000`.
-
-- **Production Build & Execution**:
-  ```bash
-  npm run build
-  npm start
-  ```
-
----
-
-<a id="macos-en"></a>
-### 🍎 macOS (Intel & Apple Silicon M1/M2/M3)
-
-#### 1. Install Prerequisites via Homebrew
-If Homebrew is not installed, install it via Terminal:
 ```bash
+# 1. Install prerequisites (Homebrew)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-Install Node.js and Git:
-```bash
 brew install node git
-```
 
-#### 2. Verify Installation
-```bash
-node -v
-npm -v
-```
-
-#### 3. Setup Project
-Open **Terminal** (`/Applications/Utilities/Terminal.app`):
-```bash
+# 2. Clone, install, configure
 cd ~/Documents
-git clone <REPOSITORY_URL>
-cd <PROJECT_FOLDER_NAME>
-
+git clone https://github.com/chiaraberti13/CompTIA-Security-SY0-701.git
+cd CompTIA-Security-SY0-701
 npm install
 cp .env.example .env
+nano .env          # paste your GEMINI_API_KEY (CTRL+O, ENTER, CTRL+X)
+
+# 3. Run
+npm run dev                    # → http://localhost:3000
+# or
+npm run build && npm start
 ```
 
-#### 4. Configure API Key
-Open `.env` using TextEdit or Nano:
-```bash
-nano .env
-```
-Paste your key into `GEMINI_API_KEY="AIzaSyYourActualKeyHere"`, press `CTRL + O` to save, `ENTER`, then `CTRL + X` to exit.
+### 🪟 Windows (PowerShell / CMD / WSL2)
 
-#### 5. Launch
-- **Development Mode**:
-  ```bash
-  npm run dev
-  ```
-- **Production Mode**:
-  ```bash
-  npm run build
-  npm start
-  ```
-Access the application at `http://localhost:3000`.
+**Native (PowerShell as Administrator):**
 
----
-
-<a id="windows-en"></a>
-### 🪟 Windows (PowerShell, Command Prompt, WSL2)
-
-#### Method 1: Windows Native (PowerShell / CMD)
-
-##### 1. Install Prerequisites
-1. Download Node.js LTS installer from [nodejs.org](https://nodejs.org/).
-2. Download Git for Windows from [git-scm.com](https://git-scm.com/).
-3. Alternatively, install via **winget** in PowerShell (Admin):
-   ```powershell
-   winget install OpenJS.NodeJS.LTS
-   winget install Git.Git
-   ```
-
-##### 2. Verify Versions in PowerShell
 ```powershell
-node -v
-npm -v
-```
+# 1. Install prerequisites
+winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+# (restart the terminal afterwards)
 
-##### 3. Clone and Setup Project
-```powershell
-cd C:\Users\YourUsername\Documents
-git clone <REPOSITORY_URL>
-cd <PROJECT_FOLDER_NAME>
-
+# 2. Clone, install, configure
+cd $HOME\Documents
+git clone https://github.com/chiaraberti13/CompTIA-Security-SY0-701.git
+cd CompTIA-Security-SY0-701
 npm install
 Copy-Item .env.example .env
+notepad .env       # paste your GEMINI_API_KEY, then save
+
+# 3. Run
+npm run dev                    # → http://localhost:3000
+# or
+npm run build ; npm start
 ```
 
-##### 4. Edit `.env`
-Open `.env` in Notepad:
-```powershell
-notepad .env
-```
-Set your API key:
-```env
-GEMINI_API_KEY="AIzaSyYourActualKeyHere"
-```
-Save and close Notepad.
+**WSL2:** open your WSL shell (e.g. Ubuntu) and follow the Linux steps above — the app maps
+to `http://localhost:3000` in your Windows browser automatically.
 
-##### 5. Run Application
-- **Development Mode**:
-  ```powershell
-  npm run dev
-  ```
-- **Production Mode**:
-  ```powershell
-  npm run build
-  npm start
-  ```
-Open your browser at `http://localhost:3000`.
+## Scripts
 
----
-
-#### Method 2: WSL2 (Windows Subsystem for Linux)
-1. Open your WSL terminal (e.g. Ubuntu).
-2. Follow the instructions under the [Linux section](#linux-en).
-3. The app will automatically map and run on `http://localhost:3000` in your Windows browser.
-
----
-
-<a id="scripts-en"></a>
-## 🛠️ Available Scripts and Commands
-
-| Script | Description |
+| Script | What it does |
 | :--- | :--- |
-| `npm run dev` | Launches Express server in development mode using `tsx` with Vite middleware and Hot Reload on `http://localhost:3000`. |
-| `npm run build` | Builds React frontend with Vite and bundles Express backend with `esbuild` into `dist/server.cjs`. |
-| `npm start` | Executes compiled production server (`node dist/server.cjs`). |
-| `npm run lint` | Performs TypeScript type checks (`tsc --noEmit`). |
-| `npm run clean` | Cleans build artifacts (`dist`, `server.js`). |
+| `npm run dev` | Express + Vite middleware in development, hot reload on `http://localhost:3000`. |
+| `npm run build` | Builds the React frontend (Vite) and bundles the Express backend (esbuild) into `dist/server.cjs`. |
+| `npm start` | Runs the compiled production server (`node dist/server.cjs`). |
+| `npm run lint` | TypeScript type-check (`tsc --noEmit`). |
+| `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
 
----
+## Architecture
 
-<a id="architecture-en"></a>
-## 📐 Application Architecture
-
-The application uses an integrated **Full-Stack Architecture**:
+Integrated **full-stack** layout — one Express server serves the frontend and proxies Gemini:
 
 ```
-├── server.ts             # Express server & Gemini API proxy
+├── server.ts                 # Express server & Gemini API proxy
 ├── src/
-│   ├── App.tsx           # Main React component (Studio, Glossary, Quiz, AI Assistant)
-│   ├── components/
-│   │   └── GlossarySection.tsx # SY0-701 Glossary with search & filtering
-│   ├── main.tsx          # React 19 entry point
-│   ├── data.ts           # SY0-701 official 5 domains data & question bank
-│   ├── types.ts          # TypeScript interfaces
-│   └── index.css         # Tailwind CSS v4 styles
-├── .env.example          # Environment variables template
-├── package.json          # Dependencies & scripts
-├── vite.config.ts        # Vite configuration
-└── tsconfig.json         # TypeScript configuration
+│   ├── App.tsx               # Main React component (Studio, Glossary, Quiz, AI)
+│   ├── components/           # UI sections (e.g. Glossary with search & filters)
+│   ├── main.tsx              # React 19 entry point
+│   ├── data.ts               # Italian source of truth — 5 domains & question bank
+│   ├── data.en.ts            # English overlay (falls back to Italian)
+│   ├── localizedData.ts      # Merges the two languages
+│   ├── i18n.tsx              # UI-string localisation & language switch
+│   ├── types.ts              # TypeScript interfaces
+│   └── index.css             # Tailwind CSS v4 styles
+├── .env.example              # Environment variables template
+├── package.json              # Dependencies & scripts
+├── vite.config.ts            # Vite configuration
+└── tsconfig.json             # TypeScript configuration
 ```
+
+## Troubleshooting
+
+**AI error: _"GEMINI_API_KEY is not configured"_**
+Missing `.env` or invalid key. Make sure `.env` exists in the project root with a valid key
+from Google AI Studio, then restart the server (`npm run dev`).
+
+**`Error: listen EADDRINUSE: address already in use :::3000`**
+Port 3000 is taken. Free it:
+- **Linux / macOS:** `npx kill-port 3000`
+- **Windows PowerShell:** `Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process`
+
+## Licence
+
+The code in this repository is distributed under the **MIT licence** — see
+[`LICENSE`](LICENSE) for the full text. You're free to use, study, modify and redistribute
+it, including commercially, as long as the copyright notice is kept; it's provided as-is,
+with no warranty.
+
+This project is an independent, educational study aid. **CompTIA** and **Security+** are
+registered trademarks of CompTIA, Inc.; this project is not affiliated with or endorsed by
+CompTIA, and all such trademarks belong to their respective owners.
 
 ---
 
-<a id="troubleshooting-en"></a>
-## ❓ Troubleshooting
-
-### 1. AI Error: *"GEMINI_API_KEY is not configured"*
-- **Cause**: Missing `.env` file or invalid `GEMINI_API_KEY`.
-- **Fix**: Verify `.env` exists in the project root with a valid API Key from Google AI Studio, then restart server (`npm run dev`).
-
-### 2. Error: `Error: listen EADDRINUSE: address already in use :::3000`
-- **Cause**: Port 3000 is occupied by another process.
-- **Fix**:
-  - **Linux / macOS**: `npx kill-port 3000`
-  - **Windows PowerShell**: `Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process`
+<p align="center">
+  <sub>Made with 🛡️ by <a href="https://github.com/chiaraberti13">chiaraberti13</a></sub>
+</p>
 
 ---
----
-
-<a id="versione-italiana"></a>
-# 🇮🇹 Versione Italiana
-
-Un'applicazione web full-stack professionale pensata per la preparazione intensiva all'esame di certificazione **CompTIA Security+ SY0-701**. Integra una checklist completa di tutti i 5 Domini ufficiali, un glossario terminologico completo con ricerca e filtri, un simulatore d'esame (*High-Stakes Simulator*), e un **Assistente AI integrato** che veste i panni di un *Senior Cybersecurity Trainer* accreditato.
-
----
-
-## 📋 Indice (Italiano)
-1. [Caratteristiche Principali](#features-it)
-2. [Prerequisiti di Sistema](#prerequisites-it)
-3. [Ottenere la Chiave API di Google Gemini](#api-key-it)
-4. [Configurazione delle Variabili d'Ambiente](#env-it)
-5. [Guida all'Installazione per Sistema Operativo](#installation-it)
-   - [Linux (Ubuntu, Debian, Fedora, Arch)](#linux-it)
-   - [macOS (Intel & Apple Silicon)](#macos-it)
-   - [Windows (PowerShell, CMD, WSL2)](#windows-it)
-6. [Script e Comandi Disponibili](#scripts-it)
-7. [Architettura dell'Applicazione](#architecture-it)
-8. [Risoluzione dei Problemi (Troubleshooting)](#troubleshooting-it)
-
----
-
-<a id="features-it"></a>
-## ✨ Caratteristiche Principali
-
-- **Checklist Interattiva SY0-701**: Tracciamento dei progressi per tutti i 5 domini (General Security Concepts, Threats/Vulnerabilities, Architecture, Operations, Management).
-- **Glossario Completo SY0-701**: Sezione glossario con ricerca istantanea, filtri per dominio, categoria (Acronimi, Controlli, Attacchi, Metriche, Governance), indice alfabetico A-Z e segnalibri.
-- **Assistente AI Senior Trainer**: Integrazione con **Google Gemini API** (modello `gemini-3.5-flash`) per spiegazioni approfondite, confronti concettuali e chiarimenti sulle metriche d'esame (ALE, SLE, ARO, RTO, RPO, ecc.).
-- **Simulatore d'Esame High-Stakes**: Domande basate su scenari complessi di livello Analisi/Applicazione con feedback dettagliati e motivazioni d'esame.
-- **Generatore di Domande di Recupero (Remediation)**: L'AI genera dinamicamente 3 domande mirate sugli argomenti in cui lo studente ha riscontrato lacune durante il test.
-
----
-
-<a id="prerequisites-it"></a>
-## ⚡ Prerequisiti di Sistema
-
-Prima di procedere con l'installazione, assicurati che sul tuo sistema siano installati:
-
-- **Node.js**: Versione `18.x` o superiore (consigliata versione LTS `20.x` o `22.x`).
-- **npm**: Versione `9.x` o superiore (installato automaticamente con Node.js).
-- **Git**: Per clonare il repository del progetto.
-
----
-
-<a id="api-key-it"></a>
-## 🔑 Ottenere la Chiave API di Google Gemini
-
-L'assistente AI e il sistema di generazione domande adattive utilizzano l'SDK ufficiale `@google/genai` e richiedono una **GEMINI_API_KEY** gratuita:
-
-1. Visita la piattaforma ufficiale **Google AI Studio**: [https://aistudio.google.com/](https://aistudio.google.com/)
-2. Effettua l'accesso con il tuo account Google.
-3. Fai clic su **"Get API key"** nel menu di navigazione.
-4. Fai clic su **"Create API key"** (selezionando un progetto Google Cloud nuovo o esistente).
-5. Copia la stringa alfanumerica generata (es. `AIzaSy...`). La userai nel file di configurazione `.env`.
-
----
-
-<a id="env-it"></a>
-## ⚙️ Configurazione delle Variabili d'Ambiente
-
-Nella cartella radice del progetto è presente un file di esempio chiamato `.env.example`. Crea un nuovo file chiamato `.env` copiando la struttura:
-
-### Contenuto del file `.env`:
-
-```env
-# Chiave API obbligatoria per l'Assistente AI e le domande di recupero
-GEMINI_API_KEY="Incolla_Qui_La_Tua_Chiave_Gemini"
-
-# (Opzionale) URL dell'applicazione se pubblicata in cloud
-APP_URL="http://localhost:3000"
-```
-
-> **Nota di Sicurezza**: Non committare mai il file `.env` su repository pubblici. Il file `.env` contiene chiavi private e segreti.
-
----
-
-<a id="installation-it"></a>
-## 🚀 Guida all'Installazione per Sistema Operativo
-
-<a id="linux-it"></a>
-### 🐧 Linux (Ubuntu, Debian, Fedora, Arch)
-
-#### 1. Verifica/Installazione dei prerequisiti
-- **Ubuntu / Debian**:
-  ```bash
-  sudo apt update
-  sudo apt install -y curl git
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt install -y nodejs
-  ```
-- **Fedora / RHEL**:
-  ```bash
-  sudo dnf install -y git nodejs
-  ```
-- **Arch Linux**:
-  ```bash
-  sudo pacman -S git nodejs npm
-  ```
-
-#### 2. Verifica versioni
-```bash
-node -v   # Deve mostrare v18.x.x o superiore
-npm -v    # Deve mostrare v9.x.x o superiore
-```
-
-#### 3. Clonazione e installazione
-```bash
-git clone <URL_DEL_REPOSITORY>
-cd <NOME_CARTELLA_PROGETTO>
-
-npm install
-cp .env.example .env
-```
-
-#### 4. Modifica del file `.env`
-Apri il file `.env` con un editor di testo (es. `nano .env`) e inserisci la tua API key:
-```env
-GEMINI_API_KEY="AIzaSyYourActualKeyHere"
-```
-
-#### 5. Avvio dell'applicazione
-- **Modalità Sviluppo** (Hot Reload attivo):
-  ```bash
-  npm run dev
-  ```
-  Apri il browser su `http://localhost:3000`.
-
-- **Build e Avvio in Produzione**:
-  ```bash
-  npm run build
-  npm start
-  ```
-
----
-
-<a id="macos-it"></a>
-### 🍎 macOS (Intel & Apple Silicon M1/M2/M3)
-
-#### 1. Installazione prerequisiti tramite Homebrew
-Se non hai [Homebrew](https://brew.sh/) installato, aprilo nel Terminale ed eseguilo:
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-Installa Node.js e Git:
-```bash
-brew install node git
-```
-
-#### 2. Verifica installazione
-```bash
-node -v
-npm -v
-```
-
-#### 3. Clonazione e installazione del progetto
-Apri il **Terminale** (`/Applications/Utilities/Terminal.app`):
-```bash
-cd ~/Documents
-git clone <URL_DEL_REPOSITORY>
-cd <NOME_CARTELLA_PROGETTO>
-
-npm install
-cp .env.example .env
-```
-
-#### 4. Configura la chiave API
-Apri e modifica il file `.env` tramite Nano o TextEdit:
-```bash
-nano .env
-```
-Inserisci la tua chiave Gemini e salva con `CTRL + O` seguito da `ENTER`, poi esci con `CTRL + X`.
-
-#### 5. Avvio
-- **Modalità Sviluppo**:
-  ```bash
-  npm run dev
-  ```
-- **Modalità Produzione**:
-  ```bash
-  npm run build
-  npm start
-  ```
-Accedi da browser all'indirizzo `http://localhost:3000`.
-
----
-
-<a id="windows-it"></a>
-### 🪟 Windows (PowerShell, Command Prompt o WSL2)
-
-#### Metodo 1: PowerShell o Command Prompt (Nativo Windows)
-
-##### 1. Installazione Prerequisiti
-1. Scarica e installa l'installer **Node.js LTS** da [nodejs.org](https://nodejs.org/).
-2. Scarica e installa **Git for Windows** da [git-scm.com](https://git-scm.com/).
-3. Alternativamente, puoi installarli via **winget** da PowerShell (eseguito come amministratore):
-   ```powershell
-   winget install OpenJS.NodeJS.LTS
-   winget install Git.Git
-   ```
-
-##### 2. Riavvia la finestra di PowerShell
-Verifica le versioni installate:
-```powershell
-node -v
-npm -v
-```
-
-##### 3. Clonazione e Configurazione Progetto
-```powershell
-cd C:\Utenti\TuoNome\Documenti
-git clone <URL_DEL_REPOSITORY>
-cd <NOME_CARTELLA_PROGETTO>
-
-npm install
-Copy-Item .env.example .env
-```
-
-##### 4. Modifica del file `.env`
-Puoi aprire il file `.env` con **Blocco Note**:
-```powershell
-notepad .env
-```
-Sostituisci la chiave temporanea con la tua API key reale:
-```env
-GEMINI_API_KEY="AIzaSyYourActualKeyHere"
-```
-Salva e chiudi il file.
-
-##### 5. Avvio dell'Applicazione
-- **Sviluppo**:
-  ```powershell
-  npm run dev
-  ```
-- **Produzione**:
-  ```powershell
-  npm run build
-  npm start
-  ```
-Apri il browser web su `http://localhost:3000`.
-
----
-
-#### Metodo 2: WSL2 (Windows Subsystem for Linux)
-1. Apri la shell di WSL (es. Ubuntu).
-2. Segui i passaggi indicati nella [sezione Linux](#linux-it).
-3. L'applicazione risponderà all'indirizzo `http://localhost:3000` anche nel browser principale di Windows.
-
----
-
-<a id="scripts-it"></a>
-## 🛠️ Script e Comandi Disponibili
-
-| Comando | Descrizione |
-| :--- | :--- |
-| `npm run dev` | Avvia il server Express in sviluppo con `tsx` e Vite middleware con Hot Reload attivo su `http://localhost:3000`. |
-| `npm run build` | Compila il frontend React con Vite e impacchetta il server Node/Express con `esbuild` in un unico file `dist/server.cjs`. |
-| `npm start` | Avvia il server compilato in modalità produzione (`node dist/server.cjs`). |
-| `npm run lint` | Esegue il controllo della sintassi e della sicurezza dei tipi TypeScript via `tsc --noEmit`. |
-| `npm run clean` | Rimuove le cartelle e i file temporanei di build (`dist`, `server.js`). |
-
----
-
-<a id="architecture-it"></a>
-## 📐 Architettura dell'Applicazione
-
-L'applicazione adotta un'architettura **Full-Stack integrata**:
-
-```
-├── server.ts             # Server Node.js / Express (Gestione endpoint API e proxy Gemini)
-├── src/
-│   ├── App.tsx           # Componente principale React (Studio, Glossario, Quiz, AI Assistant)
-│   ├── components/
-│   │   └── GlossarySection.tsx # Sezione Glossario SY0-701 con ricerca e filtri
-│   ├── main.tsx          # Entry point frontend React 19
-│   ├── data.ts           # Dataset ufficiale dei 5 Domini CompTIA e banca domande
-│   ├── types.ts          # Interfaccia dei Tipi TypeScript
-│   └── index.css         # Styling globale Tailwind CSS v4
-├── .env.example          # Modello per le variabili d'ambiente
-├── package.json          # Dipendenze e script del progetto
-├── vite.config.ts        # Configurazione build Vite
-└── tsconfig.json         # Configurazione TypeScript
-```
-
----
-
-<a id="troubleshooting-it"></a>
-## ❓ Risoluzione dei Problemi (Troubleshooting)
-
-### 1. Risposta dell'AI: *"GEMINI_API_KEY non configurata nei Secrets"*
-- **Causa**: Il file `.env` non è presente o la variabile `GEMINI_API_KEY` è vuota o errata.
-- **Soluzione**: Assicurati di aver creato il file `.env` nella radice del progetto con una chiave valida generata da [Google AI Studio](https://aistudio.google.com/). Riavvia il server (`CTRL+C` e poi `npm run dev`).
-
-### 2. Errore: `Error: listen EADDRINUSE: address already in use :::3000`
-- **Causa**: La porta 3000 è già occupata da un altro processo in esecuzione.
-- **Soluzione**:
-  - **Linux / macOS**: `npx kill-port 3000`
-  - **Windows (PowerShell)**: `Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process`
-
----
-
-## 📄 Licenza / License
-
-Progetto ad uso educativo per la preparazione alla certificazione **CompTIA Security+ SY0-701**. Tutti i marchi registrati CompTIA appartengono ai rispettivi proprietari.
