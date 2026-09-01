@@ -1,32 +1,20 @@
-# 🛡️ CompTIA Security+ SY0-701 Training Studio
-
 <p align="center">
-  <a href="README.md">🇬🇧 English</a> | <a href="README-IT.md">🇮🇹 Italiano</a>
+  <img src="assets/banner.svg" alt="CompTIA-Security-SY0-701" width="100%">
 </p>
 
-<p align="center">
-  <img src="assets/banner.svg" alt="CompTIA Security+ SY0-701 Training Studio" width="800">
-</p>
-
-A full-stack, **fully bilingual** (English / Italian) study application for the
-**CompTIA Security+ SY0-701** exam. Interactive checklists for all 5 official domains, a
-searchable SY0-701 glossary, a scenario-based exam simulator, and an integrated **AI
-Cybersecurity Trainer** powered by Google Gemini — self-hosted, your API key never leaves
-your own server.
+<p align="center"><a href="README.md">English</a> · <a href="README.it.md">Italiano</a></p>
 
 <p align="center">
-  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/stargazers"><img src="https://img.shields.io/github/stars/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=blue" alt="GitHub stars"></a>
-  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/network/members"><img src="https://img.shields.io/github/forks/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=blue" alt="GitHub forks"></a>
-  <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues"><img src="https://img.shields.io/github/issues/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=orange" alt="Open issues"></a>
-  <img src="https://img.shields.io/badge/domains-5-blue?style=for-the-badge" alt="5 domains">
-  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-blueviolet?style=for-the-badge" alt="English and Italian">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/chiaraberti13/CompTIA-Security-SY0-701?style=for-the-badge&color=green" alt="License"></a>
+  <img src="https://img.shields.io/badge/status-active-F2C94C?style=flat-square" alt="Project status: active">
+  <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="LEARNING">
+  <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="TypeScript">
+  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="English and Italian">
+  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="MIT">
 </p>
 
-<p align="center">
-  <b>If you find this trainer useful, consider supporting the project:</b><br><br>
-  <a href="https://www.paypal.me/chiaraberti13"><img src="https://img.shields.io/badge/PayPal-Donate-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal Donate"></a>
-</p>
+> A bilingual, hands-on study environment for CompTIA Security+ SY0-701, combining structured objectives, realistic scenarios and an AI-assisted cybersecurity trainer.
+
+<p align="center"><a href="https://comp-tia-security-sy-0-701.vercel.app"><strong>Live demo</strong></a> · <a href="https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues">Report an issue</a></p>
 
 ---
 
