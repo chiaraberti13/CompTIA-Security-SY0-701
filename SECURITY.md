@@ -1,41 +1,48 @@
-# Security Policy
+<p align="center">
+  <img src="assets/banner.svg" alt="CompTIA Security+ Training Studio" width="100%">
+</p>
 
-## Supported versions
+<p align="center"><a href="#-english">🇬🇧 English</a> · <a href="#-italiano">🇮🇹 Italiano</a></p>
 
-Security fixes are applied to the latest version on the default branch. Older
-commits, forks and unofficial builds are not supported unless explicitly
-documented.
+<p align="center">
+  <img src="https://img.shields.io/badge/security-responsible%20disclosure-22D3EE?style=flat-square" alt="Responsible disclosure">
+  <img src="https://img.shields.io/badge/status-maintained-F2C94C?style=flat-square" alt="Maintained">
+</p>
 
-## Reporting a vulnerability
+<p align="center"><a href="README.md">Project README</a> · <a href="LICENSE">MIT Licence</a></p>
 
-Please report suspected vulnerabilities privately through
-[GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new).
+---
 
-Do not open a public issue for an unpatched vulnerability. Include, when
-possible:
+## 🇬🇧 English
 
-- the affected version or commit;
-- a clear description of the impact;
-- reproducible steps or a minimal proof of concept;
-- suggested mitigations, if known;
-- any relevant logs with credentials and personal data removed.
+### Supported versions
 
-Please allow reasonable time for investigation and remediation before public
-disclosure.
+Security fixes are applied to the latest version on the default branch. Older commits, forks and unofficial builds are not supported unless explicitly documented.
 
-## Scope
+### Reporting a vulnerability
 
-This policy covers vulnerabilities in CompTIA Security+ SY0-701 Training Studio. Vulnerabilities in external
-dependencies or third-party services should also be reported to their
-maintainers. A dependency report may still be submitted here when it directly
-affects this project.
+Report suspected vulnerabilities privately through [GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new). Do not open a public issue for an unpatched vulnerability.
 
-Testing must be performed only on systems and data you own or are explicitly
-authorized to test. Do not perform denial-of-service testing, access third-party
-data, degrade services, or use social engineering.
+Include the affected version or commit, impact, reproducible steps or a minimal proof of concept, possible mitigations, and relevant logs with credentials and personal data removed. Allow reasonable time for investigation and remediation before public disclosure.
 
-## Responsible use
+### Scope and responsible use
 
-This policy does not grant authorization to test third-party infrastructure.
-Users remain responsible for complying with applicable laws, licences and
-written scopes of authorization.
+This policy covers this repository. Test only systems and data you own or are explicitly authorized to test. Do not perform denial-of-service testing, access third-party data, degrade services or use social engineering. This policy does not authorize testing of third-party infrastructure.
+
+---
+
+## 🇮🇹 Italiano
+
+### Versioni supportate
+
+Le correzioni di sicurezza vengono applicate alla versione più recente del branch predefinito. Commit precedenti, fork e build non ufficiali non sono supportati salvo diversa indicazione.
+
+### Segnalazione di una vulnerabilità
+
+Segnala privatamente le vulnerabilità sospette tramite [GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new). Non aprire issue pubbliche per vulnerabilità non ancora corrette.
+
+Indica versione o commit interessato, impatto, passaggi riproducibili o una prova di concetto minima, possibili mitigazioni e log privati di credenziali e dati personali. Attendi un tempo ragionevole per analisi e correzione prima della divulgazione pubblica.
+
+### Ambito e uso responsabile
+
+Questa policy copre il repository. Esegui test esclusivamente su sistemi e dati di tua proprietà o per i quali possiedi un’autorizzazione esplicita. Sono esclusi denial of service, accesso a dati di terzi, degrado dei servizi e social engineering. Questa policy non autorizza test su infrastrutture di terzi.
