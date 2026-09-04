@@ -3740,7 +3740,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
       },
       {
         name: "Penetration Test",
-        checklistKey: "PenetrationTest",
+        checklistKey: "PenetrationTestAudit",
         definition: "Un attacco simulato autorizzato contro l'infrastruttura IT dell'organizzazione per scoprire e sfruttare attivamente le vulnerabilità.",
         details: "Condotto da professionisti di sicurezza (Ethical Hackers) simulando le tattiche, tecniche e procedure (TTP) dei veri attaccanti. L'obiettivo è bypassare attivamente i controlli difensivi per verificare la resilienza sul campo e produrre un report di remediation dettagliato.",
         examTip: "A differenza di un semplice Vulnerability Scan (che si limita a scansionare e trovare vulnerabilità teoriche), il Penetration Test tenta attivamente di sfruttarle (exploit) per misurare l'impatto reale."
@@ -10414,21 +10414,6 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) Contenuto bloccato (Blocked content)**.\n\n* **Perché è la corretta:** L'evento specifico in cui un utente tenta di accedere a una risorsa web e riceve un avviso esplicito di diniego dell'accesso a causa di violazioni delle policy aziendali o categorie vietate è definito **Contenuto bloccato (Blocked Content)**.\n* **Analisi dei distrattori:**\n  * **A) Il filtraggio dei contenuti (Content filtering)** è la *tecnologia* o il *processo complessivo* che analizza il traffico per determinare cosa consentire o bloccare. L'azione specifica vissuta direttamente dall'utente (la schermata di blocco) è il blocco del contenuto.\n  * **B) Il rifiuto del firewall (Firewall rejection)** avviene quando un pacchetto viene droppato o respinto a livello IP/porta da regole del firewall di rete, ma non descrive l'azione applicativa e semantica di blocco di una specifica categoria web visualizzata con un messaggio di violazione di policy nel browser.\n  * **C) URL dannoso (Malicious URL)** si riferisce a un link che ospita malware o tentativi di truffa, ma qui il sito potrebbe essere semplicemente non consentito dalle policy aziendali (es. social network o streaming) pur essendo sicuro dal punto di vista informatico.\n\n*(ID Domanda: 6529e0286890f6360138c66b)*"
-  },
-  {
-    id: 170,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: "Nel periodo precedente a un'importante tornata elettorale nazionale, un'agenzia governativa straniera finanzia la creazione di migliaia di account finti sui social network per diffondere notizie false (disinformazione) e accentuare le divisioni sociali con l'obiettivo di spostare l'opinione dei cittadini a favore di un candidato.",
-    question: "Quale dei seguenti termini si riferisce a un programma su vasta scala eseguito da entità potenti (come governi o grandi organizzazioni) per manipolare o spostare l'opinione pubblica?",
-    options: [
-      "A) Spionaggio digitale (Digital espionage)",
-      "B) Campagna di influenza (Influence campaign)",
-      "C) Diplomazia digitale (Digital diplomacy)",
-      "D) Soft power"
-    ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Campagna di influenza (Influence campaign)**.\n\n* **Perché è la corretta:** Una **Campagna di influenza** (Influence Campaign) è uno sforzo coordinato e strategico, spesso orchestrato da attori statali o grandi gruppi d'interesse, volto a manipolare l'opinione pubblica, erodere la fiducia nelle istituzioni o influenzare decisioni politiche attraverso la disinformazione, la propaganda e l'uso coordinato di canali digitali.\n* **Analisi dei distrattori:**\n  * **A) Lo spionaggio digitale (Digital espionage)** mira a rubare informazioni riservate e segrete in modo silenzioso per scopi di intelligence, non a condizionare l'opinione delle masse in modo visibile.\n  * **C) La diplomazia digitale (Digital diplomacy)** è l'uso legittimo e trasparente di strumenti digitali da parte di governi e ambasciate per comunicare e mantenere relazioni internazionali ufficiali.\n  * **D) Il Soft power** è la capacità di influenzare gli altri attraverso l'attrazione culturale, i valori politici e le politiche estere positive, non tramite campagne coordinate di cyber-disinformazione mascherata.\n\n*ID Domanda: 64b9bd941161c30c45283e41*"
   },
   {
     id: 435,

@@ -26,583 +26,33 @@ import {
   ArrowUp,
   ArrowDown
 } from "lucide-react";
-import { getDomainTopics, getDomainQuestions, getInitialQuestions } from "./localizedData";
-import { Subtopic, TopicGroup, Question, ChatMessage } from "./types";
+import {
+  getDomainTopics,
+  getDomainQuestions,
+  getInitialQuestions,
+  questionUid,
+  domainOfQuestion,
+} from "./localizedData";
+import { Subtopic, Question, ChatMessage, QuizResult } from "./types";
 import { motion, AnimatePresence } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
+import { getSubgroupForSubtopic } from "./subgroups";
+import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
+import {
+  SECONDS_PER_QUESTION,
+  formatClock,
+  shuffle,
+  hasPassedRun,
+  scorePercent,
+  appendHistory,
+  unansweredIds,
+} from "./quiz";
 
-const SUBGROUP_MAP: Record<string, string> = {
-  // Domain 1
-  "CIATriad": "Principi Fondamentali (CIA, AAA, Non-Repudio)",
-  "AAAFramework": "Principi Fondamentali (CIA, AAA, Non-Repudio)",
-  "NonRepudiation": "Principi Fondamentali (CIA, AAA, Non-Repudio)",
-  "GapAnalysis": "Analisi Postura e Gap",
-  "ZeroTrustIntro": "Zero Trust Architecture (ZTA)",
-  "PolicyDrivenAccessControl": "Zero Trust Architecture (ZTA)",
-  "ControlPlaneZTA": "Zero Trust Architecture (ZTA)",
-  "ImplicitTrustZones": "Zero Trust Architecture (ZTA)",
-  "DataPlaneZTA": "Zero Trust Architecture (ZTA)",
-  "TechnicalControls": "Categorie di Controlli (Implementazione)",
-  "OperationalControls": "Categorie di Controlli (Implementazione)",
-  "ManagerialControls": "Categorie di Controlli (Implementazione)",
-  "PhysicalControls": "Categorie di Controlli (Implementazione)",
-  "PreventiveControl": "Tipi di Controlli (In base alla Funzione)",
-  "DetectiveControl": "Tipi di Controlli (In base alla Funzione)",
-  "CorrectiveControl": "Tipi di Controlli (In base alla Funzione)",
-  "DeterrentControl": "Tipi di Controlli (In base alla Funzione)",
-  "CompensatingControl": "Tipi di Controlli (In base alla Funzione)",
-  "DirectiveControl": "Tipi di Controlli (In base alla Funzione)",
-  "ApprovalProcess": "Processi di Change Management",
-  "ImpactAnalysis": "Processi di Change Management",
-  "BackoutPlan": "Processi di Change Management",
-  "MaintenanceWindow": "Processi di Change Management",
-  "VersionControl": "Processi di Change Management",
-  
-  // Topic 5: Cryptography
-  "SymmetricEncryption": "Crittografia",
-  "AsymmetricEncryption": "Crittografia",
-  "HashingConcept": "Crittografia",
-  "DigitalSignatures": "Infrastruttura PKI",
-  "KeyManagement": "Crittografia",
-  "PKIConcept": "Infrastruttura PKI",
-  "PKIFundamentals": "Infrastruttura PKI",
-  "RootOfTrustConcept": "Infrastruttura PKI",
-  "CertificateAuthorityConcept": "Infrastruttura PKI",
-  "RegistrationAuthorityConcept": "Infrastruttura PKI",
-  "PublicKeyConcept": "Infrastruttura PKI",
-  "PrivateKeyConcept": "Infrastruttura PKI",
-  "CSRConcept": "Infrastruttura PKI",
-  "CertificatesConcept": "Infrastruttura PKI",
-  "WildcardCertificates": "Infrastruttura PKI",
-  "SaltingConcept": "Crittografia",
-  "DigitalSignaturesConcept": "Infrastruttura PKI",
-  "TPMHardware": "Infrastruttura PKI",
-  "HSMHardware": "Infrastruttura PKI",
-  "KeyEscrowConcept": "Infrastruttura PKI",
-  "BlockCipherConcept": "Crittografia",
-  "AES256Concept": "Crittografia",
-  "StreamCipherConcept": "Crittografia",
-  "KeyStretchingConcept": "Crittografia",
-  "BlockchainConcept": "Crittografia",
-  "CodeSigningConcept": "Infrastruttura PKI",
-
-  // Topic 6: Physical Security
-  "PhysicalBadge": "Misure di Sicurezza Fisica",
-  "SecurityGuards": "Misure di Sicurezza Fisica",
-  "PhysicalCameras": "Misure di Sicurezza Fisica",
-  "PhysicalFencing": "Misure di Sicurezza Fisica",
-  "PhysicalBollards": "Misure di Sicurezza Fisica",
-  "PhysicalSensors": "Misure di Sicurezza Fisica",
-
-  // Topic 7: Deception Technologies
-  "HoneypotDeception": "Tecnologie di Inganno (Deception)",
-  "HoneynetDeception": "Tecnologie di Inganno (Deception)",
-  "HoneyfileDeception": "Tecnologie di Inganno (Deception)",
-  "HoneytokenDeception": "Tecnologie di Inganno (Deception)",
-
-  // Topic 8: Identity & Access Control Models
-  "AuthenticationConcept_New": "Modelli d'Identità e Federazione",
-  "AuthorizationConcept_New": "Modelli di Controllo Accessi (IAM)",
-  "AccountingConcept_New": "Modelli d'Identità e Federazione",
-  "MFA_SSO_Federation": "Modelli d'Identità e Federazione",
-  "PasswordPoliciesAccount": "Modelli d'Identità e Federazione",
-  "LDAPProtocol_New": "Modelli d'Identità e Federazione",
-  "AttributeBasedConcept": "Modelli di Controllo Accessi (IAM)",
-  "DACConcept": "Modelli di Controllo Accessi (IAM)",
-  "MACConcept": "Modelli di Controllo Accessi (IAM)",
-  "MFAConcept_New": "Modelli d'Identità e Federazione",
-  "FederationConcept": "Modelli d'Identità e Federazione",
-  "AccessControlModels": "Modelli di Controllo Accessi (IAM)",
-  "RBACConcept": "Modelli di Controllo Accessi (IAM)",
-  "RuleBasedAccessControlConcept": "Modelli di Controllo Accessi (IAM)",
-  "LeastPrivilegeConcept": "Modelli di Controllo Accessi (IAM)",
-  "NeedToKnowConcept": "Modelli di Controllo Accessi (IAM)",
-  "JustInTimeConcept": "Modelli di Controllo Accessi (IAM)",
-  "JustEnoughAdministrationConcept": "Modelli di Controllo Accessi (IAM)",
-  "ImplicitDenyConcept": "Modelli di Controllo Accessi (IAM)",
-  "PermissionRestrictions": "Modelli di Controllo Accessi (IAM)",
-  "GeographicNetworkRestrictions": "Modelli di Controllo Accessi (IAM)",
-
-  // Domain 2
-  "NationStateActor": "Profili e Attori delle Minacce",
-  "InsiderThreatActor": "Profili e Attori delle Minacce",
-  "OrganizedCrimeActor": "Profili e Attori delle Minacce",
-  "HacktivistActor": "Profili e Attori delle Minacce",
-  "ScriptKiddieActor": "Profili e Attori delle Minacce",
-  "ThreatActorGeneral": "Profili e Attori delle Minacce",
-  "CompetitorActor": "Profili e Attori delle Minacce",
-  
-  "FinancialGainMotiv": "Motivazioni degli Attaccanti",
-  "EspionageMotiv": "Motivazioni degli Attaccanti",
-  "RevengeMotiv": "Motivazioni degli Attaccanti",
-  "IdeologyMotiv": "Motivazioni degli Attaccanti",
-  "ChaosMotiv": "Motivazioni degli Attaccanti",
-
-  "ThreatVectorsDetails": "Vettori e Superfici di Attacco",
-  "AttackSurfacesDetails": "Vettori e Superfici di Attacco",
-
-  "VirusMalware": "Tipologie di Malware",
-  "WormMalware": "Tipologie di Malware",
-  "TrojanMalware": "Tipologie di Malware",
-  "RansomwareMalware": "Tipologie di Malware",
-  "RootkitMalware": "Tipologie di Malware",
-  "SpywareMalware": "Tipologie di Malware",
-  "KeyloggerMalware": "Tipologie di Malware",
-  "LogicBombMalware": "Tipologie di Malware",
-
-  "SocialEngineeringConcept": "Ingegneria Sociale & Phishing",
-  "Vishing": "Ingegneria Sociale & Phishing",
-  "Pretexting": "Ingegneria Sociale & Phishing",
-  "Impersonation": "Ingegneria Sociale & Phishing",
-  "WateringHole": "Ingegneria Sociale & Phishing",
-  "Typosquatting": "Ingegneria Sociale & Phishing",
-  "Cloning": "Ingegneria Sociale & Phishing",
-  "Whaling": "Ingegneria Sociale & Phishing",
-  "Misinformation": "Ingegneria Sociale & Phishing",
-  "PhishingCampaign": "Ingegneria Sociale & Phishing",
-  "PhishingSE": "Ingegneria Sociale & Phishing",
-  "SmishingSE": "Ingegneria Sociale & Phishing",
-  "VishingSE": "Ingegneria Sociale & Phishing",
-  "PretextingSE": "Ingegneria Sociale & Phishing",
-  "ImpersonationSE": "Ingegneria Sociale & Phishing",
-  "WateringHoleSE": "Ingegneria Sociale & Phishing",
-  "TyposquattingSE": "Ingegneria Sociale & Phishing",
-  "CloningSE": "Ingegneria Sociale & Phishing",
-  "WhalingSE_New": "Ingegneria Sociale & Phishing",
-  "MisinformationSE_New": "Ingegneria Sociale & Phishing",
-  "PhishingCampaignSE_New": "Ingegneria Sociale & Phishing",
-
-  "BruteForceAttack": "Attacchi alle Credenziali",
-  "DictionaryAttack": "Attacchi alle Credenziali",
-  "PasswordSpraying": "Attacchi alle Credenziali",
-  "CredentialStuffing": "Attacchi alle Credenziali",
-  "BruteForceAtt": "Attacchi alle Credenziali",
-  "DictionaryAtt": "Attacchi alle Credenziali",
-  "PasswordSprayingAtt": "Attacchi alle Credenziali",
-  "CredentialStuffingAtt": "Attacchi alle Credenziali",
-
-  "AmplifiedDDoS": "Attacchi Infrastrutturali & Web",
-  "ReflectedDDoS": "Attacchi Infrastrutturali & Web",
-  "SQLInjection": "Attacchi Infrastrutturali & Web",
-  "NetworkWirelessAttacks": "Attacchi Infrastrutturali & Web",
-  "AppCryptoAttacks": "Attacchi Infrastrutturali & Web",
-  "AmplifiedDDoS_New": "Attacchi Infrastrutturali & Web",
-  "ReflectedDDoS_New": "Attacchi Infrastrutturali & Web",
-  "SQLi_New": "Attacchi Infrastrutturali & Web",
-
-  "VulnerabilityCVE": "Analisi di Vulnerabilità",
-  "VulnerabilityCVSS": "Analisi di Vulnerabilità",
-  "ZeroDayVulnerability": "Analisi di Vulnerabilità",
-  "FalsePositiveConcept": "Analisi di Vulnerabilità",
-  "FalseNegativeConcept": "Analisi di Vulnerabilità",
-  "CVEVuln": "Analisi di Vulnerabilità",
-  "CVSSVuln": "Analisi di Vulnerabilità",
-  "ZeroDayVuln": "Analisi di Vulnerabilità",
-  "FalsePositiveVuln": "Analisi di Vulnerabilità",
-  "FalseNegativeVuln": "Analisi di Vulnerabilità",
-
-  "SegmentationMiti": "Tecniche di Mitigazione (Hardening)",
-  "LeastPrivilegeMiti": "Tecniche di Mitigazione (Hardening)",
-  "PatchingMiti": "Tecniche di Mitigazione (Hardening)",
-  "AllowListMiti": "Tecniche di Mitigazione (Hardening)",
-  "IsolationMiti": "Tecniche di Mitigazione (Hardening)",
-  "EncryptionMiti": "Tecniche di Mitigazione (Hardening)",
-  "MonitoringMiti": "Tecniche di Mitigazione (Hardening)",
-  "DisablePortsMiti": "Tecniche di Mitigazione (Hardening)",
-  "ChangePasswordsMiti": "Tecniche di Mitigazione (Hardening)",
-  "RemoveSoftwareMiti": "Tecniche di Mitigazione (Hardening)",
-  "ACLMiti": "Tecniche di Mitigazione (Hardening)",
-  "AppAllowListMiti": "Tecniche di Mitigazione (Hardening)",
-
-  // Domain 3
-  "OnPremisesArchitecture": "Modelli Architetturali Tradizionali",
-  "CentralizedArchitecture": "Modelli Architetturali Tradizionali",
-  "DecentralizedArchitecture": "Modelli Architetturali Tradizionali",
-  "IaaSCloud": "Modelli di Servizio Cloud & Responsabilità",
-  "PaaSCloud": "Modelli di Servizio Cloud & Responsabilità",
-  "FaaSCloud": "Modelli di Servizio Cloud & Responsabilità",
-  "SaaSCloud": "Modelli di Servizio Cloud & Responsabilità",
-  "SharedResponsibilityCloud": "Modelli di Servizio Cloud & Responsabilità",
-  "ResponsibilityMatrixConcept": "Modelli di Servizio Cloud & Responsabilità",
-  
-  // Under Network Security (Obj 3.2):
-  "Layer1Physical": "Modello ISO/OSI (7 Livelli)",
-  "Layer2DataLink": "Modello ISO/OSI (7 Livelli)",
-  "Layer3Network": "Modello ISO/OSI (7 Livelli)",
-  "Layer4Transport": "Modello ISO/OSI (7 Livelli)",
-  "Layer5Session": "Modello ISO/OSI (7 Livelli)",
-  "Layer6Presentation": "Modello ISO/OSI (7 Livelli)",
-  "Layer7Application": "Modello ISO/OSI (7 Livelli)",
-  "RoutersConcept": "Dispositivi di Connettività e Relay",
-  "ProxyServerConcept": "Dispositivi di Connettività e Relay",
-  "JumpServerConcept": "Dispositivi di Connettività e Relay",
-  "NACNet": "Sicurezza & Monitoraggio degli Accessi di Rete",
-  "IDSSolutionConcept": "Sicurezza & Monitoraggio degli Accessi di Rete",
-  "IPS_New": "Sicurezza & Monitoraggio degli Accessi di Rete",
-  "PassiveMode_New": "Sicurezza & Monitoraggio degli Accessi di Rete",
-  "IPSecNet": "Protocolli di Crittografia in Transito",
-  "TLSNet": "Protocolli di Crittografia in Transito",
-  "SSHNet": "Protocolli di Crittografia in Transito",
-  "VPNNet": "Architetture VPN",
-  "SiteToSiteVPNNet": "Architetture VPN",
-  "VPNGateway_New": "Architetture VPN",
-  "PSKConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WEPConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WPAWirelessConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "TKIPConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "MICConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WPA3Net": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WPA2Net": "Sicurezza Reti Wireless (Wi-Fi)",
-  "GCMPConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "SAEConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "OpenSystemConcept": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WPA3PersonalRes": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WPA3EnterpriseRes": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WiFiBluetoothTech": "Sicurezza Reti Wireless (Wi-Fi)",
-  "WirelessSurveyRes": "Sicurezza Reti Wireless (Wi-Fi)",
-  "RADIUSNet": "Autenticazione di Rete Centralizzata (AAA)",
-  "EAPProtocol_New": "Autenticazione di Rete Centralizzata (AAA)",
-  "SMTPProtocol": "Sicurezza E-Mail",
-  "MTAConcept": "Sicurezza E-Mail",
-  "SPFConcept_New": "Sicurezza E-Mail",
-  "DKIMConcept_New": "Sicurezza E-Mail",
-  "DMARCConcept_New": "Sicurezza E-Mail",
-  "PhysicalSegmentationConcept": "Segmentazione e Isolamento di Rete",
-  "AirGapConcept": "Segmentazione e Isolamento di Rete",
-  "LogicalSegmentationConcept": "Segmentazione e Isolamento di Rete",
-  "VLANConcept": "Segmentazione e Isolamento di Rete",
-  "Layer3SwitchConcept": "Segmentazione e Isolamento di Rete",
-  "InterVLANRoutingConcept": "Segmentazione e Isolamento di Rete",
-  "NetSegmentationPortSecurityConcept": "Segmentazione e Isolamento di Rete",
-  "IEEE8021XAuthConcept": "Autenticazione di Rete Centralizzata (AAA)",
-  "TrafficCaptureTAPConcept": "Sicurezza & Monitoraggio degli Accessi di Rete",
-  "ProxyTypesAdvancedConcept": "Dispositivi di Connettività e Relay",
-  "ModernCloudNetArchitectures": "Segmentazione e Isolamento di Rete",
-  "SDNConcept": "Software-Defined Networking (SDN)",
-  "DataPlaneConcept": "Software-Defined Networking (SDN)",
-  "ControlPlaneConcept": "Software-Defined Networking (SDN)",
-  "ManagementPlaneConcept": "Software-Defined Networking (SDN)",
-  "ResponsivenessPerformance": "Performance e Metriche di Rete",
-  "LatencyPerformance": "Performance e Metriche di Rete",
-
-  // Topic 3: Firewalls
-  "NGFWFire": "Soluzioni di Sicurezza Integrate",
-  "WAFFire": "Soluzioni di Sicurezza Integrate",
-  "UTMFire": "Soluzioni di Sicurezza Integrate",
-  "FirewallBase_New": "Tipi di Architetture Firewall",
-  "StatefulFirewall_New": "Tipi di Architetture Firewall",
-  "PacketFilteringFirewall_New": "Tipi di Architetture Firewall",
-  "ProxyFirewall_New": "Tipi di Architetture Firewall",
-  "StatelessFirewallConcept": "Tipi di Architetture Firewall",
-  "DPIFire": "Soluzioni di Sicurezza Integrate",
-  "AllowRule": "Configurazione Regole Firewall",
-  "DenyRule": "Configurazione Regole Firewall",
-  "InboundTraffic": "Configurazione Regole Firewall",
-  "OutboundTraffic": "Configurazione Regole Firewall",
-  "NetFirewallNATConcept": "Soluzioni di Sicurezza Integrate",
-  "NGFWCapabilitiesConcept": "Soluzioni di Sicurezza Integrate",
-  "SecurityZonesConcept": "Segmentazione e Isolamento di Rete",
-  "FailClosed_New": "Comportamenti di Sicurezza e Controllo Rate",
-  "FailOpen_New": "Comportamenti di Sicurezza e Controllo Rate",
-  "RateBasedFiltering_New": "Comportamenti di Sicurezza e Controllo Rate",
-
-  // Topic 4: Data Security
-  "DataAtRestSec": "Stati del Ciclo di Vita del Dato",
-  "DataInTransitSec": "Stati del Ciclo di Vita del Dato",
-  "DataInUseSec": "Stati del Ciclo di Vita del Dato",
-  "DataTypesConcept": "Classificazione e Tipologia dei Dati",
-  "DataClassificationLevels": "Classificazione e Tipologia dei Dati",
-  "EncryptionSec": "Tecniche di Protezione del Dato",
-  "AppVsNetworkEncryptionConcept": "Tecniche di Protezione del Dato",
-  "HashingSec": "Tecniche di Protezione del Dato",
-  "TokenizationSec": "Tecniche di Protezione del Dato",
-  "DataMaskingSec": "Tecniche di Protezione del Dato",
-  "ObfuscationSec": "Tecniche di Protezione del Dato",
-  "SanitizationSec_New": "Tecniche di Protezione del Dato",
-
-  // Topic 5: Resilience & Recovery
-  "AvailabilityRes": "Sistemi di Alta Disponibilità (HA)",
-  "HighAvailabilityRes": "Sistemi di Alta Disponibilità (HA)",
-  "ActiveActivePassiveRes": "Sistemi di Alta Disponibilità (HA)",
-  "FailoverFailbackRes": "Sistemi di Alta Disponibilità (HA)",
-  "ServerClusteringRes": "Sistemi di Alta Disponibilità (HA)",
-  "SharedStorageRes": "Sistemi di Alta Disponibilità (HA)",
-  "ScalabilityRes": "Sistemi di Alta Disponibilità (HA)",
-  "PlatformDiversityRes": "Sistemi di Alta Disponibilità (HA)",
-  "MultiCloudOutageRes": "Sistemi di Alta Disponibilità (HA)",
-  "LoadBalancingRes": "Sistemi di Alta Disponibilità (HA)",
-  "FaultToleranceConcept": "Sistemi di Alta Disponibilità (HA)",
-  "ClusteringRes": "Sistemi di Alta Disponibilità (HA)",
-  "CapacityPlanningRes": "Sistemi di Alta Disponibilità (HA)",
-  "ParallelProcessingRes": "Sistemi di Alta Disponibilità (HA)",
-  "SiteResiliencyRes": "Siti di Disaster Recovery",
-  "DisasterRecoverySiteRes": "Siti di Disaster Recovery",
-  "BusinessContinuityCOOPRes": "Siti di Disaster Recovery",
-  "ManualProceduresRes": "Siti di Disaster Recovery",
-  "HotSiteRes": "Siti di Disaster Recovery",
-  "WarmSiteRes": "Siti di Disaster Recovery",
-  "ColdSiteRes": "Siti di Disaster Recovery",
-  "DisasterRecoveryRes": "Siti di Disaster Recovery",
-  "BusinessContinuityRes": "Siti di Disaster Recovery",
-  "BackupsRes": "Strategie di Backup e Replica",
-  "ReplicationRes": "Strategie di Backup e Replica",
-  "SynchronizationRes": "Strategie di Backup e Replica",
-  "SnapshotsRes": "Strategie di Backup e Replica",
-  "RecoveryRes": "Strategie di Backup e Replica",
-  "EaseOfRecoveryConcept": "Strategie di Backup e Replica",
-  "CorporateImageConcept": "Strategie di Backup e Replica",
-  "RestoreAction": "Strategie di Backup e Replica",
-  "RecoveryTestingRes": "Strategie di Backup e Replica",
-  "OnSiteBackupRes": "Strategie di Backup e Replica",
-  "OffSiteBackupRes": "Strategie di Backup e Replica",
-  "BackupFrequencyRes": "Strategie di Backup e Replica",
-  "BackupEncryptionRes": "Strategie di Backup e Replica",
-  "JournalingRes": "Strategie di Backup e Replica",
-  "UPSRes": "Resilienza Alimentazione Fisica",
-  "GeneratorsRes": "Resilienza Alimentazione Fisica",
-  "BackupPowerConcept": "Resilienza Alimentazione Fisica",
-  "PowerResilience": "Resilienza Alimentazione Fisica",
-  "PowerResiliencyRes": "Resilienza Alimentazione Fisica",
-  "OfflineUPSRes": "Resilienza Alimentazione Fisica",
-  "LineInteractiveUPSRes": "Resilienza Alimentazione Fisica",
-  "OnlineUPSRes": "Resilienza Alimentazione Fisica",
-  "GeneratorRes": "Resilienza Alimentazione Fisica",
-  "SPOFConcept": "Analisi dei Punti di Guasto Singoli",
-  "RedundancyConcept": "Analisi dei Punti di Guasto Singoli",
-  "IoTConcept_New": "Dispositivi Speciali e IoT",
-  "EmbeddedSystemConcept_New": "Dispositivi Speciali e IoT",
-  "RTOSConcept_New": "Dispositivi Speciali e IoT",
-  "SCADAConcept_New": "Dispositivi Speciali e IoT",
-  "ICSConcept_New": "Dispositivi Speciali e IoT",
-
-  // Topic 6: PBQ Dominio 3 Scenarios
-  "VPNPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "FirewallRulesPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "SSHPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "WPA3PBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "RADIUSPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "EncryptionVsHashingPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-  "BackupRecoveryPBQ": "Scenari Pratici di Laboratorio (PBQ)",
-
-  // Domain 4
-  "HardeningConcept": "Hardening di Sistemi e Dispositivi",
-  "ServerHardening": "Hardening di Sistemi e Dispositivi",
-  "WorkstationHardening": "Hardening di Sistemi e Dispositivi",
-  "RouterHardening": "Hardening di Sistemi e Dispositivi",
-  "SwitchHardening": "Hardening di Sistemi e Dispositivi",
-  "MobileDeviceHardening": "Hardening di Sistemi e Dispositivi",
-  "IoTHardening": "Hardening di Sistemi e Dispositivi",
-  "AntivirusScanningConcept": "Hardening di Sistemi e Dispositivi",
-  "SecurityBaselineRes": "Hardening di Sistemi e Dispositivi",
-  "PatchManagementRes": "Hardening di Sistemi e Dispositivi",
-  "GroupPolicyRes": "Hardening di Sistemi e Dispositivi",
-  "MDM": "Dispositivi Mobili ed Enterprise (MDM)",
-  "BYOD": "Dispositivi Mobili ed Enterprise (MDM)",
-  "COPE": "Dispositivi Mobili ed Enterprise (MDM)",
-  "CYOD": "Dispositivi Mobili ed Enterprise (MDM)",
-  "VulnerabilityScan": "Metodologie di Vulnerability Assessment",
-  "PenetrationTest": "Metodologie di Vulnerability Assessment",
-  "CVE": "Metodologie di Vulnerability Assessment",
-  "CVSS": "Metodologie di Vulnerability Assessment",
-  "PatchManagement": "Metodologie di Vulnerability Assessment",
-  "PatchConcept": "Metodologie di Vulnerability Assessment",
-  "PatchAvailabilityConcept": "Metodologie di Vulnerability Assessment",
-  "InabilityToPatchConcept": "Metodologie di Vulnerability Assessment",
-  "EaseOfDeploymentConcept": "Automazione e Orchestrazione di Sicurezza",
-  "AutomationConcept": "Automazione e Orchestrazione di Sicurezza",
-  "ActiveReconnaissanceConcept": "Tecniche di Reconnaissance e Testing",
-  "PassiveReconnaissanceConcept": "Tecniche di Reconnaissance e Testing",
-  "VulnerabilityAssessmentConcept": "Tecniche di Reconnaissance e Testing",
-  "BlackBoxTesting": "Tecniche di Reconnaissance e Testing",
-  "WhiteBoxTesting": "Tecniche di Reconnaissance e Testing",
-  "GreyBoxTesting": "Tecniche di Reconnaissance e Testing",
-  "PassiveTestingConcept": "Tecniche di Reconnaissance e Testing",
-  "SIEM": "Strumenti di Monitoraggio e Telemetria",
-  "DLP": "Strumenti di Monitoraggio e Telemetria",
-  "SCAP": "Strumenti di Monitoraggio e Telemetria",
-  "SNMP": "Strumenti di Monitoraggio e Telemetria",
-  "NetFlow": "Strumenti di Monitoraggio e Telemetria",
-  "VulnerabilityScanner": "Strumenti di Monitoraggio e Telemetria",
-  "UBAConcept": "Strumenti di Monitoraggio e Telemetria",
-  "ActivePassiveMonitoringConcept": "Strumenti di Monitoraggio e Telemetria",
-  "SIEMComponentsConcept": "Strumenti di Monitoraggio e Telemetria",
-  "FirewallLogs": "Analisi delle Tipologie di Log",
-  "EndpointLogs": "Analisi delle Tipologie di Log",
-  "SystemLogs": "Analisi delle Tipologie di Log",
-  "IDSLogs": "Analisi delle Tipologie di Log",
-  "IPSLogs": "Analisi delle Tipologie di Log",
-  "ApplicationLogs": "Analisi delle Tipologie di Log",
-  "PreparationPhase": "Fasi del Ciclo di Incident Response",
-  "DetectionPhase": "Fasi del Ciclo di Incident Response",
-  "AnalysisPhase": "Fasi del Ciclo di Incident Response",
-  "ContainmentPhase": "Fasi del Ciclo di Incident Response",
-  "EradicationPhase": "Fasi del Ciclo di Incident Response",
-  "RecoveryPhase": "Fasi del Ciclo di Incident Response",
-  "LessonsLearnedPhase": "Fasi del Ciclo di Incident Response",
-  "IncidentResponseGeneralConcept": "Esercitazioni e Procedure di Risposta",
-  "TabletopExercisesConcept": "Esercitazioni e Procedure di Risposta",
-  "SimulationsConcept": "Esercitazioni e Procedure di Risposta",
-  "FunctionalExercisesConcept": "Esercitazioni e Procedure di Risposta",
-  "LiveDrillsConcept": "Esercitazioni e Procedure di Risposta",
-  "ChainOfCustody": "Fasi di Digital Forensics",
-  "AcquisitionForensics": "Fasi di Digital Forensics",
-  "PreservationForensics": "Fasi di Digital Forensics",
-  "ReportingForensics": "Fasi di Digital Forensics",
-  "ProvisioningAutomation": "Automazione e Orchestrazione di Sicurezza",
-  "APIAutomation": "Automazione e Orchestrazione di Sicurezza",
-  "ScriptingAutomation": "Automazione e Orchestrazione di Sicurezza",
-  "OrchestrationAutomation": "Automazione e Orchestrazione di Sicurezza",
-  "PBQLogAnalysis": "Scenari Pratici di Analisi Incidenti (PBQ)",
-  "PBQFirewallLogs": "Scenari Pratici di Analisi Incidenti (PBQ)",
-  "PBQIncidentInvestigation": "Scenari Pratici di Analisi Incidenti (PBQ)",
-  "PBQMalwareId": "Scenari Pratici di Analisi Incidenti (PBQ)",
-  "PBQHostIsolation": "Scenari Pratici di Analisi Incidenti (PBQ)",
-  "PBQAccessLogReview": "Scenari Pratici di Analisi Incidenti (PBQ)",
-
-  // Domain 5
-  "Governance": "Strutture di Governance e Ruoli dei Dati",
-  "Boards": "Strutture di Governance e Ruoli dei Dati",
-  "Committees": "Strutture di Governance e Ruoli dei Dati",
-  "DataRolesGovernance": "Strutture di Governance e Ruoli dei Dati",
-  "AUP": "Politiche di Sicurezza e Standard di Sviluppo",
-  "SecurityPolicies": "Politiche di Sicurezza e Standard di Sviluppo",
-  "IncidentResponsePolicy": "Politiche di Sicurezza e Standard di Sviluppo",
-  "BCP": "Politiche di Sicurezza e Standard di Sviluppo",
-  "DRP": "Politiche di Sicurezza e Standard di Sviluppo",
-  "RTORes": "Politiche di Sicurezza e Standard di Sviluppo",
-  "RPORes": "Politiche di Sicurezza e Standard di Sviluppo",
-  "SDLC": "Politiche di Sicurezza e Standard di Sviluppo",
-  "ChangeManagement": "Politiche di Sicurezza e Standard di Sviluppo",
-  "TechnicalDebtConcept": "Politiche di Sicurezza e Standard di Sviluppo",
-  "RiskAssessment": "Quadro di Riferimento del Rischio (Framework)",
-  "RiskRegister": "Quadro di Riferimento del Rischio (Framework)",
-  "RiskAppetite": "Quadro di Riferimento del Rischio (Framework)",
-  "RiskTolerance": "Quadro di Riferimento del Rischio (Framework)",
-  "SLE": "Valutazione Quantitativa del Rischio (Metrics)",
-  "ALE": "Valutazione Quantitativa del Rischio (Metrics)",
-  "ARO": "Valutazione Quantitativa del Rischio (Metrics)",
-  "ExposureFactorEF": "Valutazione Quantitativa del Rischio (Metrics)",
-  "ProbabilityConcept": "Valutazione Quantitativa del Rischio (Metrics)",
-  "LikelihoodConcept": "Valutazione Quantitativa del Rischio (Metrics)",
-  "RiskAnalysisConcept": "Metodologie di Analisi del Rischio",
-  "ResidualRiskAnalysisConcept": "Metodologie di Analisi del Rischio",
-  "QualitativeRiskAssessmentConcept": "Metodologie di Analisi del Rischio",
-  "QuantitativeRiskAssessmentConcept": "Metodologie di Analisi del Rischio",
-  "ThreatVectorAnalysisConcept": "Metodologie di Analisi del Rischio",
-  "Accept": "Strategie di Trattamento del Rischio",
-  "Transfer": "Strategie di Trattamento del Rischio",
-  "RiskTransferConcept": "Strategie di Trattamento del Rischio",
-  "CyberInsuranceConcept": "Strategie di Trattamento del Rischio",
-  "Mitigate": "Strategie di Trattamento del Rischio",
-  "Avoid": "Strategie di Trattamento del Rischio",
-  "Compliance": "Conformità Normativa e Obblighi Legali",
-  "Privacy": "Conformità Normativa e Obblighi Legali",
-  "DueDiligence": "Conformità Normativa e Obblighi Legali",
-  "DueCare": "Conformità Normativa e Obblighi Legali",
-  "GDPRComplianceConcept": "Conformità Normativa e Obblighi Legali",
-  "DataSovereigntyConcept": "Conformità Normativa e Obblighi Legali",
-  "VendorAssessment": "Valutazione del Rischio Fornitori (Third Party)",
-  "SupplyChainAnalysis": "Valutazione del Rischio Fornitori (Third Party)",
-  "Questionnaires": "Valutazione del Rischio Fornitori (Third Party)",
-  "SLA": "Accordi e Contratti di Servizio",
-  "NDA": "Accordi e Contratti di Servizio",
-  "MOU": "Accordi e Contratti di Servizio",
-  "MOA": "Accordi e Contratti di Servizio",
-  "BPA": "Accordi e Contratti di Servizio",
-  "MSA": "Accordi e Contratti di Servizio",
-  "SOW": "Accordi e Contratti di Servizio",
-  "InternalAudit": "Valutazioni e Audit di Sicurezza",
-  "ExternalAudit": "Valutazioni e Audit di Sicurezza",
-  "RegulatoryAudit": "Valutazioni e Audit di Sicurezza",
-  "PeriodicReviewConcept": "Valutazioni e Audit di Sicurezza",
-  "ContinuousAssessmentConcept": "Valutazioni e Audit di Sicurezza",
-  "PhishingAwareness": "Consapevolezza e Addestramento Personale",
-  "PasswordManagement": "Consapevolezza e Addestramento Personale",
-  "SocialEngineering": "Consapevolezza e Addestramento Personale",
-  "InsiderThreat": "Consapevolezza e Addestramento Personale",
-  "AssetManagementRes": "Smaltimento e Declassificazione Asset",
-  "AssetTrackingRes": "Smaltimento e Declassificazione Asset",
-  "BarcodeRes": "Smaltimento e Declassificazione Asset",
-  "RFIDRes": "Smaltimento e Declassificazione Asset",
-  "MediaSanitizationRes": "Smaltimento e Declassificazione Asset",
-  "PhysicalDestructionRes": "Smaltimento e Declassificazione Asset",
-  "DegaussingRes": "Smaltimento e Declassificazione Asset",
-  "CertificateOfDestructionRes": "Smaltimento e Declassificazione Asset",
-  "DataRetentionRes": "Smaltimento e Declassificazione Asset",
-
-  // New & Previous Keys Mapping
-  // Domain 4 - Topic 1
-  "CISBenchmarkRes": "Hardening di Sistemi e Dispositivi",
-  "BenchmarkRes": "Hardening di Sistemi e Dispositivi",
-  "AntivirusRes": "Hardening di Sistemi e Dispositivi",
-  "AntiMalwareRes": "Hardening di Sistemi e Dispositivi",
-  "QuarantineRes": "Hardening di Sistemi e Dispositivi",
-
-  // Domain 4 - Topic 3
-  "RulesOfEngagementRes": "Metodologie di Vulnerability Assessment",
-  "ExploitationRes": "Metodologie di Vulnerability Assessment",
-  "LateralMovementRes": "Metodologie di Vulnerability Assessment",
-  "PersistenceRes": "Metodologie di Vulnerability Assessment",
-  "PivotingRes": "Metodologie di Vulnerability Assessment",
-  "SASTRes": "Metodologie di Vulnerability Assessment",
-  "FuzzingRes": "Metodologie di Vulnerability Assessment",
-  "PackageMonitoringRes": "Metodologie di Vulnerability Assessment",
-  "ResponsibleDisclosureRes": "Metodologie di Vulnerability Assessment",
-  "BugBountyRes": "Metodologie di Vulnerability Assessment",
-  "ValidationOfRemediationRes": "Metodologie di Vulnerability Assessment",
-  "RescanningRes": "Metodologie di Vulnerability Assessment",
-  "VulnerabilityScannerRes": "Metodologie di Vulnerability Assessment",
-  "PortScanRes": "Metodologie di Vulnerability Assessment",
-  "VulnerabilityAssessmentRes": "Metodologie di Vulnerability Assessment",
-  "RemediationRes": "Metodologie di Vulnerability Assessment",
-
-  // Domain 4 - Topic 4
-  "SecurityMonitoringRes": "Strumenti di Monitoraggio e Telemetria",
-  "ComputingResourcesRes": "Strumenti di Monitoraggio e Telemetria",
-  "LogAggregationRes": "Strumenti di Monitoraggio e Telemetria",
-  "LogCorrelationRes": "Strumenti di Monitoraggio e Telemetria",
-  "DashboardRes": "Strumenti di Monitoraggio e Telemetria",
-  "AlertingRes": "Strumenti di Monitoraggio e Telemetria",
-  "AlertTuningRes": "Strumenti di Monitoraggio e Telemetria",
-  "AgentRes": "Strumenti di Monitoraggio e Telemetria",
-  "AgentlessRes": "Strumenti di Monitoraggio e Telemetria",
-  "DataLeakageRes": "Strumenti di Monitoraggio e Telemetria",
-  "MIBRes": "Strumenti di Monitoraggio e Telemetria",
-  "OIDRes": "Strumenti di Monitoraggio e Telemetria",
-  "SNMPPollRes": "Strumenti di Monitoraggio e Telemetria",
-  "SNMPTrapRes": "Strumenti di Monitoraggio e Telemetria",
-  "PollingRes": "Strumenti di Monitoraggio e Telemetria",
-  "TrapRes": "Strumenti di Monitoraggio e Telemetria",
-  "ProbeRes": "Strumenti di Monitoraggio e Telemetria",
-  "CollectorRes": "Strumenti di Monitoraggio e Telemetria",
-  "FlowRecordsRes": "Strumenti di Monitoraggio e Telemetria",
-  "CorrelationRes": "Strumenti di Monitoraggio e Telemetria",
-
-  // Domain 5 - Topic 1 & 2
-  "ExceptionRes": "Politiche di Sicurezza e Standard di Sviluppo",
-  "ExemptionRes": "Politiche di Sicurezza e Standard di Sviluppo",
-
-  // Domain 5 - Topic 3
-  "EnvironmentalVariablesRes": "Metodologie di Analisi del Rischio",
-  "OrganizationalImpactRes": "Metodologie di Analisi del Rischio",
-
-  // Domain 5 - Topic 5
-  "NISTRes": "Conformità Normativa e Obblighi Legali",
-
-  // Domain 5 - Topic 8
-  "AuditConceptRes": "Valutazioni e Audit di Sicurezza",
-  "VerificationRes": "Valutazioni e Audit di Sicurezza",
-  "ReportingRes": "Valutazioni e Audit di Sicurezza"
-};
-
-const getSubgroupForSubtopic = (checklistKey: string): string | null => {
-  return SUBGROUP_MAP[checklistKey] || null;
-};
 
 export default function App() {
   // Localization
-  const { lang, setLang, t } = useLang();
+  const { lang, setLang, isLoadingLang, t } = useLang();
   const DOMAIN_1_TOPICS = useMemo(() => getDomainTopics(1, lang), [lang]);
   const DOMAIN_2_TOPICS = useMemo(() => getDomainTopics(2, lang), [lang]);
   const DOMAIN_3_TOPICS = useMemo(() => getDomainTopics(3, lang), [lang]);
@@ -620,7 +70,14 @@ export default function App() {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [activeDomain, setActiveDomain] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [selectedSubtopic, setSelectedSubtopic] = useState<Subtopic>(DOMAIN_1_TOPICS[0].subtopics[0]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // The AI panel is 380px wide: opening it by default on a phone would leave
+  // no room for the content it is supposed to comment on.
+  const [sidebarOpen, setSidebarOpen] = useState(
+    () => typeof window === "undefined" || window.innerWidth >= 1024
+  );
+
+  // Inline notification, replacing window.alert().
+  const [toast, setToast] = useState<string | null>(null);
 
   // Switch domain in Studio and update selection
   const handleSwitchDomain = (domain: 1 | 2 | 3 | 4 | 5) => {
@@ -653,11 +110,24 @@ export default function App() {
   const [quizScore, setQuizScore] = useState(0);
   const [wrongQuestions, setWrongQuestions] = useState<number[]>([]);
 
+  // Exam timer (opt-in): ~2 minutes per question, auto-submit on expiry.
+  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [timeUp, setTimeUp] = useState(false);
+
+  // End-of-quiz answer review, driven by the answers already collected.
+  const [showReview, setShowReview] = useState(false);
+  const [reviewWrongOnly, setReviewWrongOnly] = useState(true);
+
+  // Locally persisted history of completed runs.
+  const [quizHistory, setQuizHistory] = useState<QuizResult[]>(
+    () => readJSON<QuizResult[]>(STORAGE_KEYS.quizHistory, [])
+  );
+
   // Remediation / Recovery State
   const [remediationActive, setRemediationActive] = useState(false);
   const [remediationQuestions, setRemediationQuestions] = useState<Question[]>([]);
   const [remediationIndex, setRemediationIndex] = useState(0);
-  const [remediationAnswers, setRemediationAnswers] = useState<Record<number, number>>({});
   const [remediationSelected, setRemediationSelected] = useState<number | null>(null);
   const [remediationShowFeedback, setRemediationShowFeedback] = useState(false);
   const [remediationCompleted, setRemediationCompleted] = useState(false);
@@ -734,15 +204,15 @@ export default function App() {
 
   // Load checklist progress from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("comptia_sy0701_checklist");
-    if (saved) {
-      try {
-        setCheckedItems(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    setCheckedItems(readJSON<Record<string, boolean>>(STORAGE_KEYS.checklist, {}));
   }, []);
+
+  // Auto-dismiss the inline notification.
+  useEffect(() => {
+    if (!toast) return;
+    const id = window.setTimeout(() => setToast(null), 4000);
+    return () => window.clearTimeout(id);
+  }, [toast]);
 
   // Re-resolve the selected subtopic in the active language (by checklistKey)
   // so the study panel updates instantly when the user switches language.
@@ -763,7 +233,6 @@ export default function App() {
   useEffect(() => {
     const byId = new Map(getInitialQuestions(lang).map(q => [q.id, q]));
     setActiveQuestions(prev => prev.map(q => byId.get(q.id) ?? q));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
   // Keep the trainer welcome message in sync with the active language.
@@ -786,7 +255,7 @@ export default function App() {
   const handleToggleCheck = (key: string) => {
     const updated = { ...checkedItems, [key]: !checkedItems[key] };
     setCheckedItems(updated);
-    localStorage.setItem("comptia_sy0701_checklist", JSON.stringify(updated));
+    writeJSON(STORAGE_KEYS.checklist, updated);
   };
 
   // Bulk toggle for a group of keys
@@ -798,7 +267,7 @@ export default function App() {
       updated[k] = targetState;
     });
     setCheckedItems(updated);
-    localStorage.setItem("comptia_sy0701_checklist", JSON.stringify(updated));
+    writeJSON(STORAGE_KEYS.checklist, updated);
   };
 
   // Get matching icon for each topic group
@@ -927,6 +396,30 @@ export default function App() {
   };
 
   // Quiz Handling
+
+  /**
+   * Puts the simulator into a clean "question 1" state for the given set.
+   * Every entry point into a run goes through here so the twelve pieces of
+   * quiz state can never be reset only partially.
+   */
+  const beginQuizRun = (questions: Question[]) => {
+    setActiveQuestions(questions);
+    setQuizStarted(true);
+    setCurrentQuestionIndex(0);
+    setQuizAnswers({});
+    setSelectedOption(null);
+    setShowFeedback(false);
+    setQuizCompleted(false);
+    setQuizScore(0);
+    setWrongQuestions([]);
+    setRemediationActive(false);
+    setRemediationCompleted(false);
+    setShowReview(false);
+    setReviewWrongOnly(true);
+    setTimeUp(false);
+    setSecondsLeft(timerEnabled ? questions.length * SECONDS_PER_QUESTION : null);
+  };
+
   const handleStartQuiz = () => {
     // Dynamically retrieve all questions for each domain
     const d1All = DOMAIN_1_QUESTIONS;
@@ -934,11 +427,6 @@ export default function App() {
     const d3All = DOMAIN_3_QUESTIONS;
     const d4All = DOMAIN_4_QUESTIONS;
     const d5All = DOMAIN_5_QUESTIONS;
-
-    // Shuffle helper to randomize questions selection
-    const shuffle = <T,>(arr: T[]): T[] => {
-      return [...arr].sort(() => Math.random() - 0.5);
-    };
 
     const d1Selected = shuffle(d1All).slice(0, customCounts[1]);
     const d2Selected = shuffle(d2All).slice(0, customCounts[2]);
@@ -955,22 +443,11 @@ export default function App() {
     ];
 
     if (questionsToUse.length === 0) {
-      alert(t("quiz.selectAtLeastOne"));
+      setToast(t("quiz.selectAtLeastOne"));
       return;
     }
 
-    setActiveQuestions(questionsToUse);
-
-    setQuizStarted(true);
-    setCurrentQuestionIndex(0);
-    setQuizAnswers({});
-    setSelectedOption(null);
-    setShowFeedback(false);
-    setQuizCompleted(false);
-    setQuizScore(0);
-    setWrongQuestions([]);
-    setRemediationActive(false);
-    setRemediationCompleted(false);
+    beginQuizRun(questionsToUse);
   };
 
   const handleSelectOption = (index: number) => {
@@ -994,14 +471,46 @@ export default function App() {
     }
   };
 
+  /**
+   * Closes the run and records it in the local history.
+   * `extraWrong` carries the questions never answered (timer expiry), which
+   * count as wrong but were never pushed by handleConfirmAnswer.
+   */
+  const finishQuiz = (extraWrong: number[] = []) => {
+    if (extraWrong.length > 0) {
+      setWrongQuestions(prev => Array.from(new Set([...prev, ...extraWrong])));
+    }
+    setQuizCompleted(true);
+    setSecondsLeft(null);
+
+    const total = activeQuestions.length;
+    const entry: QuizResult = {
+      at: Date.now(),
+      score: quizScore,
+      total,
+      domains: Array.from(new Set(activeQuestions.map(q => domainOfQuestion(q.id)))).sort(),
+      passed: hasPassedRun(quizScore, total),
+    };
+    setQuizHistory(prev => {
+      const next = appendHistory(prev, entry);
+      writeJSON(STORAGE_KEYS.quizHistory, next);
+      return next;
+    });
+  };
+
   const handleNextQuestion = () => {
     if (currentQuestionIndex < activeQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedOption(null);
       setShowFeedback(false);
     } else {
-      setQuizCompleted(true);
+      finishQuiz();
     }
+  };
+
+  const handleClearHistory = () => {
+    setQuizHistory([]);
+    removeKey(STORAGE_KEYS.quizHistory);
   };
 
   // Remediation Generation
@@ -1038,7 +547,6 @@ export default function App() {
         setRemediationQuestions(data.questions);
         setRemediationActive(true);
         setRemediationIndex(0);
-        setRemediationAnswers({});
         setRemediationSelected(null);
         setRemediationShowFeedback(false);
         setRemediationCompleted(false);
@@ -1064,7 +572,6 @@ export default function App() {
     const currentQuestion = remediationQuestions[remediationIndex];
     const isCorrect = remediationSelected === currentQuestion.answerIndex;
 
-    setRemediationAnswers(prev => ({ ...prev, [currentQuestion.id]: remediationSelected }));
     setRemediationShowFeedback(true);
 
     if (isCorrect) {
@@ -1081,6 +588,77 @@ export default function App() {
       setRemediationCompleted(true);
     }
   };
+
+  /* ---------------------------------------------------------------- *
+   * Exam timer
+   * ---------------------------------------------------------------- */
+
+  // Ticks once per second while a main-quiz question is on screen.
+  useEffect(() => {
+    if (secondsLeft === null || secondsLeft <= 0) return;
+    if (!quizStarted || quizCompleted || remediationActive) return;
+    const id = window.setTimeout(
+      () => setSecondsLeft(prev => (prev === null ? null : prev - 1)),
+      1000
+    );
+    return () => window.clearTimeout(id);
+  }, [secondsLeft, quizStarted, quizCompleted, remediationActive]);
+
+  // Expiry: submit whatever has been answered; the rest counts as wrong.
+  useEffect(() => {
+    if (secondsLeft !== 0 || !quizStarted || quizCompleted) return;
+    setTimeUp(true);
+    finishQuiz(unansweredIds(activeQuestions, quizAnswers));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secondsLeft, quizStarted, quizCompleted]);
+
+  /* ---------------------------------------------------------------- *
+   * Keyboard shortcuts for the question screens: 1-4 to pick an option,
+   * Enter to confirm and to move on. Typing in the chat must not trigger them.
+   * ---------------------------------------------------------------- */
+  useEffect(() => {
+    if (activeTab !== "quiz" || !quizStarted || quizCompleted) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = document.activeElement as HTMLElement | null;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
+
+      const inRemediation = remediationActive && !remediationCompleted;
+      const current = inRemediation
+        ? remediationQuestions[remediationIndex]
+        : activeQuestions[currentQuestionIndex];
+      if (!current) return;
+
+      const digit = Number(e.key);
+      if (Number.isInteger(digit) && digit >= 1 && digit <= current.options.length) {
+        e.preventDefault();
+        if (inRemediation) handleRemediationSelect(digit - 1);
+        else handleSelectOption(digit - 1);
+        return;
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (inRemediation) {
+          if (remediationShowFeedback) handleRemediationNext();
+          else handleRemediationConfirm();
+        } else if (showFeedback) {
+          handleNextQuestion();
+        } else {
+          handleConfirmAnswer();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    activeTab, quizStarted, quizCompleted, remediationActive, remediationCompleted,
+    remediationIndex, remediationShowFeedback, remediationSelected,
+    currentQuestionIndex, showFeedback, selectedOption, activeQuestions, remediationQuestions,
+  ]);
 
   const maxQuestionsByDomain: Record<number, number> = {
     1: DOMAIN_1_QUESTIONS.length,
@@ -1099,6 +677,26 @@ export default function App() {
   ];
 
   const totalQuestionsSelected = (Object.values(customCounts) as number[]).reduce((sum, val) => sum + val, 0);
+
+  // Single source of truth for "did this run pass?", used by the icon, the
+  // badge and the remediation branch alike.
+  const hasPassed = hasPassedRun(quizScore, activeQuestions.length);
+
+  // Questions answered wrongly, in the order they were asked, for the review.
+  const reviewQuestions = reviewWrongOnly
+    ? activeQuestions.filter(q => wrongQuestions.includes(q.id))
+    : activeQuestions;
+
+  const bestHistoryPercent = quizHistory.length
+    ? Math.max(...quizHistory.map(r => scorePercent(r.score, r.total)))
+    : 0;
+  const recentHistory = quizHistory.slice(0, 5);
+  const avgHistoryPercent = recentHistory.length
+    ? Math.round(
+        recentHistory.reduce((sum, r) => sum + scorePercent(r.score, r.total), 0) /
+          recentHistory.length
+      )
+    : 0;
 
   const applyPreset = (preset: "domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom") => {
     setQuizFocus(preset);
@@ -1130,20 +728,20 @@ export default function App() {
   return (
     <div className="h-screen overflow-hidden bg-slate-950 flex flex-col font-sans text-slate-100" id="app_root">
       {/* Top Professional Header - Sleek Interface Style */}
-      <header className="h-16 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between px-6 shrink-0 sticky top-0 z-40 backdrop-blur" id="app_header">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-cyan-600 rounded flex items-center justify-center font-bold text-xl text-slate-50 shadow-md shadow-cyan-500/10" id="logo_icon_box">S+</div>
-          <div>
-            <h1 className="text-sm font-bold tracking-tight text-cyan-400 uppercase" id="header_title">CompTIA Security+ SY0-701</h1>
-            <p className="text-xs text-slate-400" id="header_subtitle">{t("header.subtitle")}</p>
+      <header className="min-h-16 border-b border-slate-800 bg-slate-900/50 flex flex-wrap items-center justify-between gap-y-2 gap-x-4 px-3 sm:px-6 py-2 lg:py-0 lg:h-16 shrink-0 sticky top-0 z-40 backdrop-blur" id="app_header">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-cyan-600 rounded flex items-center justify-center font-bold text-lg sm:text-xl text-slate-50 shadow-md shadow-cyan-500/10 shrink-0" id="logo_icon_box">S+</div>
+          <div className="min-w-0">
+            <h1 className="text-xs sm:text-sm font-bold tracking-tight text-cyan-400 uppercase truncate" id="header_title">CompTIA Security+ SY0-701</h1>
+            <p className="text-xs text-slate-400 hidden sm:block truncate" id="header_subtitle">{t("header.subtitle")}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3" id="navigation_tabs">
+        <div className="flex items-center gap-2 lg:gap-3 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-thin" id="navigation_tabs">
           <button 
             id="tab_btn_studio"
             onClick={() => { setActiveTab("studio"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "studio" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "studio" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <BookOpen className="w-3.5 h-3.5" />
             {t("tab.studio")}
@@ -1151,7 +749,7 @@ export default function App() {
           <button 
             id="tab_btn_glossary"
             onClick={() => { setActiveTab("glossary"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "glossary" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "glossary" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <FileText className="w-3.5 h-3.5" />
             {t("tab.glossary")}
@@ -1159,27 +757,27 @@ export default function App() {
           <button 
             id="tab_btn_quiz"
             onClick={() => { setActiveTab("quiz"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${activeTab === "quiz" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "quiz" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <Activity className="w-3.5 h-3.5" />
             {t("tab.quiz")}
           </button>
 
-          <div className="h-6 w-[1px] bg-slate-700 mx-1"></div>
+          <div className="h-6 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
           <button 
             id="toggle_sidebar_btn"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={`px-2.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${sidebarOpen ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "border border-slate-800 text-slate-400 hover:bg-slate-800/30"}`}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 shrink-0 whitespace-nowrap transition-all ${sidebarOpen ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "border border-slate-800 text-slate-400 hover:bg-slate-800/30"}`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
             <span>{t("tab.aiTrainer")}</span>
           </button>
 
-          <div className="h-6 w-[1px] bg-slate-700 mx-1"></div>
+          <div className="h-6 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
           {/* Language toggle IT / EN */}
-          <div className="flex items-center rounded-md border border-slate-800 overflow-hidden" id="lang_toggle" title={t("lang.label")}>
+          <div className="flex items-center rounded-md border border-slate-800 overflow-hidden shrink-0" id="lang_toggle" title={t("lang.label")}>
             <button
               id="lang_btn_it"
               onClick={() => setLang("it")}
@@ -1190,8 +788,11 @@ export default function App() {
             <button
               id="lang_btn_en"
               onClick={() => setLang("en")}
-              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${lang === "en" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+              disabled={isLoadingLang}
+              title={isLoadingLang ? t("lang.loadingEn") : undefined}
+              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 disabled:opacity-60 ${lang === "en" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
             >
+              {isLoadingLang && <RefreshCw className="w-3 h-3 animate-spin" />}
               EN
             </button>
           </div>
@@ -1292,13 +893,26 @@ export default function App() {
                                 <div 
                                   key={unit.key} 
                                   id={`unit_${groupIdx}_${unitIdx}`}
-                                  className={`group flex items-center justify-between p-2 rounded border border-transparent transition-all cursor-pointer ${isSelected ? "bg-cyan-500/10 border-l-2 border-l-cyan-500 text-cyan-50 font-medium" : "text-xs text-slate-400 hover:text-slate-300 hover:bg-slate-900/30"}`}
+                                  role="button"
+                                  tabIndex={0}
+                                  aria-current={isSelected}
+                                  aria-label={t("a11y.selectTopic", { name: unit.name })}
+                                  className={`group flex items-center justify-between p-2 rounded border border-transparent transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${isSelected ? "bg-cyan-500/10 border-l-2 border-l-cyan-500 text-cyan-50 font-medium" : "text-xs text-slate-400 hover:text-slate-300 hover:bg-slate-900/30"}`}
                                   onClick={() => setSelectedSubtopic(unit.subtopics[0])}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      setSelectedSubtopic(unit.subtopics[0]);
+                                    }
+                                  }}
                                 >
                                   <div className="flex items-center gap-2 min-w-0 flex-1" id={`unit_label_${groupIdx}_${unit.key}`}>
                                     {/* Checklist checkbox for bulk selection of all subtopics in subgroup */}
                                     <button 
                                       id={`unit_check_box_${groupIdx}_${unit.key}`}
+                                      role="checkbox"
+                                      aria-checked={isAllChecked ? true : isSomeChecked ? "mixed" : false}
+                                      aria-label={t("a11y.toggleCheck", { name: unit.name })}
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         handleToggleGroupCheck(unit.subtopics.map(s => s.checklistKey));
@@ -1453,6 +1067,9 @@ export default function App() {
                                 <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">{t("study.completed")}</span>
                                 <button 
                                   id={`concept_check_${sub.checklistKey}`}
+                                  role="checkbox"
+                                  aria-checked={isChecked}
+                                  aria-label={t("a11y.toggleCheck", { name: sub.name })}
                                   onClick={() => handleToggleCheck(sub.checklistKey)}
                                   className={`w-5 h-5 rounded border flex items-center justify-center transition-colors shrink-0 ${isChecked ? "bg-cyan-500 border-cyan-500 text-slate-950" : "border-slate-700 hover:border-slate-500 bg-slate-950"}`}
                                 >
@@ -1528,7 +1145,7 @@ export default function App() {
                             )}
 
                             {/* Exam Tip */}
-                            <div className="bg-slate-950 border border-slate-850 p-4 rounded-lg flex gap-3.5 items-start" id={`concept_tip_${sub.checklistKey}`}>
+                            <div className="bg-slate-950 border border-slate-800 p-4 rounded-lg flex gap-3.5 items-start" id={`concept_tip_${sub.checklistKey}`}>
                               <div className="p-1.5 bg-cyan-500/10 rounded-full border border-cyan-500/20 text-cyan-400 shrink-0">
                                 <Sparkles className="w-4 h-4" />
                               </div>
@@ -1539,7 +1156,7 @@ export default function App() {
                             </div>
 
                             {/* Pre-filled Chat Helper for this sub-concept */}
-                            <div className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-850 rounded-lg" id={`concept_chat_trigger_${sub.checklistKey}`}>
+                            <div className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800 rounded-lg" id={`concept_chat_trigger_${sub.checklistKey}`}>
                               <div className="flex items-center gap-2">
                                 <Info className="w-3.5 h-3.5 text-cyan-400" />
                                 <span className="text-xs text-slate-400">{t("study.doubtsAbout", { name: sub.name })}</span>
@@ -1549,7 +1166,7 @@ export default function App() {
                                   setSidebarOpen(true);
                                   handleSendChat(t("study.askPrompt", { name: sub.name }));
                                 }}
-                                className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold px-3 py-1.5 rounded transition-colors flex items-center gap-1 border border-slate-750"
+                                className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold px-3 py-1.5 rounded transition-colors flex items-center gap-1 border border-slate-700"
                               >
                                 {t("study.askExplanation")}
                                 <ArrowRight className="w-3.5 h-3.5" />
@@ -1567,7 +1184,7 @@ export default function App() {
             </main>
 
             {/* Pulsanti di scorrimento rapido (Su/Giù) */}
-            <div className="absolute bottom-6 right-6 flex flex-col gap-2.5 z-30 animate-fade-in" id="scroll_controls">
+            <div className="absolute bottom-6 right-6 flex flex-col gap-2.5 z-30" id="scroll_controls">
               <button
                 onClick={scrollToPanelTop}
                 className="p-3 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500 text-slate-300 hover:text-cyan-400 shadow-xl shadow-black/60 transition-all duration-200 group flex items-center justify-center backdrop-blur-sm"
@@ -1630,18 +1247,11 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => {
-                            const newQuestions = DOMAIN_1_QUESTIONS.filter(q => q.id >= 141 && q.id <= 150);
-                            setActiveQuestions(newQuestions);
-                            setQuizStarted(true);
-                            setCurrentQuestionIndex(0);
-                            setQuizAnswers({});
-                            setSelectedOption(null);
-                            setShowFeedback(false);
-                            setQuizCompleted(false);
-                            setQuizScore(0);
-                            setWrongQuestions([]);
-                            setRemediationActive(false);
-                            setRemediationCompleted(false);
+                            beginQuizRun(
+                              DOMAIN_1_QUESTIONS.filter(
+                                q => q.id >= questionUid(1, 141) && q.id <= questionUid(1, 150)
+                              )
+                            );
                           }}
                           className="flex-1 sm:flex-initial bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-3 py-2 rounded text-[11px] transition-colors shadow-md shadow-cyan-600/10 text-center"
                         >
@@ -1757,7 +1367,7 @@ export default function App() {
                                 type="button"
                                 onClick={handleDecrement}
                                 disabled={currentVal <= 0}
-                                className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-850 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
+                                className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-800 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
                               >
                                 -
                               </button>
@@ -1775,7 +1385,7 @@ export default function App() {
                                 type="button"
                                 onClick={handleIncrement}
                                 disabled={currentVal >= maxVal}
-                                className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-850 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
+                                className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-800 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
                               >
                                 +
                               </button>
@@ -1787,6 +1397,23 @@ export default function App() {
                   </div>
 
                   {/* Summary & Run constraints */}
+                  {/* Exam timer opt-in */}
+                  <div className="bg-slate-950/40 border border-slate-800/60 p-4 rounded-md" id="timer_toggle_box">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="timer_toggle_input"
+                        checked={timerEnabled}
+                        onChange={(e) => setTimerEnabled(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 accent-cyan-500 cursor-pointer"
+                      />
+                      <span className="space-y-0.5">
+                        <span className="text-xs font-bold text-slate-200 block">{t("quiz.timerEnable")}</span>
+                        <span className="text-[10px] text-slate-500 block leading-relaxed">{t("quiz.timerHint")}</span>
+                      </span>
+                    </label>
+                  </div>
+
                   <div className="bg-cyan-950/20 border border-cyan-500/20 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center gap-4" id="custom_quiz_summary_box">
                     <div className="text-left space-y-1">
                       <div className="text-xs font-mono text-slate-400">{t("quiz.configSummary")}</div>
@@ -1818,13 +1445,70 @@ export default function App() {
                     <p className="text-slate-400">{t("quiz.rule2")}</p>
                     <p className="text-slate-400">{t("quiz.rule3")}</p>
                   </div>
+
+                  {/* Locally stored history of past runs */}
+                  <div className="bg-slate-950 p-4 rounded border border-slate-800 max-w-md mx-auto text-left space-y-3" id="quiz_history_box">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs font-mono uppercase tracking-wider">
+                        <TrendingUp className="w-4 h-4" />
+                        <span>{t("quiz.historyTitle")}</span>
+                      </div>
+                      {quizHistory.length > 0 && (
+                        <button
+                          type="button"
+                          id="clear_history_btn"
+                          onClick={handleClearHistory}
+                          className="text-[10px] text-slate-500 hover:text-rose-400 underline underline-offset-2 transition-colors"
+                        >
+                          {t("quiz.historyClear")}
+                        </button>
+                      )}
+                    </div>
+
+                    {quizHistory.length === 0 ? (
+                      <p className="text-[11px] text-slate-500 italic">{t("quiz.historyEmpty")}</p>
+                    ) : (
+                      <>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-slate-400">
+                          <span>{t("quiz.historyBest", { percent: bestHistoryPercent })}</span>
+                          <span>{t("quiz.historyAvg", { n: recentHistory.length, percent: avgHistoryPercent })}</span>
+                        </div>
+                        <ul className="space-y-1.5">
+                          {recentHistory.map((r) => {
+                            const percent = scorePercent(r.score, r.total);
+                            return (
+                              <li
+                                key={r.at}
+                                className="flex items-center justify-between gap-3 text-[11px] font-mono bg-slate-900/60 border border-slate-800 rounded px-2.5 py-1.5"
+                              >
+                                <span className="text-slate-500">
+                                  {new Date(r.at).toLocaleDateString(lang === "it" ? "it-IT" : "en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                  })}
+                                  {" · "}
+                                  {t("sidebar.domShort", { n: r.domains.join("/") })}
+                                </span>
+                                <span className="flex items-center gap-2">
+                                  <span className="text-slate-300">{r.score}/{r.total}</span>
+                                  <span className={r.passed ? "text-cyan-400 font-bold" : "text-rose-400 font-bold"}>
+                                    {percent}%
+                                  </span>
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </>
+                    )}
+                  </div>
                 </div>
               ) : quizCompleted ? (
                 /* Completed Screen */
                 <div className="space-y-6" id="quiz_completed_screen">
                   <div className="text-center space-y-4">
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${quizScore >= 8 ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-400" : "bg-rose-500/10 border border-rose-500/30 text-rose-400"}`} id="completed_icon_box">
-                      {quizScore >= 8 ? <Award className="w-8 h-8" /> : <AlertTriangle className="w-8 h-8" />}
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${hasPassed ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-400" : "bg-rose-500/10 border border-rose-500/30 text-rose-400"}`} id="completed_icon_box">
+                      {hasPassed ? <Award className="w-8 h-8" /> : <AlertTriangle className="w-8 h-8" />}
                     </div>
                     <div className="space-y-1">
                       <h2 className="text-xl font-bold text-slate-100" id="completed_title">{t("quiz.completedTitle")}</h2>
@@ -1833,13 +1517,27 @@ export default function App() {
 
                     <div className="inline-block bg-slate-950 px-6 py-4 rounded border border-slate-800 shadow-inner" id="score_badge_box">
                       <div className="text-3xl font-extrabold text-slate-100 font-mono" id="score_digits">{quizScore} / {activeQuestions.length}</div>
-                      <div className={`text-xs font-mono font-bold uppercase mt-1 tracking-wider ${quizScore >= (activeQuestions.length * 0.8) ? "text-cyan-400" : "text-rose-400"}`} id="score_status">
-                        {quizScore >= (activeQuestions.length * 0.8) ? t("quiz.passed") : t("quiz.failed")}
+                      <div className={`text-xs font-mono font-bold uppercase mt-1 tracking-wider ${hasPassed ? "text-cyan-400" : "text-rose-400"}`} id="score_status">
+                        {hasPassed ? t("quiz.passed") : t("quiz.failed")}
                       </div>
                     </div>
                   </div>
 
-                  {quizScore < (activeQuestions.length * 0.8) ? (
+                  {timeUp && (
+                    <div
+                      className="bg-amber-500/5 border border-amber-500/25 p-4 rounded flex gap-3 items-start"
+                      id="time_up_box"
+                      role="status"
+                    >
+                      <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-amber-400 font-mono">{t("quiz.timeUpTitle")}</h4>
+                        <p className="text-xs text-slate-300 leading-relaxed">{t("quiz.timeUpDesc")}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {!hasPassed ? (
                     /* Remediation Prompt */
                     <div className="bg-slate-950 border border-rose-500/20 p-5 rounded space-y-4" id="remediation_box">
                       <div className="flex items-start gap-3">
@@ -1900,6 +1598,102 @@ export default function App() {
                       </div>
                     </div>
                   )}
+
+                  {/* Answer review: every answer given is already in quizAnswers. */}
+                  <div className="border-t border-slate-800 pt-5 space-y-4" id="quiz_review_section">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-cyan-400" />
+                        {t("quiz.reviewTitle")}
+                      </h4>
+                      <button
+                        type="button"
+                        id="toggle_review_btn"
+                        aria-expanded={showReview}
+                        aria-controls="quiz_review_list"
+                        onClick={() => setShowReview(prev => !prev)}
+                        className="text-[11px] font-bold px-3 py-1.5 rounded border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors"
+                      >
+                        {showReview ? t("quiz.reviewHide") : t("quiz.reviewShow")}
+                      </button>
+                    </div>
+
+                    {showReview && (
+                      <div className="space-y-4" id="quiz_review_list">
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setReviewWrongOnly(true)}
+                            aria-pressed={reviewWrongOnly}
+                            className={`px-3 py-1.5 rounded text-[11px] font-semibold border transition-all ${reviewWrongOnly ? "border-rose-500 bg-rose-500/10 text-rose-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700"}`}
+                          >
+                            {t("quiz.reviewFilterWrong", { n: wrongQuestions.length })}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setReviewWrongOnly(false)}
+                            aria-pressed={!reviewWrongOnly}
+                            className={`px-3 py-1.5 rounded text-[11px] font-semibold border transition-all ${!reviewWrongOnly ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700"}`}
+                          >
+                            {t("quiz.reviewFilterAll", { n: activeQuestions.length })}
+                          </button>
+                        </div>
+
+                        {reviewQuestions.length === 0 ? (
+                          <p className="text-xs text-slate-400 bg-slate-950 border border-slate-800 rounded p-4">
+                            {t("quiz.reviewAllCorrect")}
+                          </p>
+                        ) : (
+                          <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+                            {reviewQuestions.map(q => {
+                              const given = quizAnswers[q.id];
+                              const answered = given !== undefined;
+                              const correct = answered && given === q.answerIndex;
+                              const position = activeQuestions.findIndex(a => a.id === q.id) + 1;
+
+                              return (
+                                <div
+                                  key={q.id}
+                                  id={`review_q_${q.id}`}
+                                  className={`p-4 rounded border space-y-2.5 ${correct ? "border-emerald-500/25 bg-emerald-500/[0.02]" : "border-rose-500/25 bg-rose-500/[0.02]"}`}
+                                >
+                                  <div className="flex items-center justify-between gap-2 text-[10px] font-mono">
+                                    <span className="text-slate-400 uppercase tracking-wider">
+                                      {t("quiz.reviewQuestionN", { i: position })} · {q.topic}
+                                    </span>
+                                    {correct ? (
+                                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                    ) : (
+                                      <X className="w-3.5 h-3.5 text-rose-400" />
+                                    )}
+                                  </div>
+
+                                  <p className="text-xs font-semibold text-slate-200 leading-relaxed">{q.question}</p>
+
+                                  <div className="space-y-1 text-[11px]">
+                                    <p className={correct ? "text-emerald-300" : "text-rose-300"}>
+                                      <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewYourAnswer")}:</span>
+                                      {answered ? q.options[given] : t("quiz.reviewNoAnswer")}
+                                    </p>
+                                    {!correct && (
+                                      <p className="text-emerald-300">
+                                        <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewCorrectAnswer")}:</span>
+                                        {q.options[q.answerIndex]}
+                                      </p>
+                                    )}
+                                  </div>
+
+                                  <div className="text-[11px] text-slate-400 leading-relaxed border-t border-slate-800/70 pt-2">
+                                    {renderMarkdownToJSX(q.explanation)}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex gap-4 justify-center" id="recompleted_buttons">
                     <button 
@@ -1981,7 +1775,7 @@ export default function App() {
                     </h3>
 
                     {/* Options list */}
-                    <div className="space-y-2.5" id="remediation_options_list">
+                    <div className="space-y-2.5" id="remediation_options_list" role="radiogroup" aria-label={t("a11y.optionsGroup")}>
                       {remediationQuestions[remediationIndex].options.map((opt, oIdx) => {
                         const isSelected = remediationSelected === oIdx;
                         const isCorrect = oIdx === remediationQuestions[remediationIndex].answerIndex;
@@ -2003,9 +1797,13 @@ export default function App() {
                           <button
                             key={oIdx}
                             id={`remediation_opt_${oIdx}`}
+                            role="radio"
+                            aria-checked={isSelected}
+                            disabled={remediationShowFeedback}
                             onClick={() => handleRemediationSelect(oIdx)}
                             className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
                           >
+                            <span className="font-mono text-[10px] text-slate-500 mr-2 select-none">{oIdx + 1}</span>
                             {opt}
                           </button>
                         );
@@ -2055,9 +1853,22 @@ export default function App() {
                   
                   {/* Progress Header */}
                   <div className="space-y-2" id="quiz_progress_container">
-                    <div className="flex justify-between items-center text-xs font-mono text-slate-400" id="quiz_progress_text">
-                      <span className="text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded text-[10px] uppercase font-bold">{activeQuestions[currentQuestionIndex].topic}</span>
-                      <span>{t("quiz.level")} <strong className="text-cyan-400">{levelLabel(activeQuestions[currentQuestionIndex].level)}</strong> · {t("quiz.questionCounter", { i: currentQuestionIndex + 1, n: activeQuestions.length })}</span>
+                    <div className="flex justify-between items-center gap-2 text-xs font-mono text-slate-400" id="quiz_progress_text">
+                      <span className="text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded text-[10px] uppercase font-bold truncate">{activeQuestions[currentQuestionIndex].topic}</span>
+                      <span className="flex items-center gap-2 shrink-0">
+                        {secondsLeft !== null && (
+                          <span
+                            id="quiz_timer"
+                            role="timer"
+                            aria-live="off"
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold tabular-nums border ${secondsLeft <= 60 ? "border-rose-500/40 bg-rose-500/10 text-rose-300" : "border-slate-700 bg-slate-900 text-slate-300"}`}
+                            title={t("quiz.timerLabel")}
+                          >
+                            {formatClock(secondsLeft)}
+                          </span>
+                        )}
+                        <span>{t("quiz.level")} <strong className="text-cyan-400">{levelLabel(activeQuestions[currentQuestionIndex].level)}</strong> · {t("quiz.questionCounter", { i: currentQuestionIndex + 1, n: activeQuestions.length })}</span>
+                      </span>
                     </div>
                     {/* Progress Bar */}
                     <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden" id="quiz_bar">
@@ -2081,11 +1892,11 @@ export default function App() {
                   </h3>
 
                   {/* Options buttons */}
-                  <div className="space-y-2.5" id="quiz_options_list">
+                  <div className="space-y-2.5" id="quiz_options_list" role="radiogroup" aria-label={t("a11y.optionsGroup")}>
                     {activeQuestions[currentQuestionIndex].options.map((opt, oIdx) => {
                       const isSelected = selectedOption === oIdx;
                       const isCorrect = oIdx === activeQuestions[currentQuestionIndex].answerIndex;
-                      let optionStyle = "border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/40 text-slate-450";
+                      let optionStyle = "border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/40 text-slate-400";
 
                       if (showFeedback) {
                         if (isCorrect) {
@@ -2103,9 +1914,13 @@ export default function App() {
                         <button
                           key={oIdx}
                           id={`quiz_opt_${oIdx}`}
+                          role="radio"
+                          aria-checked={isSelected}
+                          disabled={showFeedback}
                           onClick={() => handleSelectOption(oIdx)}
                           className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
                         >
+                          <span className="font-mono text-[10px] text-slate-500 mr-2 select-none">{oIdx + 1}</span>
                           {opt}
                         </button>
                       );
@@ -2138,14 +1953,17 @@ export default function App() {
                       </button>
                     </div>
                   ) : (
-                    <button 
-                      id="quiz_confirm_btn"
-                      onClick={handleConfirmAnswer}
-                      disabled={selectedOption === null}
-                      className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
-                    >
-                      {t("quiz.confirmAnswer")}
-                    </button>
+                    <div className="space-y-2">
+                      <button 
+                        id="quiz_confirm_btn"
+                        onClick={handleConfirmAnswer}
+                        disabled={selectedOption === null}
+                        className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
+                      >
+                        {t("quiz.confirmAnswer")}
+                      </button>
+                      <p className="text-[10px] text-slate-500 text-center font-mono">{t("a11y.keyboardHint")}</p>
+                    </div>
                   )}
 
                 </div>
@@ -2171,7 +1989,7 @@ export default function App() {
             <motion.div 
               id="ai_sidebar"
               initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 380, opacity: 1 }}
+              animate={{ width: typeof window !== "undefined" && window.innerWidth < 640 ? Math.min(380, window.innerWidth - 32) : 380, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="border-l border-slate-800 bg-slate-900/65 flex-shrink-0 flex flex-col overflow-hidden h-full z-10"
@@ -2336,14 +2154,14 @@ export default function App() {
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-900/50" id="new_questions_modal_content">
-                {DOMAIN_1_QUESTIONS.filter(q => q.id >= 141 && q.id <= 150).map((q, idx) => (
+                {DOMAIN_1_QUESTIONS.filter(q => q.id >= questionUid(1, 141) && q.id <= questionUid(1, 150)).map((q, idx) => (
                   <div key={q.id} className="p-4 bg-slate-950/40 border border-slate-800/80 rounded-lg space-y-3" id={`modal_q_${q.id}`}>
                     <div className="flex items-center justify-between gap-2 border-b border-slate-800/60 pb-1.5">
                       <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase">{t("modal.questionN", { i: idx + 1, id: q.id })}</span>
                       <span className="text-[10px] font-mono text-slate-500">{t("modal.topic", { topic: q.topic })}</span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs text-slate-450 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
+                      <p className="text-xs text-slate-400 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
                       <p className="text-xs font-semibold text-slate-200">{q.question}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
@@ -2376,18 +2194,11 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => {
-                    const newQuestions = DOMAIN_1_QUESTIONS.filter(q => q.id >= 141 && q.id <= 150);
-                    setActiveQuestions(newQuestions);
-                    setQuizStarted(true);
-                    setCurrentQuestionIndex(0);
-                    setQuizAnswers({});
-                    setSelectedOption(null);
-                    setShowFeedback(false);
-                    setQuizCompleted(false);
-                    setQuizScore(0);
-                    setWrongQuestions([]);
-                    setRemediationActive(false);
-                    setRemediationCompleted(false);
+                    beginQuizRun(
+                      DOMAIN_1_QUESTIONS.filter(
+                        q => q.id >= questionUid(1, 141) && q.id <= questionUid(1, 150)
+                      )
+                    );
                     setShowNewQuestionsModal(false);
                   }}
                   className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition-colors shadow-md shadow-cyan-600/10"
@@ -2400,6 +2211,26 @@ export default function App() {
         )}
 
       </div>
+
+      {/* Inline notification (replaces window.alert) */}
+      {toast && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] max-w-sm w-[calc(100%-3rem)] bg-slate-900 border border-amber-500/40 text-amber-200 rounded-lg shadow-2xl px-4 py-3 flex items-start gap-3"
+          id="app_toast"
+          role="alert"
+        >
+          <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-amber-400" />
+          <p className="text-xs leading-relaxed flex-1">{toast}</p>
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            aria-label={t("toast.dismiss")}
+            className="p-0.5 text-slate-400 hover:text-slate-200 transition-colors shrink-0"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

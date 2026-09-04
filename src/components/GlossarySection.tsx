@@ -6,7 +6,6 @@ import {
   Bookmark, 
   BookmarkCheck, 
   GraduationCap, 
-  Sparkles, 
   Copy, 
   Check, 
   ChevronDown, 
@@ -14,15 +13,12 @@ import {
   RotateCcw, 
   MessageSquare, 
   Tag, 
-  Layers, 
-  ShieldAlert,
-  Info,
-  SlidersHorizontal,
-  CheckCircle2
+  Layers
 } from "lucide-react";
 import { getDomainTopics } from "../localizedData";
 import { TopicGroup, Subtopic } from "../types";
 import { useLang, translate, type Lang, type UIKey } from "../i18n";
+import { STORAGE_KEYS, readJSON, writeJSON } from "../storage";
 
 export interface GlossaryTerm {
   id: string;
@@ -40,42 +36,17 @@ export interface GlossaryTerm {
   keyFormulas?: string[];
 }
 
-const DOMAIN_INFO: Record<number, { title: string; short: string; color: string; bg: string; border: string }> = {
-  1: { 
-    title: "Dominio 1: General Security Concepts (12%)", 
-    short: "Dominio 1: Concetti Generali", 
-    color: "text-cyan-400", 
-    bg: "bg-cyan-500/10", 
-    border: "border-cyan-500/30" 
-  },
-  2: { 
-    title: "Dominio 2: Threats, Vulnerabilities & Mitigations (22%)", 
-    short: "Dominio 2: Minacce e Vulnerabilità", 
-    color: "text-amber-400", 
-    bg: "bg-amber-500/10", 
-    border: "border-amber-500/30" 
-  },
-  3: { 
-    title: "Dominio 3: Security Architecture (18%)", 
-    short: "Dominio 3: Architettura di Sicurezza", 
-    color: "text-indigo-400", 
-    bg: "bg-indigo-500/10", 
-    border: "border-indigo-500/30" 
-  },
-  4: { 
-    title: "Dominio 4: Security Operations (28%)", 
-    short: "Dominio 4: Operazioni di Sicurezza", 
-    color: "text-emerald-400", 
-    bg: "bg-emerald-500/10", 
-    border: "border-emerald-500/30" 
-  },
-  5: { 
-    title: "Dominio 5: Security Program Management & Oversight (20%)", 
-    short: "Dominio 5: Governance e Conformità", 
-    color: "text-rose-400", 
-    bg: "bg-rose-500/10", 
-    border: "border-rose-500/30" 
-  }
+/**
+ * Per-domain accent colours for badges and filter pills.
+ * Domain names are not stored here: they come from the i18n dictionary
+ * (`glossDom.<id>.title` / `.short`) so they follow the active language.
+ */
+const DOMAIN_INFO: Record<number, { color: string; bg: string; border: string }> = {
+  1: { color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/30" },
+  2: { color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/30" },
+  3: { color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/30" },
+  4: { color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/30" },
+  5: { color: "text-rose-400", bg: "bg-rose-500/10", border: "border-rose-500/30" },
 };
 
 const CATEGORY_COLORS: Record<string, { badge: string; text: string }> = {
@@ -89,10 +60,6 @@ const CATEGORY_COLORS: Record<string, { badge: string; text: string }> = {
 
 // Helper function to categorize subtopics automatically
 function determineCategory(sub: Subtopic, groupTitle: string): GlossaryTerm["category"] {
-  const nameUpper = sub.name.toUpperCase();
-  const defUpper = sub.definition.toUpperCase();
-  const groupUpper = groupTitle.toUpperCase();
-
   // Acronimi e Protocolli
   if (
     /^(AAA|CIA|MFA|SSO|SAML|OIDC|LDAP|RADIUS|TACACS\+|DNSSEC|DKIM|SPF|DMARC|IPSEC|TLS|SSH|HTTPS|SNMP|BGP|OSPF|EAP|GCMP|SAE|TKIP|MIC|WPA\d?|RBAC|ABAC|MAC|DAC|RuBAC|PKI|CRL|OCSP|CSR|CA|HSM|TPM|CVE|CVSS|SIEM|SOAR|XDR|EDR|NDR|EPP|NIDS|NIPS|HIDS|HIPS|NGFW|WAF|UTM|SWG|CASB|SASE|ZTNA|DLP|SAST|DAST|IAST|RAID|UPS|SLA|MOU|MOA|ISA|NDA|DPA|GDPR|HIPAA|PCI|NIST|CIS|ISO|BIA|BCP|DRP|RTO|RPO|ALE|SLE|ARO|AV|EF|MTTR|MTTD|MTBF|MTTF)$/.test(sub.name) ||
@@ -142,8 +109,8 @@ function determineCategory(sub: Subtopic, groupTitle: string): GlossaryTerm["cat
 function checkIfAcronym(term: string): boolean {
   const clean = term.trim();
   if (clean.length <= 6 && clean === clean.toUpperCase() && /[A-Z]/.test(clean)) return true;
-  if (/^[A-Z0-9\-\+\/]{2,8}$/.test(clean)) return true;
-  if (/\([A-Z0-9\-\+]{2,8}\)/.test(clean)) return true;
+  if (/^[A-Z0-9\-+/]{2,8}$/.test(clean)) return true;
+  if (/\([A-Z0-9\-+]{2,8}\)/.test(clean)) return true;
   return false;
 }
 
@@ -157,25 +124,40 @@ const CATEGORY_LABEL_KEY: Record<string, UIKey> = {
   "Governance & Normative": "cat.governance",
 };
 
-// Build unified glossary dataset for the given language.
+/**
+ * Build the unified glossary dataset for the given language.
+ *
+ * Display strings come from the localized dataset, but the category is derived
+ * from the ITALIAN source: `determineCategory()` matches Italian keywords
+ * ("attacc", "minacc", "normativ", ...), so running it on translated names
+ * dropped nearly every English term into the "Concetti Cardine" fallback and
+ * made the category filter useless in English.
+ */
 function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
-  const domains: { id: 1 | 2 | 3 | 4 | 5; groups: TopicGroup[] }[] = [
-    { id: 1, groups: getDomainTopics(1, lang) },
-    { id: 2, groups: getDomainTopics(2, lang) },
-    { id: 3, groups: getDomainTopics(3, lang) },
-    { id: 4, groups: getDomainTopics(4, lang) },
-    { id: 5, groups: getDomainTopics(5, lang) },
+  const domains: { id: 1 | 2 | 3 | 4 | 5; groups: TopicGroup[]; source: TopicGroup[] }[] = [
+    { id: 1, groups: getDomainTopics(1, lang), source: getDomainTopics(1, "it") },
+    { id: 2, groups: getDomainTopics(2, lang), source: getDomainTopics(2, "it") },
+    { id: 3, groups: getDomainTopics(3, lang), source: getDomainTopics(3, "it") },
+    { id: 4, groups: getDomainTopics(4, lang), source: getDomainTopics(4, "it") },
+    { id: 5, groups: getDomainTopics(5, lang), source: getDomainTopics(5, "it") },
   ];
 
   const termsMap = new Map<string, GlossaryTerm>();
 
-  domains.forEach(({ id, groups }) => {
+  domains.forEach(({ id, groups, source }) => {
+    // checklistKey -> Italian subtopic and its Italian group title.
+    const sourceByKey = new Map<string, { sub: Subtopic; groupTitle: string }>();
+    source.forEach((g) => {
+      g.subtopics.forEach((sub) => sourceByKey.set(sub.checklistKey, { sub, groupTitle: g.title }));
+    });
+
     groups.forEach((group) => {
       group.subtopics.forEach((sub) => {
         const key = `${id}_${sub.name.toLowerCase().trim()}`;
         if (!termsMap.has(key)) {
           const isAcr = checkIfAcronym(sub.name);
-          const cat = determineCategory(sub, group.title);
+          const src = sourceByKey.get(sub.checklistKey);
+          const cat = determineCategory(src?.sub ?? sub, src?.groupTitle ?? group.title);
           const letterMatch = sub.name.trim().match(/^[A-Za-z]/);
           const firstLetter = letterMatch ? letterMatch[0].toUpperCase() : "#";
 
@@ -226,25 +208,16 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
   const [onlyBookmarks, setOnlyBookmarks] = useState(false);
 
   // UI States
-  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem("comptia_glossary_bookmarks");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(
+    () => readJSON<string[]>(STORAGE_KEYS.bookmarks, [])
+  );
 
   const [expandedTermId, setExpandedTermId] = useState<string | null>(null);
   const [copiedTermId, setCopiedTermId] = useState<string | null>(null);
 
   // Save bookmarks to localStorage
   useEffect(() => {
-    try {
-      localStorage.setItem("comptia_glossary_bookmarks", JSON.stringify(bookmarkedIds));
-    } catch (err) {
-      console.error("Error saving bookmarks", err);
-    }
+    writeJSON(STORAGE_KEYS.bookmarks, bookmarkedIds);
   }, [bookmarkedIds]);
 
   const toggleBookmark = (id: string, e: React.MouseEvent) => {
@@ -263,7 +236,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
       definition: term.definition,
       tip,
     });
-    navigator.clipboard.writeText(textToCopy);
+    // The Clipboard API is unavailable on insecure origins and can reject.
+    void navigator.clipboard?.writeText(textToCopy).catch(() => undefined);
     setCopiedTermId(term.id);
     setTimeout(() => setCopiedTermId(null), 2000);
   };
@@ -438,7 +412,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                         : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 border-slate-700/50"
                     }`}
                   >
-                    <span>Dom {domNum}</span>
+                    <span>{t("sidebar.domShort", { n: domNum })}</span>
                     <span className="text-[10px] opacity-75">({count})</span>
                   </button>
                 );
@@ -594,7 +568,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                       <div className="flex flex-wrap items-center gap-1.5">
                         {/* Domain Badge */}
                         <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase border ${domStyle.bg} ${domStyle.color} ${domStyle.border}`}>
-                          Dom {item.domainId}
+                          {t("sidebar.domShort", { n: item.domainId })}
                         </span>
 
                         {/* Category Badge */}
