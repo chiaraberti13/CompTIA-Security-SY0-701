@@ -3225,7 +3225,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "It verifies strict adherence to the mandatory national and international laws of the sector (e.g. an inspection by the Data Protection Authority for the GDPR). In case of non-compliance, it can issue severe fines, suspend activities or revoke commercial licenses.",
     examTip: "The Regulatory Audit differs from the others in its stringent legal obligatoriness and the direct monetary and administrative penalties issued by public authorities.",
   },
-  PenetrationTest: {
+  PenetrationTestAudit: {
     name: "Penetration Test",
     definition: "An authorized simulated attack against the organization's IT infrastructure to discover and actively exploit vulnerabilities.",
     details: "Conducted by security professionals (Ethical Hackers) simulating the tactics, techniques and procedures (TTP) of real attackers. The goal is to actively bypass the defensive controls to verify field resilience and produce a detailed remediation report.",

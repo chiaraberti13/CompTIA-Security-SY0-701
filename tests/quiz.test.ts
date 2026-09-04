@@ -1,0 +1,110 @@
+import { describe, expect, it } from "vitest";
+import {
+  PASS_RATIO,
+  HISTORY_LIMIT,
+  formatClock,
+  shuffle,
+  hasPassedRun,
+  scorePercent,
+  appendHistory,
+  unansweredIds,
+} from "../src/quiz";
+import type { Question, QuizResult } from "../src/types";
+
+const question = (id: number): Question => ({
+  id,
+  topic: "t",
+  level: "ANALISI",
+  scenario: "s",
+  question: "q",
+  options: ["a", "b", "c", "d"],
+  answerIndex: 0,
+  explanation: "e",
+});
+
+describe("formatClock", () => {
+  it("formats as mm:ss", () => {
+    expect(formatClock(0)).toBe("00:00");
+    expect(formatClock(59)).toBe("00:59");
+    expect(formatClock(60)).toBe("01:00");
+    expect(formatClock(1205)).toBe("20:05");
+  });
+
+  it("clamps negatives instead of showing -1:-1", () => {
+    expect(formatClock(-30)).toBe("00:00");
+  });
+});
+
+describe("shuffle", () => {
+  it("returns a permutation and leaves the input untouched", () => {
+    const input = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8]);
+    const out = shuffle(input);
+    expect(out).toHaveLength(input.length);
+    expect([...out].sort((a, b) => a - b)).toEqual([...input]);
+  });
+
+  it("is close to uniform: every element reaches the first slot", () => {
+    // The sort()-with-random-comparator version fails this: element 0 lands
+    // first far more often than 1/n.
+    const n = 6;
+    const source = Array.from({ length: n }, (_, i) => i);
+    const firstSlotCounts = new Array(n).fill(0);
+    for (let i = 0; i < 6000; i++) firstSlotCounts[shuffle(source)[0]]++;
+    const expected = 6000 / n;
+    for (const count of firstSlotCounts) {
+      expect(count).toBeGreaterThan(expected * 0.7);
+      expect(count).toBeLessThan(expected * 1.3);
+    }
+  });
+});
+
+describe("passing threshold", () => {
+  it("passes at exactly the threshold", () => {
+    expect(hasPassedRun(8, 10)).toBe(true);
+    expect(hasPassedRun(7, 10)).toBe(false);
+    expect(PASS_RATIO).toBe(0.8);
+  });
+
+  it("scales with the size of the run, not a fixed score", () => {
+    // The old `score >= 8` check called a 9/100 run a pass.
+    expect(hasPassedRun(9, 100)).toBe(false);
+    expect(hasPassedRun(80, 100)).toBe(true);
+  });
+
+  it("treats an empty run as not passed", () => {
+    expect(hasPassedRun(0, 0)).toBe(false);
+  });
+});
+
+describe("scorePercent", () => {
+  it("rounds and survives an empty run", () => {
+    expect(scorePercent(1, 3)).toBe(33);
+    expect(scorePercent(0, 0)).toBe(0);
+  });
+});
+
+describe("appendHistory", () => {
+  const entry = (at: number): QuizResult => ({ at, score: 1, total: 2, domains: [1], passed: false });
+
+  it("puts the newest run first", () => {
+    expect(appendHistory([entry(1)], entry(2))[0].at).toBe(2);
+  });
+
+  it("caps the stored history", () => {
+    let history: QuizResult[] = [];
+    for (let i = 0; i < HISTORY_LIMIT + 10; i++) history = appendHistory(history, entry(i));
+    expect(history).toHaveLength(HISTORY_LIMIT);
+    expect(history[0].at).toBe(HISTORY_LIMIT + 9);
+  });
+});
+
+describe("unansweredIds", () => {
+  it("lists only the questions with no recorded answer", () => {
+    const questions = [question(1), question(2), question(3)];
+    expect(unansweredIds(questions, { 2: 0 })).toEqual([1, 3]);
+  });
+
+  it("counts an answer of index 0 as answered", () => {
+    expect(unansweredIds([question(1)], { 1: 0 })).toEqual([]);
+  });
+});

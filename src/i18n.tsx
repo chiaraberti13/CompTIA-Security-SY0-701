@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { loadEnglishOverlay, isEnglishOverlayReady } from "./localizedData";
+import { STORAGE_KEYS } from "./storage";
 
 export type Lang = "it" | "en";
 
-const STORAGE_KEY = "comptia_sy0701_lang";
+const STORAGE_KEY = STORAGE_KEYS.lang;
 
 /* ------------------------------------------------------------------ *
  * Language context
@@ -12,6 +14,8 @@ interface LanguageContextValue {
   lang: Lang;
   setLang: (lang: Lang) => void;
   toggleLang: () => void;
+  /** True while the English dataset chunk is being downloaded. */
+  isLoadingLang: boolean;
   t: (key: UIKey, vars?: Record<string, string | number>) => string;
 }
 
@@ -29,7 +33,29 @@ function detectInitialLang(): Lang {
 }
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLangState] = useState<Lang>(() => detectInitialLang());
+  const [initialLang] = useState<Lang>(() => detectInitialLang());
+  const [lang, setLangState] = useState<Lang>(initialLang);
+  const [isLoadingLang, setIsLoadingLang] = useState(false);
+  // The English dataset lives in a lazily-loaded chunk. Italian users never
+  // download it; English users wait for it once, before the first render.
+  const [datasetReady, setDatasetReady] = useState(initialLang === "it");
+
+  useEffect(() => {
+    if (initialLang !== "en") return;
+    let cancelled = false;
+    loadEnglishOverlay()
+      .catch(() => {
+        // Network failure on the overlay chunk: fall back to Italian rather
+        // than leaving the user on a splash screen forever.
+        if (!cancelled) setLangState("it");
+      })
+      .finally(() => {
+        if (!cancelled) setDatasetReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [initialLang]);
 
   useEffect(() => {
     try {
@@ -44,16 +70,49 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [lang]);
 
-  const setLang = useCallback((l: Lang) => setLangState(l), []);
-  const toggleLang = useCallback(() => setLangState((prev) => (prev === "it" ? "en" : "it")), []);
+  const setLang = useCallback((l: Lang) => {
+    if (l === "it" || isEnglishOverlayReady()) {
+      setLangState(l);
+      return;
+    }
+    // Switching to English for the first time: fetch the overlay chunk before
+    // flipping the language, so the UI never renders half-translated content.
+    setIsLoadingLang(true);
+    loadEnglishOverlay()
+      .then(() => setLangState("en"))
+      .catch(() => {
+        /* stay on the current language */
+      })
+      .finally(() => setIsLoadingLang(false));
+  }, []);
+
+  const toggleLang = useCallback(
+    () => setLang(lang === "it" ? "en" : "it"),
+    [lang, setLang]
+  );
 
   const t = useCallback(
     (key: UIKey, vars?: Record<string, string | number>) => translate(lang, key, vars),
     [lang]
   );
 
+  if (!datasetReady) {
+    return (
+      <div
+        className="h-screen w-full flex flex-col items-center justify-center gap-4 bg-slate-950 text-slate-400"
+        role="status"
+        aria-live="polite"
+      >
+        <div className="w-10 h-10 rounded border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" />
+        <p className="text-xs font-mono uppercase tracking-widest">
+          {translate(initialLang, "lang.loadingDataset")}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <LanguageContext.Provider value={{ lang, setLang, toggleLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, toggleLang, isLoadingLang, t }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -97,6 +156,8 @@ const it = {
   "tab.aiTrainer": "AI Trainer",
   "lang.switchTo": "English",
   "lang.label": "Lingua",
+  "lang.loadingDataset": "Caricamento contenuti...",
+  "lang.loadingEn": "Caricamento inglese...",
 
   // Sidebar checklist
   "sidebar.browseChecklist": "Sfoglia Checklist",
@@ -187,6 +248,42 @@ const it = {
   "quiz.confirmAnswer": "Conferma Risposta",
   "quiz.bestChoice": "BEST CHOICE SELEZIONATA",
   "quiz.distractor": "DISTRATTORE RILEVATO",
+
+  // Quiz: timer d'esame
+  "quiz.timerLabel": "Tempo",
+  "quiz.timerEnable": "Timer d'esame (~2 min/domanda)",
+  "quiz.timerHint": "Allo scadere del tempo l'esame viene consegnato automaticamente.",
+  "quiz.timeUpTitle": "TEMPO SCADUTO",
+  "quiz.timeUpDesc": "Il tempo a disposizione è terminato: l'esame è stato consegnato automaticamente. Le domande senza risposta contano come errate.",
+
+  // Quiz: ripasso delle risposte
+  "quiz.reviewTitle": "Ripasso delle risposte",
+  "quiz.reviewShow": "Rivedi le risposte",
+  "quiz.reviewHide": "Chiudi il ripasso",
+  "quiz.reviewFilterWrong": "Solo errate ({n})",
+  "quiz.reviewFilterAll": "Tutte ({n})",
+  "quiz.reviewYourAnswer": "La tua risposta",
+  "quiz.reviewCorrectAnswer": "Risposta corretta",
+  "quiz.reviewNoAnswer": "Nessuna risposta data",
+  "quiz.reviewAllCorrect": "Nessun errore da ripassare: hai risposto correttamente a tutte le domande.",
+  "quiz.reviewQuestionN": "Domanda {i}",
+
+  // Quiz: storico dei risultati
+  "quiz.historyTitle": "I tuoi risultati precedenti",
+  "quiz.historyEmpty": "Nessun test completato finora. Il tuo storico comparirà qui.",
+  "quiz.historyClear": "Cancella storico",
+  "quiz.historyBest": "Miglior punteggio: {percent}%",
+  "quiz.historyAvg": "Media ultimi {n}: {percent}%",
+
+  // Notifiche inline (sostituiscono alert())
+  "toast.dismiss": "Chiudi la notifica",
+
+  // Accessibilità
+  "a11y.selectTopic": "Apri l'argomento {name}",
+  "a11y.toggleCheck": "Segna {name} come completato",
+  "a11y.optionsGroup": "Opzioni di risposta",
+  "a11y.keyboardHint": "Suggerimento: premi 1-4 per selezionare, Invio per confermare.",
+
 
   // Chat sidebar
   "chat.title": "ASSISTENTE AI TRAINER",
@@ -315,6 +412,8 @@ const en: Record<UIKey, string> = {
   "tab.aiTrainer": "AI Trainer",
   "lang.switchTo": "Italiano",
   "lang.label": "Language",
+  "lang.loadingDataset": "Loading content...",
+  "lang.loadingEn": "Loading English...",
 
   // Sidebar checklist
   "sidebar.browseChecklist": "Browse Checklist",
@@ -405,6 +504,42 @@ const en: Record<UIKey, string> = {
   "quiz.confirmAnswer": "Confirm Answer",
   "quiz.bestChoice": "BEST CHOICE SELECTED",
   "quiz.distractor": "DISTRACTOR DETECTED",
+
+  // Quiz: exam timer
+  "quiz.timerLabel": "Time",
+  "quiz.timerEnable": "Exam timer (~2 min/question)",
+  "quiz.timerHint": "When the time runs out the exam is submitted automatically.",
+  "quiz.timeUpTitle": "TIME IS UP",
+  "quiz.timeUpDesc": "Your time has run out and the exam was submitted automatically. Unanswered questions count as wrong.",
+
+  // Quiz: answer review
+  "quiz.reviewTitle": "Answer review",
+  "quiz.reviewShow": "Review your answers",
+  "quiz.reviewHide": "Close the review",
+  "quiz.reviewFilterWrong": "Wrong only ({n})",
+  "quiz.reviewFilterAll": "All ({n})",
+  "quiz.reviewYourAnswer": "Your answer",
+  "quiz.reviewCorrectAnswer": "Correct answer",
+  "quiz.reviewNoAnswer": "Not answered",
+  "quiz.reviewAllCorrect": "Nothing to review: you answered every question correctly.",
+  "quiz.reviewQuestionN": "Question {i}",
+
+  // Quiz: results history
+  "quiz.historyTitle": "Your previous results",
+  "quiz.historyEmpty": "No test completed yet. Your history will show up here.",
+  "quiz.historyClear": "Clear history",
+  "quiz.historyBest": "Best score: {percent}%",
+  "quiz.historyAvg": "Average of last {n}: {percent}%",
+
+  // Inline notifications (replacing alert())
+  "toast.dismiss": "Dismiss notification",
+
+  // Accessibility
+  "a11y.selectTopic": "Open topic {name}",
+  "a11y.toggleCheck": "Mark {name} as completed",
+  "a11y.optionsGroup": "Answer options",
+  "a11y.keyboardHint": "Tip: press 1-4 to select, Enter to confirm.",
+
 
   // Chat sidebar
   "chat.title": "AI TRAINER ASSISTANT",

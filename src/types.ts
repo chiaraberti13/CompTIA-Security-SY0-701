@@ -35,3 +35,15 @@ export interface ChatMessage {
   text: string;
   timestamp: Date;
 }
+
+/** One completed exam run, persisted so the learner can track progress. */
+export interface QuizResult {
+  /** Completion time, epoch milliseconds. */
+  at: number;
+  score: number;
+  total: number;
+  /** Domain ids the run covered. */
+  domains: number[];
+  /** Whether the run reached the 80% passing threshold. */
+  passed: boolean;
+}

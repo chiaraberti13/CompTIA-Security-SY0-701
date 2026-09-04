@@ -189,7 +189,10 @@ npm run build ; npm start
 | `npm run dev` | Express + middleware Vite in sviluppo, hot reload su `http://localhost:3000`. |
 | `npm run build` | Compila il frontend React (Vite) e impacchetta il backend Express (esbuild) in `dist/server.cjs`. |
 | `npm start` | Avvia il server compilato in produzione (`node dist/server.cjs`). |
-| `npm run lint` | Controllo dei tipi TypeScript (`tsc --noEmit`). |
+| `npm run typecheck` | Controllo dei tipi TypeScript (`tsc --noEmit`). |
+| `npm run lint` | ESLint sul sorgente (regole TypeScript + React Hooks). |
+| `npm test` | Suite Vitest: integrità del dataset, logica del quiz e copertura i18n. |
+| `npm run check` | Typecheck + lint + test, lo stesso controllo eseguito dalla CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
 
 ## Architettura
@@ -197,20 +200,27 @@ npm run build ; npm start
 Struttura **full-stack** integrata — un unico server Express serve il frontend e fa da proxy a Gemini:
 
 ```
-├── server.ts                 # Server Express & proxy API Gemini
+├── server.ts                 # Server Express & proxy API Gemini (helmet, rate limit)
 ├── src/
 │   ├── App.tsx               # Componente React principale (Studio, Glossario, Quiz, AI)
 │   ├── components/           # Sezioni UI (es. Glossario con ricerca e filtri)
 │   ├── main.tsx              # Entry point React 19
 │   ├── data.ts               # Fonte di verità italiana — 5 domini & banca domande
-│   ├── data.en.ts            # Overlay inglese (ricade sull'italiano)
-│   ├── localizedData.ts      # Unisce le due lingue
+│   ├── data.en.ts            # Overlay inglese, caricato on demand (ricade sull'italiano)
+│   ├── localizedData.ts      # Unisce le due lingue, rende univoci gli id delle domande
+│   ├── subgroups.ts          # Mappa checklistKey → sottogruppo tematico
+│   ├── quiz.ts               # Logica pura del quiz (shuffle, soglia, storico)
+│   ├── storage.ts            # Helper localStorage a prova di errore
 │   ├── i18n.tsx              # Localizzazione stringhe UI & cambio lingua
 │   ├── types.ts              # Interfacce TypeScript
 │   └── index.css             # Stili Tailwind CSS v4
+├── tests/                    # Suite Vitest (dataset, logica quiz, i18n)
+├── public/favicon.svg        # Icona dell'app
+├── .github/workflows/ci.yml  # Typecheck + lint + test + build a ogni push/PR
 ├── .env.example              # Modello per le variabili d'ambiente
+├── eslint.config.js          # Configurazione flat di ESLint
 ├── package.json              # Dipendenze & script
-├── vite.config.ts            # Configurazione Vite
+├── vite.config.ts            # Configurazione Vite (split chunk dataset/vendor)
 └── tsconfig.json             # Configurazione TypeScript
 ```
 

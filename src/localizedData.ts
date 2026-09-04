@@ -11,7 +11,7 @@ import {
   DOMAIN_4_QUESTIONS,
   DOMAIN_5_QUESTIONS,
 } from "./data";
-import { GROUP_EN, SUBTOPIC_EN, QUESTION_EN } from "./data.en";
+import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.en";
 import type { Lang } from "./i18n";
 
 const IT_TOPICS: Record<number, TopicGroup[]> = {
@@ -31,14 +31,62 @@ const IT_QUESTIONS: Record<number, Question[]> = {
 };
 
 /* ------------------------------------------------------------------ *
+ * Lazily loaded English overlay.
+ *
+ * `data.en.ts` is ~1.6 MB of source. Importing it statically put it in the
+ * initial bundle for every visitor, including the Italian ones who never read
+ * a single string from it. It is now a dynamic import, so it becomes its own
+ * chunk that is fetched only when the user actually runs the app in English.
+ * ------------------------------------------------------------------ */
+
+interface EnglishOverlay {
+  GROUP_EN: Record<string, GroupOverride>;
+  SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>>;
+  QUESTION_EN: Record<number, Record<number, QuestionOverride>>;
+}
+
+let englishOverlay: EnglishOverlay | null = null;
+let englishOverlayPromise: Promise<EnglishOverlay> | null = null;
+
+/** True once the English dataset chunk has been downloaded and is usable. */
+export function isEnglishOverlayReady(): boolean {
+  return englishOverlay !== null;
+}
+
+/**
+ * Downloads the English overlay chunk (idempotent: concurrent callers share
+ * one in-flight request, and later calls resolve immediately).
+ */
+export function loadEnglishOverlay(): Promise<EnglishOverlay> {
+  if (englishOverlay) return Promise.resolve(englishOverlay);
+  if (!englishOverlayPromise) {
+    englishOverlayPromise = import("./data.en")
+      .then((m) => {
+        englishOverlay = {
+          GROUP_EN: m.GROUP_EN,
+          SUBTOPIC_EN: m.SUBTOPIC_EN,
+          QUESTION_EN: m.QUESTION_EN,
+        };
+        return englishOverlay;
+      })
+      .catch((err) => {
+        // Allow a later retry instead of caching the failure forever.
+        englishOverlayPromise = null;
+        throw err;
+      });
+  }
+  return englishOverlayPromise;
+}
+
+/* ------------------------------------------------------------------ *
  * Per-language memoized caches so the overlay work happens once.
  * ------------------------------------------------------------------ */
 
 const topicsCache: Partial<Record<Lang, Record<number, TopicGroup[]>>> = {};
 const questionsCache: Partial<Record<Lang, Record<number, Question[]>>> = {};
 
-type SubtopicOverrides = Record<string, (typeof SUBTOPIC_EN)[number][string] | undefined>;
-type QuestionOverrides = Record<number, (typeof QUESTION_EN)[number][number] | undefined>;
+type SubtopicOverrides = Record<string, SubtopicOverride | undefined>;
+type QuestionOverrides = Record<number, QuestionOverride | undefined>;
 
 function localizeSubtopic(sub: Subtopic, subOverrides: SubtopicOverrides): Subtopic {
   const o = subOverrides[sub.checklistKey];
@@ -54,8 +102,12 @@ function localizeSubtopic(sub: Subtopic, subOverrides: SubtopicOverrides): Subto
   };
 }
 
-function localizeGroup(group: TopicGroup, subOverrides: SubtopicOverrides): TopicGroup {
-  const g = GROUP_EN[group.title];
+function localizeGroup(
+  group: TopicGroup,
+  groupOverrides: Record<string, GroupOverride>,
+  subOverrides: SubtopicOverrides
+): TopicGroup {
+  const g = groupOverrides[group.title];
   return {
     ...group,
     title: g?.title ?? group.title,
@@ -77,30 +129,55 @@ function localizeQuestion(q: Question, qOverrides: QuestionOverrides): Question 
   };
 }
 
+/**
+ * Globally unique question id.
+ *
+ * The source dataset numbers questions per domain, so the same id appears in
+ * several domains (130 collisions before this was introduced). Anything that
+ * keys questions by id — answer maps, wrong-answer tracking, the language
+ * re-mapping effect — needs ids that are unique across the whole app, so the
+ * domain is folded into the id: source id 141 of domain 1 becomes 10141.
+ */
+export const questionUid = (domainId: number, sourceId: number): number =>
+  domainId * 10000 + sourceId;
+
+/** The domain a namespaced question id belongs to. */
+export const domainOfQuestion = (uid: number): number => Math.floor(uid / 10000);
+
 /** Localized topic groups for a domain. Italian is the source of truth. */
 export function getDomainTopics(domainId: number, lang: Lang): TopicGroup[] {
   const it = IT_TOPICS[domainId] || [];
-  if (lang === "it") return it;
+  // Falls back to Italian if the overlay chunk has not landed yet; the
+  // LanguageProvider awaits it before switching, so this is a safety net.
+  if (lang === "it" || !englishOverlay) return it;
   const cache = (topicsCache[lang] ??= {});
   if (!cache[domainId]) {
     // English subtopic overrides are scoped per domain because checklistKeys
     // are not globally unique across domains.
-    const subOverrides = SUBTOPIC_EN[domainId] || {};
-    cache[domainId] = it.map((g) => localizeGroup(g, subOverrides));
+    const subOverrides = englishOverlay.SUBTOPIC_EN[domainId] || {};
+    cache[domainId] = it.map((g) => localizeGroup(g, englishOverlay!.GROUP_EN, subOverrides));
   }
   return cache[domainId];
 }
 
-/** Localized questions for a domain. Italian is the source of truth. */
+/**
+ * Localized questions for a domain, with globally unique ids.
+ * Italian is the source of truth.
+ */
 export function getDomainQuestions(domainId: number, lang: Lang): Question[] {
   const it = IT_QUESTIONS[domainId] || [];
-  if (lang === "it") return it;
-  const cache = (questionsCache[lang] ??= {});
+  const effectiveLang: Lang = lang === "en" && englishOverlay ? "en" : "it";
+  const cache = (questionsCache[effectiveLang] ??= {});
   if (!cache[domainId]) {
-    // English question overrides are scoped per domain because question ids
-    // are reused across domains in the Italian source.
-    const qOverrides = QUESTION_EN[domainId] || {};
-    cache[domainId] = it.map((q) => localizeQuestion(q, qOverrides));
+    // English question overrides are scoped per domain because source ids
+    // are reused across domains in the Italian source. The overlay is looked
+    // up with the original id, then the id is namespaced.
+    const qOverrides =
+      effectiveLang === "en" ? englishOverlay!.QUESTION_EN[domainId] || {} : {};
+    cache[domainId] = it.map((q) => ({
+      ...localizeQuestion(q, qOverrides),
+      id: questionUid(domainId, q.id),
+    }));
   }
   return cache[domainId];
 }
